@@ -43,6 +43,11 @@ const items = [
     title: 'Settings'
   },
   {
+    href: '/consultar_users',
+    icon: (<CogIcon fontSize="small" />),
+    title: 'consultar'
+  },
+  {
     href: '/login',
     icon: (<LockIcon fontSize="small" />),
     title: 'Login'
