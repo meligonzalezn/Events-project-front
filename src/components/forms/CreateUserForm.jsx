@@ -1,8 +1,11 @@
 import * as Yup from 'yup';
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { roles } from 'src/utils/roles';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
+import { createUser } from 'src/utils/userAxios';
+import { useEffect, useState } from 'react';
 
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
@@ -11,6 +14,9 @@ import { useRouter } from 'next/router';
  * @returns React component.
  */
 export default function CreateUserForm(props) {
+  const [upload, setUpload] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -21,7 +27,7 @@ export default function CreateUserForm(props) {
       rol: 'Administrador',
       password: ''
     },
-    validationSchema: Yup.object({
+    validationSchema: Yup.object().shape({
       firstName: Yup
         .string().required('Es necesario digitar sus nombres').max(50),
       lastName: Yup
@@ -46,13 +52,48 @@ export default function CreateUserForm(props) {
     })
   });
 
-  /**
-   * Verifica si se cumplen las validaciones establecidas.
-   * @returns Boolean True si las validaciones pasaron, false de lo contrario.
+  useEffect(() => {
+    /**
+   * Verifica si se cumplen las validaciones establecidas e inserta al nuevo usuario en la BD.
    */
-  const validateData = () => {
-    if (confirmPass.isValid && formik.isValid) return true;
-    return false;
+    const validateAndUploadData = async () => {
+      if (!upload) return;
+      setLoading(true);
+
+      if (confirmPass.isValid && formik.isValid) {
+        await createUser(formik);
+        setLoading(!loading);
+        router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+      }
+
+      setLoading(false);
+      setUpload(false);
+    }
+
+    validateAndUploadData();
+  }, [formik.errors, confirmPass.errors])
+
+  /**
+   * Valida los campos, revisando que las validaciones se cumplan, y tocando (marcando que ya se tocaron)
+   * los campos que existen.
+   * @param {} e 
+   */
+  const markErrors = async (e) => {
+    const [resp, respc] = await Promise.all([formik.validateForm, confirmPass.validateForm]);
+
+    for (var i in formik.values) {
+      var key = i;
+      formik.setFieldTouched(key, true);
+    }
+
+    for (var i in confirmPass.values) {
+      var key = i;
+      confirmPass.setFieldTouched(key, true);
+    }
+
+    formik.setErrors(resp);
+    confirmPass.setErrors(respc);
+    setUpload(true);
   }
 
   return (
@@ -190,11 +231,11 @@ export default function CreateUserForm(props) {
         </CardContent>
         <Divider />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }} >
-          <Button color="primary" variant="contained" onClick={(e) => {
-            if (validateData()) router.push('/'); // TODO Registrar Usuario en la Base de Datos.
+          <LoadingButton loading={loading} color="primary" variant="contained" onClick={(e) => {
+            markErrors(e)
           }}>
             Registrar Usuario
-          </Button>
+          </LoadingButton>
         </Box>
       </Card>
     </form>
