@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { roles } from 'src/utils/roles';
 import { useFormik } from 'formik';
@@ -66,12 +66,12 @@ export default function CreateUserForm(props) {
         router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
       }
 
-      setLoading(false);
       setUpload(false);
+      setLoading(false);
     }
 
     validateAndUploadData();
-  }, [formik.errors, confirmPass.errors])
+  }, [upload])
 
   /**
    * Valida los campos, revisando que las validaciones se cumplan, y tocando (marcando que ya se tocaron)
