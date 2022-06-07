@@ -32,6 +32,11 @@ const items = [
     title: 'Products'
   },
   {
+    href: '/noticias',
+    icon: (<UserIcon fontSize="small" />),
+    title: 'Noticias'
+  },
+  {
     href: '/account',
     icon: (<UserIcon fontSize="small" />),
     title: 'Account'
