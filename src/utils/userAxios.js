@@ -8,15 +8,15 @@ const { createHash } = require('crypto');
 async function createUser(metadata) {
   const data = metadata.values;
   const user = {
-    Nombre: data.firstName + " " + data.lastName,
-    Correo: data.email,
-    Telefono: data.phone,
-    Rol: data.rol,
-    Estado: true,
-    Contraseña: createHash("sha256").update(data.password).digest("hex")
+    Name: data.firstName + " " + data.lastName,
+    Email: data.email,
+    Phone: data.phone,
+    Role: data.rol,
+    State: true,
+    Password: createHash("sha256").update(data.password).digest("hex")
   }
 
-  const request = await axios.post("http://localhost:8000/usuarios/", user, {
+  const request = await axios.post("http://localhost:8000/User/", user, {
     headers: {
       'Content-Type': 'application/json',
     }
