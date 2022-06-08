@@ -9,8 +9,7 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import ResponsiveDatePicker from "./date-picker-responsive";
-
+import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 
 const states = [
   {
@@ -27,7 +26,7 @@ export const EventDetails = (props) => {
   const [values, setValues] = useState({
     title: "Cenita en la casa de Melissa",
     state: "Activo",
-    enrollmentPrice: "0"
+    enrollmentPrice: "0",
   });
 
   const handleChange = (e) => {
@@ -40,7 +39,7 @@ export const EventDetails = (props) => {
   return (
     <form autoComplete="off" noValidate {...props}>
       <Card>
-        <CardHeader  title="Evento" />
+        <CardHeader title="Evento" />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
@@ -60,7 +59,6 @@ export const EventDetails = (props) => {
                 fullWidth
                 label="Estado"
                 name="state"
-                
                 required
                 select
                 SelectProps={{ native: true }}
@@ -75,20 +73,32 @@ export const EventDetails = (props) => {
               </TextField>
             </Grid>
             <Grid item md={3.7} xs={12}>
-              <ResponsiveDatePicker title="Fecha de inicio"/>
+              <ResponsiveDatePicker title="Fecha de inicio" />
             </Grid>
             <Grid item md={3.7} xs={12}>
-              <ResponsiveDatePicker title="Fecha de finalización"/>
+              <ResponsiveDatePicker title="Fecha de finalización" />
             </Grid>
             <Grid item md={4.5} xs={12}>
-            <TextField
+              <TextField
                 fullWidth
                 label="Precio de inscripción"
                 name="enrollmentPrice"
                 onChange={handleChange}
                 required
                 value={values.enrollmentPrice}
+                type="number"
                 variant="outlined"
+              />
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <TextField
+                fullWidth
+                id="outlined-multiline-static"
+                label="Detalles"
+                multiline
+                rows={4}
+                name="details"
+                defaultValue=""
               />
             </Grid>
           </Grid>
@@ -98,12 +108,31 @@ export const EventDetails = (props) => {
           sx={{
             display: "flex",
             justifyContent: "flex-end",
-            p: 2,
+            p: 1,
           }}
         >
-          <Button color="primary" variant="contained">
-            Save details
-          </Button>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              p: 1,
+            }}
+          >
+            <Button color="primary" fullWidth variant="text">
+              Subir imagen
+            </Button>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              p: 1,
+            }}
+          >
+            <Button color="primary" variant="contained">
+              Guardar
+            </Button>
+          </Box>
         </Box>
       </Card>
     </form>

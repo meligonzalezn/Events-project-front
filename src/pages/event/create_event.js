@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { Box, Container, Grid, Typography } from '@mui/material';
-import { AccountProfile } from '../components/account/account-profile';
-import { EventDetails } from '../components/event/event-profile-details';
-import { DashboardLayout } from '../components/dashboard-layout';
+import { MapsCard } from '../../components/event/event-map-card';
+import { EventDetails } from '../../components/event/event-profile-details';
+import { DashboardLayout } from '../../components/dashboard-layout';
 
 const Account = () => (
   <>
@@ -35,7 +35,7 @@ const Account = () => (
             md={6}
             xs={12}
           >
-            <AccountProfile />
+            <MapsCard />
           </Grid>
           <Grid
             item

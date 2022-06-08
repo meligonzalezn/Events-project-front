@@ -33,7 +33,7 @@ const items = [
     title: 'Products'
   },
   {
-    href: '/create_event',
+    href: '/event/create_event',
     icon: (<UserIcon fontSize="small" />),
     title: 'Events'
   },

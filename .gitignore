@@ -17,6 +17,7 @@ out
 .DS_Store
 .eslintcache
 .idea
+.env.local
 /.env
 /.env.local
 /.env.development.local
