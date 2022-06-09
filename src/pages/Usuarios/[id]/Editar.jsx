@@ -6,6 +6,7 @@ import UserForm from 'src/components/forms/CreateUserForm';
 import { createUser, update } from 'src/utils/userAxios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import NotFund from "./../../404.js"
 
 /**
  * 
@@ -20,10 +21,21 @@ const EditarUsuario = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() =>{
+    let user = {}
+    console.log("id", id)
     try{
-      const user = JSON.parse(localStorage.getItem("usuarios"))[id-1];
+      const users = JSON.parse(localStorage.getItem("usuarios"));
+      console.log("users", users)
+      user = users.find((user, index) => {
+        if(user.id == id){
+          console.log("user", index, user)
+          return user
+        }
+        })
+      console.log("user", user)
     }catch(err){
-      const user = {}
+      return <NotFund></NotFund>
+      user = {}
     }
     setUsuario(user ? user : {})
     setLoading(false);
@@ -57,7 +69,7 @@ const EditarUsuario = () => {
               <AccountProfile />
             </Grid>
             <Grid item lg={8} md={6} xs={12} >
-              <UserForm id={id} finalFunction={update} type={"Actualizar"} {...usuario}/>
+              <UserForm finalFunction={update} type={"Actualizar"} {...usuario}/>
             </Grid>
           </Grid>
         </Container>

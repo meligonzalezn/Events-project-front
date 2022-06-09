@@ -42,7 +42,9 @@ export default function BasicTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, index) => (
+          {rows.map((row, index) => {
+            if(row.State !== props.StateExpected) return <></> 
+            return(
             <TableRow
             key={row.id}
             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -57,7 +59,7 @@ export default function BasicTable(props) {
                 <DesplegableTabla id={row.id}></DesplegableTabla>
               </TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
     </TableContainer>

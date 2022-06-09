@@ -65,11 +65,7 @@ async function update(metadata) {
   }
 
   try {
-    const request = await axios.put("http://localhost:8000/User/" + data.id + "/update", user, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+    const request = await axios.put("http://localhost:8000/User/" + data.id + "/update/", user)
     return [request, null];
 
   } catch (err) {
@@ -82,12 +78,7 @@ async function update(metadata) {
 async function enable(pk) {
 
   try {
-    const request = await axios.put("http://localhost:8000/User/" + pk + "/enable", user, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    console.log("donete")
+    const request = await axios.put("http://localhost:8000/User/" + pk + "/enable/", user)
     return [request, null];
 
   }

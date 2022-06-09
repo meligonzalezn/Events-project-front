@@ -67,7 +67,7 @@ export default function UserForm(props) {
       if (confirmPass.isValid && formik.isValid) {
         await props.finalFunction(formik)
         setLoading(!loading);
-        router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+        router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
       }
 
       setUpload(false);

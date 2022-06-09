@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Autocomplete, Box, Container, Divider, Grid, Pagination } from '@mui/material';
+import { Autocomplete, Box, Container, Divider, Grid, Pagination, Button } from '@mui/material';
 import { products } from '../__mocks__/products';
 import { ProductListToolbar } from '../components/product/product-list-toolbar';
 import { ProductCard } from '../components/product/product-card';
@@ -25,10 +25,16 @@ const Item = styled(Box)(({ theme }) => ({
  */
 const ConsultarUser = () => {
   const [usuarios, setUsuarios] = useState([]);
+  const [EnableUsers, setEnableUsers] = useState(true);
+
+  const handleShowUserList = () =>{
+    setEnableUsers(!EnableUsers)
+  }
 
   useEffect(async () => {
     const [usuarios, error] = await getUsers();
     localStorage.setItem('usuarios', error ? JSON.stringify([]) : JSON.stringify(usuarios))
+    // Date.now()
     setUsuarios(error ? [] : usuarios);
   }
   , [])
@@ -44,8 +50,13 @@ const ConsultarUser = () => {
       <Container maxWidth="full">
 
 
-        <Tabla rows={usuarios}></Tabla>
+        <Tabla rows={usuarios} StateExpected={EnableUsers}></Tabla>
+
+      <Button onClick={handleShowUserList}>
+        {EnableUsers ? 'Inhabilitados' : 'Usuarios habilitados'}
+      </Button>
       </Container>
+  
     </>
   )
 };
