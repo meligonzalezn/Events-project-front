@@ -1,39 +1,31 @@
-import { useState } from 'react';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { states } from 'src/utils/states';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
+import { createNews } from 'src/utils/newsAxios';
+import { useEffect, useRef, useState } from 'react';
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  TextField,
-  TextareaAutosize
-} from '@mui/material';
-
-const states = [
-  {
-    value: 'activo',
-    label: 'Activo'
-  },
-  {
-    value: 'inactivo',
-    label: 'Inactivo'
-  },
-];
-
+/**
+ * Formulario donde se digitarán los datos del usuario a crear.
+ * 
+ * @param {{}} props 
+ * @returns React component.
+ */
 export const NewsRegisterForm = (props) => {
+  const [data, setData] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const date = new Date()
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       title: '',
       description: '',
       summary: '',
       state: 'Activo',
-      media_file: '',
-      edition_date: new Date()
+      media_file: null,
+      edition_date: date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDay()
     },
     validationSchema: Yup.object().shape({
       title: Yup
@@ -41,71 +33,89 @@ export const NewsRegisterForm = (props) => {
       description: Yup
         .string().required('Porfavor digite una descripción'),
       summary: Yup
-        .string().required('Es necesario redactar un resumen'),
+        .string().required('Es necesario escribir un resumen'),
+      media_file: Yup
+        .object().required('Porfavor seleccione al menos 1 archivo (imagen o video)')
     })
   });
-  /*const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });*/
 
-  /*const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };*/
+  useEffect(() => {
+    /**
+     * This function verifies all validations and insert a news to database
+     * @returns 
+     */
+    const onSubmit = async () => {
+      if (!data) return;
+      setLoading(true);
+      if (formik.isValid) {
+        console.log("Su mamá en tanga",formik.values)
+        await createNews(formik);
+        setLoading(!loading);
+        //here we need a modal that I'll do later
+        router.push('/');
+      }
+      setData(false);
+      setLoading(false);
+    }
+    onSubmit();
+  }, [data])
+  
+  /**
+   * Valida los campos, revisando que las validaciones se cumplan, y tocando (marcando que ya se tocaron)
+   * los campos que existen.
+   * @param {} e
+   */
+   const markErrors = async (e) => {
+    const [resp] = await Promise.all([formik.validateForm]);
+
+    for (var i in formik.values) {
+      var key = i;
+      formik.setFieldTouched(key, true);
+    }
+    formik.setErrors(resp);
+    setData(true);
+  }
 
   return (
     <form
       autoComplete="off"
-      noValidate
+      onSubmit={formik.handleSubmit}
       {...props}
     >
       <Card>
         <CardHeader
-          subheader=""
-          title="Escribir noticia"
+          subheader="Registre aquí una noticia"
+          title="Noticia"
         />
         <Divider />
+
         <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+          <Grid container spacing={3} >
+            <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
+                error={Boolean(formik.touched.title && formik.errors.title)}
+                helperText={formik.touched.title && formik.errors.title}
                 label="Título"
-                name="titulo"
-                //onChange={handleChange}
+                name="title"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
                 required
-                //value={values.firstName}
+                value={formik.values.title}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-               <TextField
+
+            <Grid item md={6} xs={12} >
+              <TextField
                 fullWidth
-                label="Estado"
-                name="estado"
-                //onChange={handleChange}
+                label="Seleccione un estado"
+                name="state"
+                onChange={formik.handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                //value={values.state}
+                value={formik.values.state}
                 variant="outlined"
               >
                 {states.map((option) => (
@@ -118,64 +128,58 @@ export const NewsRegisterForm = (props) => {
                 ))}
               </TextField>
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+
+            <Grid item md={12} xs={12} >
               <TextField
                 fullWidth
+                error={Boolean(formik.touched.summary && formik.errors.summary)}
+                helperText={formik.touched.summary && formik.errors.summary}
                 label="Resumen"
-                name="resumen"
-                //onChange={handleChange}
+                name="summary"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 required
-                //value={values.firstName}
+                value={formik.values.summary}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={12} xs={12} >
               <TextareaAutosize
-                fullWidth
-                aria-label="text-area-details"
-                placeholder="Detalles"
-                style={{ width: 200 }}
+                aria-label="Descripcion"
+                name="description"
+                placeholder='Descripción'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                required
+                value={formik.values.description}
+                variant="outlined"
               />
             </Grid>
           </Grid>
+          
         </CardContent>
         <Divider />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2, 
-            gap:'0.75rem'
-          }}
-        >
-          <Button
-                sx={{border:0, color:'none'}}
-                variant="contained"
-                component="label">
-                Subir archivo
-                <input
-                  type="file"
-                  hidden
-                />
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Guardar
-          </Button>
-
-
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }} >
+          <label>
+            <input 
+              id="media_file"
+              type="file"
+              name="media_file"
+              onChange={(event) => 
+                formik.setFieldValue("media_file", event.target.files[0]) && 
+                console.log("holas "+event.target.files[0] + event.target.files[0].name)}
+              >
+            </input>
+          </label>
+          <LoadingButton 
+            loading={loading} 
+            color="primary" 
+            variant="contained" 
+            onClick={(e) => { markErrors(e)}}>
+            Registrar Noticia
+          </LoadingButton>
         </Box>
       </Card>
     </form>
   );
-};
+}
