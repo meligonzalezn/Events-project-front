@@ -7,6 +7,9 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Tabla from 'src/components/tabla';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { getUsers } from 'src/utils/userAxios';
 
 const Item = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,30 +19,36 @@ const Item = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const ConsultarUser = () => (
-  <>
-    <Head>
-      <title>
-        Consultar Usuario
-      </title>
-    </Head>
+/**
+ * 
+ * GUI that show user informetion saved on DB.
+ */
+const ConsultarUser = () => {
+  const [usuarios, setUsuarios] = useState([]);
 
-    <Container maxWidth="full">
+  useEffect(async () => {
+    const [usuarios, error] = await getUsers();
+    localStorage.setItem('usuarios', error ? JSON.stringify([]) : JSON.stringify(usuarios))
+    setUsuarios(error ? [] : usuarios);
+  }
+  , [])
+
+  return (
+    <>
+      <Head>
+        <title>
+          Consultar Usuario
+        </title>
+      </Head>
+
+      <Container maxWidth="full">
 
 
-      <Tabla rows={
-        [{
-          name: "name xd",
-          rol: "rol"
-        },
-        {
-          name: "name xd",
-          rol: "rol2"
-        }]
-      } handleInhabilitar={(event) => console.log("XD")}></Tabla>
-    </Container>
-  </>
-);
+        <Tabla rows={usuarios}></Tabla>
+      </Container>
+    </>
+  )
+};
 
 ConsultarUser.getLayout = (page) => (
   <DashboardLayout>

@@ -3,8 +3,20 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/router';
+import { enable } from 'src/utils/userAxios';
+import Link from 'next/link'
 
+/**
+ * 
+ * @param {{id: int}} props 
+ * @returns 
+ */
 export default function BasicMenu(props) {
+
+  const handleInhabilitar = () => {
+    enable(props.id)
+  }
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -14,14 +26,6 @@ export default function BasicMenu(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  /**
-   * Funcion para redireccionar a la pagina de editar.
-   */
-  const handleEdit = () =>{
-    router.push('/');
-  }
-
   /**
    * Funcionalidad de inhabilitar a un usuario
    */
@@ -45,9 +49,11 @@ export default function BasicMenu(props) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleEdit}>Editar</MenuItem>
-        <MenuItem onClick={props.handleInhabilitar}>Inhabilitar</MenuItem>
-      </Menu>
-    </div>
+        <MenuItem>
+          <Link href={`Usuarios/[id]/Editar/`} as={`Usuarios/${props.id}/Editar/`}
+        >Editar</Link></MenuItem>
+      <MenuItem onClick={handleInhabilitar}>Inhabilitar</MenuItem>
+    </Menu>
+    </div >
   );
 }
