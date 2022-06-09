@@ -20,12 +20,16 @@ export const NewsRegisterForm = (props) => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
+      //These id's values are default for now, it's important to get this information from the logged user and from 
+      // dropdown of events
+      id_event_id: 2,
+      id_user_id: 4,
       title: '',
       description: '',
       summary: '',
       state: 'Activo',
       media_file: null,
-      edition_date: date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDay()
+      edition_date: date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDay(), 
     },
     validationSchema: Yup.object().shape({
       title: Yup
