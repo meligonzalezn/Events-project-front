@@ -13,42 +13,46 @@ import { useEffect, useState } from 'react';
  * @param {{}} props 
  * @returns React component.
  */
-export default function CreateUserForm(props) {
+export default function UserForm(props) {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() =>console.log("XD"), [])
 
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      rol: 'Administrador',
-      password: ''
+      Name: props.Name ? props.Name : '',
+      LastName: props.LastName ? props.LastName : '',
+      Email: props.Email ? props.Email : '',
+      Phone: props.Phone ? props.Phone : '',
+      rol: props.Role ? props.Role : 'Administrador',
+      Password: props.Password ? props.Password : '',
+      BeforePassword: props.Password ? props.Password : '',
+      id: props.id
     },
     validationSchema: Yup.object().shape({
-      firstName: Yup
+      Name: Yup
         .string().required('Es necesario digitar sus nombres').max(50),
-      lastName: Yup
+      LastName: Yup
         .string().required('Es necesario digitar sus apellidos').max(50),
-      email: Yup
+      Email: Yup
         .string().email('Debe ser un correo válido').max(100).min(5)
-        .required('Es necesario digitar un email'),
-      phone: Yup
+        .required('Es necesario digitar un Email'),
+      Phone: Yup
         .number().positive('No puede ser un número negativo'),
-      password: Yup
+      Password: Yup
         .string().max(255).required('Digite su contraseña').min(8)
     })
   });
 
   const confirmPass = useFormik({
     initialValues: {
-      password: ''
+      Password: ''
     },
     validationSchema: Yup.object({
-      password: Yup
-        .string().max(255).required('Digite su contraseña').oneOf([formik.values.password], 'La contraseña no coincide')
+      Password: Yup
+        .string().max(255).required('Digite su contraseña').oneOf([formik.values.Password], 'La contraseña no coincide')
     })
   });
 
@@ -61,9 +65,9 @@ export default function CreateUserForm(props) {
       setLoading(true);
 
       if (confirmPass.isValid && formik.isValid) {
-        await createUser(formik);
+        await props.finalFunction(formik)
         setLoading(!loading);
-        router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+        router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
       }
 
       setUpload(false);
@@ -107,6 +111,7 @@ export default function CreateUserForm(props) {
           subheader="Registre al usuario que desea"
           title="Usuario"
         />
+        {console.log("props", props)}
 
         <Divider />
 
@@ -115,14 +120,14 @@ export default function CreateUserForm(props) {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                error={Boolean(formik.touched.firstName && formik.errors.firstName)}
-                helperText={formik.touched.firstName && formik.errors.firstName}
+                error={Boolean(formik.touched.Name && formik.errors.Name)}
+                helperText={formik.touched.Name && formik.errors.Name}
                 label="Nombres"
-                name="firstName"
+                name="Name"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
-                value={formik.values.firstName}
+                value={formik.values.Name}
                 variant="outlined"
               />
             </Grid>
@@ -130,29 +135,29 @@ export default function CreateUserForm(props) {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                error={Boolean(formik.touched.lastName && formik.errors.lastName)}
-                helperText={formik.touched.lastName && formik.errors.lastName}
+                error={Boolean(formik.touched.LastName && formik.errors.LastName)}
+                helperText={formik.touched.LastName && formik.errors.LastName}
                 label="Apellidos"
-                name="lastName"
+                name="LastName"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 required
-                value={formik.values.lastName}
+                value={formik.values.LastName}
                 variant="outlined"
               />
             </Grid>
 
             <Grid item md={6} xs={12} >
               <TextField
-                error={Boolean(formik.touched.email && formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
+                error={Boolean(formik.touched.Email && formik.errors.Email)}
+                helperText={formik.touched.Email && formik.errors.Email}
                 fullWidth
                 label="Email"
-                name="email"
+                name="Email"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 required
-                value={formik.values.email}
+                value={formik.values.Email}
                 variant="outlined"
               />
             </Grid>
@@ -160,14 +165,14 @@ export default function CreateUserForm(props) {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                error={Boolean(formik.touched.phone && formik.errors.phone)}
-                helperText={formik.touched.phone && formik.errors.phone}
+                error={Boolean(formik.touched.Phone && formik.errors.Phone)}
+                helperText={formik.touched.Phone && formik.errors.Phone}
                 label="Número de teléfono"
-                name="phone"
+                name="Phone"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 type="number"
-                value={formik.values.phone}
+                value={formik.values.Phone}
                 variant="outlined"
               />
             </Grid>
@@ -175,31 +180,31 @@ export default function CreateUserForm(props) {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                error={Boolean(formik.touched.password && formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
+                error={Boolean(formik.touched.Password && formik.errors.Password)}
+                helperText={formik.touched.Password && formik.errors.Password}
                 label="Contraseña"
-                name="password"
+                name="Password"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 required
                 type="password"
-                value={formik.values.password}
+                value={formik.values.Password}
                 variant="outlined"
               />
             </Grid>
 
             <Grid item md={6} xs={12} >
               <TextField
-                error={Boolean(confirmPass.touched.password && confirmPass.errors.password)}
+                error={Boolean(confirmPass.touched.Password && confirmPass.errors.Password)}
                 fullWidth
                 label="Confirme contraseña"
-                name="password"
+                name="Password"
                 onChange={confirmPass.handleChange}
                 onBlur={confirmPass.handleBlur}
                 required
-                helperText={confirmPass.touched.password && confirmPass.errors.password}
+                helperText={confirmPass.touched.Password && confirmPass.errors.Password}
                 type="password"
-                value={confirmPass.values.password}
+                value={confirmPass.values.Password}
                 variant="outlined"
               />
             </Grid>
@@ -234,7 +239,7 @@ export default function CreateUserForm(props) {
           <LoadingButton loading={loading} color="primary" variant="contained" onClick={(e) => {
             markErrors(e)
           }}>
-            Registrar Usuario
+            {`${props.type} usuario`}
           </LoadingButton>
         </Box>
       </Card>
