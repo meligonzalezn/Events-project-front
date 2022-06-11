@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Box, Container, Grid, Pagination, Typography } from '@mui/material';
+import { Box, Container, Grid, Pagination } from '@mui/material';
 import { products } from 'src/__mocks__/products';
 import { NewsNavbar } from '../news/NewsNavbar';
 import { NewCard } from '../news/NewCard';
-import LinearProgress from '@mui/material/LinearProgress';
+import { useRouter } from 'next/router';
+import LinearLoader from '../loaders/LinealLoader';
 
 const NEWS_PER_PAGE = 6;
 
@@ -17,6 +18,7 @@ export default function ShowNews(props) {
   const [page, setPage] = useState(1); // We display 6 news per page.
   const [loading, setLoading] = useState(true);
   const [numPages, setNumPages] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     // TODO Obtener las noticias.
@@ -33,6 +35,7 @@ export default function ShowNews(props) {
    */
   const testClick = (e) => {
     const newSelected = e.target.id;
+    router.push("Noticias/[id]/Ver", `Noticias/${newSelected}/Ver`);
   }
 
   /**
@@ -66,26 +69,10 @@ export default function ShowNews(props) {
 
   if (loading) {
     return (
-      <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
-        <Container maxWidth={false}>
-          <NewsNavbar />
-
-          <Typography sx={{ py: 15 }} align="center" color="textPrimary" gutterBottom variant="h5">
-            Estamos obteniendo tus noticias
-          </Typography>
-
-          <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
-            <Box sx={{ width: '60%' }}>
-              <LinearProgress />
-            </Box>
-          </Box>
-
-          <Typography sx={{ py: 19 }} align="center" color="textPrimary" gutterBottom variant="h5">
-            Por favor espera
-          </Typography>
-
-        </Container>
-      </Box>
+      <LinearLoader
+        upperMessage='Estamos cargando tus noticias'
+        lowerMessage='Por favor espera'
+      ></LinearLoader>
     )
   } else return (
     <Box component="main" sx={{ flexGrow: 1, py: 4 }} >

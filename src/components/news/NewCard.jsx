@@ -1,7 +1,5 @@
-import PropTypes from 'prop-types';
 import { Avatar, Box, Card, CardContent, Divider, Grid, Typography, Button } from '@mui/material';
 import { Clock as ClockIcon } from '../../icons/clock';
-import { Download as DownloadIcon } from '../../icons/download';
 
 /**
  * Crea y retorna una Card con la información pertinente a una noticia.
