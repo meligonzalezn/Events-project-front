@@ -10,9 +10,6 @@ import DesplegableTabla from './desplegableTabla';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalizeWord } from 'src/utils/string-processing';
 
-
-
-
 /**
  * Make a table with next fields.
  * @param {{
@@ -31,7 +28,7 @@ export default function BasicTable(props) {
     console.log("aaaa")
   }
   return (
-    <TableContainer component={Paper} sx={{marginTop: "30px"}}>
+    <TableContainer component={Paper} sx={{ marginTop: "30px" }}>
       {console.log(rows)}
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -43,23 +40,24 @@ export default function BasicTable(props) {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => {
-            if(row.State !== props.StateExpected) return <></> 
-            return(
-            <TableRow
-            key={row.id}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row" onClick={onClick} style={{ cursor: 'pointer' }}>
-                {capitalizeWord(row.Name)}
-              </TableCell>
-              <TableCell align='right' component="th" scope="row" onClick={onClick} style={{ cursor: 'pointer'}}>
-                {capitalizeWord(row.Role)}
-              </TableCell>
-              <TableCell align='right'>
-                <DesplegableTabla id={row.id}></DesplegableTabla>
-              </TableCell>
-            </TableRow>
-          )})}
+            if (row.State !== props.StateExpected) return <></>
+            return (
+              <TableRow
+                key={row.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row" onClick={onClick} style={{ cursor: 'pointer' }}>
+                  {capitalizeWord(row.Name)}
+                </TableCell>
+                <TableCell align='right' component="th" scope="row" onClick={onClick} style={{ cursor: 'pointer' }}>
+                  {capitalizeWord(row.Role)}
+                </TableCell>
+                <TableCell align='right'>
+                  <DesplegableTabla id={row.id}></DesplegableTabla>
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </TableContainer>
