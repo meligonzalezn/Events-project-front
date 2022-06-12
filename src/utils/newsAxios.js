@@ -1,7 +1,19 @@
 import axios from 'axios'
-import { useState } from 'react';
 
-
+/**
+* We get the events titles registered in database
+*/
+let eventsTitle = []
+async function eventsData () {
+  await axios.get("http://localhost:8000/Events/").then((res) => {
+    res.data.map((value) => {
+      eventsTitle.push(value.Title)
+    })
+  })
+  return eventsTitle;
+} 
+//Exec function to get Data before rendering component 
+eventsData()
 /**
  * This function creates JSON with the news's data and insert them to database
  * @param {} metadata
@@ -19,13 +31,6 @@ async function createNews(metadata) {
   if(data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
-    /**
-   * We get the events in database
-   */
-
-  const eventsData = await axios.get("http://localhost:8000/Events/").then((res) => {
-    return res.data
-  })
   
   const config = {
     'content-type': 'multipart/form-data'
@@ -35,7 +40,7 @@ async function createNews(metadata) {
     return res;
   });
 
-  return {eventsData, request};
+  return request;
 }
 
-export { createNews}
+export { createNews, eventsData, eventsTitle}

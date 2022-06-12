@@ -1,14 +1,11 @@
 import * as Yup from 'yup';
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { states } from 'src/utils/states';
 import { useFormik } from 'formik';
-import { createNews } from 'src/utils/newsAxios';
+import { createNews, eventsTitle } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
-/**
- * Formulario donde se digitarán los datos del usuario a crear.
- * 
+/** 
  * @param {{}} props 
  * @returns React component.
  */
@@ -22,6 +19,7 @@ export const NewsRegisterForm = (props) => {
       title: '',
       description: '',
       summary: '',
+      //When user creates a news default state is activo
       state: 'Activo',
       media_file: null,
       edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate() 
@@ -38,6 +36,7 @@ export const NewsRegisterForm = (props) => {
         .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)')
     })
   });
+  
 
   useEffect(() => {
     /**
@@ -48,15 +47,13 @@ export const NewsRegisterForm = (props) => {
       if (!data) return;
       setLoading(true);
       if (formik.isValid) {
-        await createNews(formik);
+        //await createNews(formik);
         setLoading(!loading);
       }
       setModal(!modal)
       setData(false);
       setLoading(false);
-     
     }
-    
     onSubmit();
   }, [data])
   
@@ -108,21 +105,19 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                label="Seleccione un estado"
-                name="state"
-                onChange={formik.handleChange}
+                label="Seleccione el evento"
+                name="event"
+                //onChange={formik.handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={formik.values.state}
+                //value={formik.values.state}
                 variant="outlined"
               >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
+                {eventsTitle.map((option, key) => (
+                  <option key={key}
                   >
-                    {option.label}
+                    {option}
                   </option>
                 ))}
               </TextField>
