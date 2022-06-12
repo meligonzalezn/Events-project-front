@@ -3,10 +3,9 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import LoadingButton from '@mui/lab/LoadingButton';
 import { states } from 'src/utils/states';
 import { useFormik } from 'formik';
-import { useRouter } from 'next/router';
 import { createNews } from 'src/utils/newsAxios';
-import { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { ModalAlert } from '../modals/modalAlert';
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
  * 
@@ -16,8 +15,8 @@ import { useEffect, useRef, useState } from 'react';
 export const NewsRegisterForm = (props) => {
   const [data, setData] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState(false);
   const date = new Date()
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -25,17 +24,18 @@ export const NewsRegisterForm = (props) => {
       summary: '',
       state: 'Activo',
       media_file: null,
-      edition_date: date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDay(), 
+      edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate() 
+
     },
     validationSchema: Yup.object().shape({
       title: Yup
         .string().required('Porfavor ingrese un título').max(500),
       description: Yup
-        .string().required('Porfavor digite una descripción'),
+        .string().required('Requerido'),
       summary: Yup
         .string().required('Es necesario escribir un resumen'),
       media_file: Yup
-        .object().required('Porfavor seleccione al menos 1 archivo (imagen o video)')
+        .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)')
     })
   });
 
@@ -48,21 +48,20 @@ export const NewsRegisterForm = (props) => {
       if (!data) return;
       setLoading(true);
       if (formik.isValid) {
-        console.log("Su mamá en tanga",formik.values)
         await createNews(formik);
         setLoading(!loading);
-        //here we need a modal that I'll do later
-        router.push('/');
       }
+      setModal(!modal)
       setData(false);
       setLoading(false);
+     
     }
+    
     onSubmit();
   }, [data])
   
   /**
-   * Valida los campos, revisando que las validaciones se cumplan, y tocando (marcando que ya se tocaron)
-   * los campos que existen.
+   * This function validates fields
    * @param {} e
    */
    const markErrors = async (e) => {
@@ -143,34 +142,53 @@ export const NewsRegisterForm = (props) => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={12} xs={12} >
+            <Grid item md={12} xs={12} sx={{float:'left', width:'50%'}}>
               <TextareaAutosize
+                style={{ 
+                        height:'9.3rem', 
+                        padding:'0.75rem', 
+                        border:'0.8px solid #E3E3E3', 
+                        borderRadius:'0.6rem',
+                        width:'100%', 
+                        maxWidth:'100%', 
+                        fontFamily: 'Inter',
+                        fontStyle: 'normal',
+                        fontWeight:'400',
+                        fontSize: '16px',
+                        lineHeight: '24px'}}
                 aria-label="Descripcion"
                 name="description"
-                placeholder='Descripción'
+                placeholder='Detalles *'
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 required
                 value={formik.values.description}
                 variant="outlined"
               />
+              
             </Grid>
           </Grid>
           
         </CardContent>
         <Divider />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }} >
-          <label>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap:'0.75rem', alignItems:'center' }} >
+          <div>
             <input 
+              style={{display:'none'}}
               id="media_file"
               type="file"
+              accept='.png, .jpg, jpeg, .mp4, .mkv'
               name="media_file"
-              onChange={(event) => 
-                formik.setFieldValue("media_file", event.target.files[0]) && 
-                console.log("holas "+event.target.files[0] + event.target.files[0].name)}
+              required
+              onChange={(event) => formik.setFieldValue("media_file", event.target.files[0])}
               >
             </input>
-          </label>
+            <label htmlFor="media_file" 
+              style={{color:'#5048E5', fontFamily: 'Inter', fontStyle: 'normal',
+                    fontWeight: '600',fontSize: '0.87rem',lineHeight: '1.5rem', cursor:'pointer'}}>
+              Subir archivo
+            </label>
+          </div>
           <LoadingButton 
             loading={loading} 
             color="primary" 
@@ -180,6 +198,15 @@ export const NewsRegisterForm = (props) => {
           </LoadingButton>
         </Box>
       </Card>
+      {(modal == true) ? <ModalAlert 
+        title={"Noticia registrada"} 
+        message={"La noticia fue registrada exitosamente!"} modalState={modal}
+        setModalState={setModal}/> : 
+        <ModalAlert 
+        title={"Noticia registrada"} 
+        message={"La noticia fue registrada exitosamente!"} modalState={modal}
+        setModalState={setModal}/>
+      } 
     </form>
   );
 }

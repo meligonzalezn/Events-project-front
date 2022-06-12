@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { useState } from 'react';
+
 
 /**
  * This function creates JSON with the news's data and insert them to database
@@ -17,7 +19,6 @@ async function createNews(metadata) {
   if(data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
-
     /**
    * We get the events in database
    */
@@ -31,11 +32,10 @@ async function createNews(metadata) {
 
   }
   const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => {
-    console.log("respuesta", res)
     return res;
   });
 
   return {eventsData, request};
 }
 
-export { createNews }
+export { createNews}

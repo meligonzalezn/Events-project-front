@@ -1,18 +1,11 @@
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    TextField,
-    InputAdornment,
-    SvgIcon,
-    Typography
-  } from '@mui/material';
-  import { useState } from 'react';
-  import { Search as SearchIcon } from '../../icons/search';  
-  import {NewsRegisterForm} from '../news/news-register-form'
-  export const NewsListToolbar = (props) => {
+import {Box,Button,Card,CardContent,TextField,InputAdornment,SvgIcon,Typography, Modal} from '@mui/material';
+import { useState } from 'react';
+import { Search as SearchIcon } from '../../icons/search';  
+import {NewsRegisterForm} from '../news/news-register-form'
+import {useStyles} from "../modals/modalAlert"
+export const NewsListToolbar = (props) => {
     const [buttonNews, setButtonNews] = useState(false);
+    const styles = useStyles();
     return(
         <Box {...props}>
         <Box
@@ -65,8 +58,13 @@ import {
             </CardContent>
             </Card>
         </Box>
-        {(buttonNews == true) ? <NewsRegisterForm ></NewsRegisterForm>:<></>}
-        </Box>
+        {(buttonNews == true) ? 
+        <Modal open={buttonNews} onClose={() => setButtonNews(!buttonNews)}>
+            <div className={styles.modal}>
+                <NewsRegisterForm ></NewsRegisterForm>
+            </div>
+        </Modal>:<></>}
+    </Box>
     )
   };
   
