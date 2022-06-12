@@ -1,8 +1,9 @@
 import Head from 'next/head';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { MapsCard } from '../../components/event/event-map-card';
-import { EventDetails } from '../../components/event/event-profile-details';
+import { EventDetails } from '../../components/event/event-profile-details-copy';
 import { DashboardLayout } from '../../components/dashboard-layout';
+
 
 const Account = () => (
   <>
