@@ -57,11 +57,11 @@ export const NewsRegisterForm = (props) => {
           await createNews(formik);
           if(executed === true){
             setModal(!modal)
-            setLoading(true);
+            setLoading(!loading);
             formik.resetForm()
         }
         setData(false);
-        setLoading(false);
+        setLoading(false)
       }
       }catch(error){
         console.log(error)
