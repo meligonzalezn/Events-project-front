@@ -9,10 +9,14 @@ import {
 
 } from '@mui/material';
 
-import  MapRender from "../map/map"
+import  MapComponent from "../map/map"
 
 
-export const MapsCard = (props) => (
+export const MapsCard = (props) => {
+  const {MapRender, getPlace} = MapComponent(); 
+  const map = MapRender();
+  
+  return (
   <Card {...props}>
     <CardHeader title="Ubicación" subheader="¿Donde se realizará el evento?" />
     <Divider/>
@@ -24,11 +28,12 @@ export const MapsCard = (props) => (
         py: 8
       }}
     > */}
-      <MapRender/>
+      {/* <MapRender/> */}
+      {map}
       
       {/* </Box> */}
     </CardContent>
     
     <Divider />
   </Card>
-);
+)};

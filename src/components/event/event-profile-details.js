@@ -1,108 +1,95 @@
-import { useState , useEffect} from "react";
-import Axios from "axios";
-import {Image} from "cloudinary-react";
-import * as Yup from "yup";
-import {  useFormik} from "formik";
-import {Box, Button,Card,CardContent,CardHeader,Divider,Grid,TextField,} from "@mui/material";
+import * as Yup from 'yup';
+import { Box, Button ,Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
+import { createEvent } from 'src/utils/eventAxios';
+import { useEffect, useState } from 'react';
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
+import {states} from "../../utils/states"
 
-const states = [
-  {
-    value: "active",
-    label: "Activo",
-  },
-  {
-    value: "inactive",
-    label: "Inactivo",
-  },
-];
+/**
+ * Formulario donde se digitarán los datos del usuario a crear.
+ * 
+ * @param {{}} props 
+ * @returns React component.
+ */
+//export default function EventDetails(props) {
+export const EventDetails = ({eventPlace}) => {
+  const [upload, setUpload] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-const FILE_SIZE = 160 * 1024;
-const SUPPORTED_FORMATS = [
-      "image/jpg",
-      "image/jpeg",
-      "image/gif",
-      "image/png"
-    ];
-  
-  
-
-export const EventDetails = (props) => {
-  const [validating, setValidating] = useState(true);
+  const router = useRouter();
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      start_date: new Date(),
+      finish_date: new Date(),
+      enrollment_price: 0,
+      details: '',
+      state: 'Activo',
+      image_file: '',
+      place: '',
+    },
+    validationSchema: Yup.object().shape({
+      title: Yup
+        .string().required('Es necesario digitar un título').max(100),
+      place: Yup
+        .string().max(200),
+      start_date: Yup
+      .string().required('Es necesario seleccionar una fecha').max(50),
+      finish_date: Yup
+      .string().required('Es necesario seleccionar una fecha').max(50),
+      enrollment_price: Yup
+        .number().required('Es necesario digitar un precio').min(0, 'No puede ser un número negativo'),
+      details: Yup
+      .string().max(500)
+    })
+  });
 
   useEffect(() => {
     /**
    * Verifica si se cumplen las validaciones establecidas e inserta al nuevo usuario en la BD.
    */
-    const validateAndUploadData = async () => {
-      if(validating){
-          console.log(formik.isValid)
-          console.log("monda: ",formik.values)
-          setValidating(true);
+    const onSubmit = async () => {
+      if (!upload) return;
+      setLoading(true);
 
-     }
+      if ( formik.isValid ) {
+        await createEvent(formik).then((res) => console.log( "res: ",res));
+        setLoading(!loading);
+        //router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+      }
+
+      setUpload(false);
+      setLoading(false);
     }
 
-    validateAndUploadData();
-  }, [validating] )
-  
-  
-  const formSchema = Yup.object().shape({
-    title: Yup.string()
-      .required("Campo requerido")
-      .min(5, "Mínimo 5 caracteres"),
-    image: Yup
-    .mixed()
-    .test(
-      "fileSize",
-      "File too large",
-      value => value && value.size <= FILE_SIZE
-    )
-    .test(
-      "fileFormat",
-      "Unsupported Format",
-      value => value && SUPPORTED_FORMATS.includes(value.type)
-    )
-  });
+    onSubmit();
+  }, [upload])
 
-  const onSubmit = () => {
-    console.log("submit", formik.errors);
-    setSubmitting(false);
+  /**
+   * Valida los campos, revisando que las validaciones se cumplan, y tocando (marcando que ya se tocaron)
+   * los campos que existen.
+   * @param {} e 
+   */
+  const markErrors = async (e) => {
+    formik.setFieldValue('place', eventPlace());
+    const [resp] = await Promise.all([formik.validateForm]);
+
+    for (var i in formik.values) {
+      var key = i;
+      formik.setFieldTouched(key, true);
+    }
+    formik.setErrors(resp);
+    setUpload(true);
   }
 
-  const formik = useFormik({
-    initialValues: {
-      title: '',
-      image: '',
-    },
-    validationSchema: formSchema,
-    onSubmit: onSubmit,
-  });
-
-  const [values2, setValues] = useState({
-    title: "Cenita en la casa de Melissa",
-    state: "Activo",
-    enrollmentPrice: "0",
-  });
-
-  const handleChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const uploadImage = (files) => {
-      const formData = new FormData();
-      formData.append("file", files[0]);
-      formData.append("upload_preset", "cspbtq5u");
-      Axios.post("https://api.cloudinary.com/v1_1/dyytwkgar/image/upload", formData).then((response) => console.log(response));
-  };
-
-  
-
   return (
-    <form autoComplete="off" onSubmit={formik.handleSubmit}>
+    <form
+      autoComplete="off"
+      onSubmit={formik.handleSubmit}
+    >
       <Card>
         <CardHeader title="Evento" />
         <Divider />
@@ -142,11 +129,11 @@ export const EventDetails = (props) => {
               </TextField>
             </Grid>
             <Grid item md={3.7} xs={12}>
-              <ResponsiveDatePicker name="start_date" title="Fecha de inicio" onChange={formik.handleChange}
+              <ResponsiveDatePicker name="start_date" title="Fecha de inicio" onChange={(e) => {formik.setFieldValue('start_date', e)}}
                 value={formik.values.start_date} />
             </Grid>
             <Grid item md={3.7} xs={12}>
-              <ResponsiveDatePicker name="finish_date" title="Fecha de finalización"  onChange={formik.handleChange}
+              <ResponsiveDatePicker name="finish_date" title="Fecha de finalización"  onChange={(e) => {formik.setFieldValue('finish_date', e)}}
                 value={formik.values.finish_date}/>
             </Grid>
             <Grid item md={4.5} xs={12}>
@@ -172,7 +159,6 @@ export const EventDetails = (props) => {
                 multiline
                 rows={4}
                 name="details"
-                defaultValue=""
                 error={Boolean(formik.touched.details && formik.errors.details)}
                 helperText={formik.touched.details && formik.errors.details}
                 onBlur={formik.handleBlur}
@@ -180,11 +166,6 @@ export const EventDetails = (props) => {
                 value={formik.values.details}
               />
             </Grid>
-            <Grid item md={12} xs={12}>
-              <Image cloudName="dyytwkgar"  publicId ="https://res.cloudinary.com/dyytwkgar/image/upload/v1654811261/hcokwzqk7i2hia76qzgv.png"
-              />
-            </Grid>
-
           </Grid>
         </CardContent>
         <Divider />
@@ -196,35 +177,49 @@ export const EventDetails = (props) => {
             p: 1,
           }}
         >
-          
           <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              p: 1,
-            }}
-          >
-            <Button variant="contained" component="label">
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 1.7,
+          }}
+        >
+          <div>
+            <input 
+              style={{display:'none'}}
+              id = "image_file"
+              type="file"
+              accept='.png, .jpg, jpeg'
+              name="image_file"
+              //required
+              onChange={(e) => formik.setFieldValue("image_file", e.target.files[0])}
+              >
+            </input>
+            <label htmlFor="image_file" 
+              style={{color:'#5048E5', fontFamily: 'Inter', fontStyle: 'normal',
+                    fontWeight: '600',fontSize: '0.87rem',lineHeight: '1.5rem', cursor:'pointer'}}>
               Subir imagen
-              <input type="file" hidden name="file" onChange={formik.handleChange}/>
-            </Button>
-          </Box>
-          
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              p: 1,
-            }}
-          >
-            <Button color="primary" variant="contained" onClick={(e) => {
-            markErrors(e)}}>
-              Guardar
-            </Button>
-          </Box>
+            </label>
+          </div>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 1,
+          }}
+        >
+          <LoadingButton 
+            loading={loading} 
+            color="primary" 
+            variant="contained" 
+            onClick={(e) => { markErrors(e)}}>
+            Guardar
+          </LoadingButton>
+        </Box>
         </Box>
      
       </Card>
     </form>
   );
-};
+}

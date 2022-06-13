@@ -1,15 +1,18 @@
 import Head from 'next/head';
-import { Box, Container, Grid, Typography } from '@mui/material';
-import { MapsCard } from '../../components/event/event-map-card';
-import { EventDetails } from '../../components/event/event-profile-details-copy';
+import { Box, Divider ,Container, Grid, Typography } from '@mui/material';
+import MapComponent from '../../components/map/map';
+import { EventDetails } from '../../components/event/event-profile-details';
 import { DashboardLayout } from '../../components/dashboard-layout';
 
 
-const Account = () => (
+const Event = () => {
+  const {MapRender, getPlace} = MapComponent(); 
+  const mapsCard = MapRender();
+  return(
   <>
     <Head>
       <title>
-        Account | Material Kit
+        Eventos
       </title>
     </Head>
     <Box
@@ -20,12 +23,6 @@ const Account = () => (
       }}
     >
       <Container maxWidth="lg">
-        <Typography
-          sx={{ mb: 3 }}
-          variant="h4"
-        >
-          Account
-        </Typography>
         <Grid
           container
           spacing={3}
@@ -36,7 +33,8 @@ const Account = () => (
             md={6}
             xs={12}
           >
-            <MapsCard />
+            <Divider/>
+            {mapsCard}
           </Grid>
           <Grid
             item
@@ -44,18 +42,18 @@ const Account = () => (
             md={6}
             xs={12}
           >
-            <EventDetails />
+            <EventDetails  eventPlace={getPlace} />
           </Grid>
         </Grid>
       </Container>
     </Box>
   </>
-);
+);}
 
-Account.getLayout = (page) => (
+Event.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default Account;
+export default Event;
