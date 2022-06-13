@@ -4,6 +4,7 @@ import axios from 'axios'
 * We get the events titles registered in database
 */
 let eventsTitle = []
+let executed = false; 
 async function eventsData () {
   await axios.get("http://localhost:8000/Events/").then((res) => {
     res.data.map((value) => {
@@ -12,7 +13,6 @@ async function eventsData () {
   })
   return eventsTitle;
 } 
-//Exec function to get Data before rendering component 
 eventsData()
 /**
  * This function creates JSON with the news's data and insert them to database
@@ -20,9 +20,17 @@ eventsData()
  */
 async function createNews(metadata) {
   const data = metadata.values;
+  let eventSelected = {}
+  let id_event_selected;
+  const eventsDataAll = await axios.get("http://localhost:8000/Events/").then((res) => {
+    eventSelected = res.data.find((element) => element.Title===data.event_name)  
+    id_event_selected = eventSelected.id 
+    return id_event_selected;
+  })
+
   let form_data = new FormData()
-  /*These values are default for now*/
-  form_data.append('ID_event', 1)
+  form_data.append('ID_event', id_event_selected)
+  // This value is default for now
   form_data.append('ID_user', 1)
   form_data.append('Title', data.title)
   form_data.append('Description', data.description)
@@ -36,11 +44,12 @@ async function createNews(metadata) {
     'content-type': 'multipart/form-data'
 
   }
-  const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => {
+  const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
+    executed = true;
     return res;
   });
 
-  return request;
+  return {request, eventsDataAll};
 }
 
-export { createNews, eventsData, eventsTitle}
+export { createNews, eventsData, eventsTitle, executed}

@@ -2,9 +2,10 @@ import * as Yup from 'yup';
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormik } from 'formik';
-import { createNews, eventsTitle } from 'src/utils/newsAxios';
+import { createNews, eventsTitle, executed} from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
+import { border } from '@mui/system';
 /** 
  * @param {{}} props 
  * @returns React component.
@@ -13,14 +14,17 @@ export const NewsRegisterForm = (props) => {
   const [data, setData] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
+  const [modalError, setModalError] = useState(false)
   const date = new Date()
+
   const formik = useFormik({
     initialValues: {
       title: '',
       description: '',
       summary: '',
-      //When user creates a news default state is activo
+      //When user creates a news default state is active
       state: 'Activo',
+      event_name: 'Evento',
       media_file: null,
       edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate() 
 
@@ -29,6 +33,8 @@ export const NewsRegisterForm = (props) => {
       title: Yup
         .string().required('Porfavor ingrese un título').max(500),
       description: Yup
+        .string().required('Requerido'),
+      event_name: Yup
         .string().required('Requerido'),
       summary: Yup
         .string().required('Es necesario escribir un resumen'),
@@ -44,15 +50,24 @@ export const NewsRegisterForm = (props) => {
      * @returns 
      */
     const onSubmit = async () => {
-      if (!data) return;
-      setLoading(true);
-      if (formik.isValid) {
-        //await createNews(formik);
-        setLoading(!loading);
+      try {
+        if (!data) return;
+        setLoading(true);
+        if (formik.isValid) {
+          await createNews(formik);
+          if(executed === true){
+            setModal(!modal)
+            setLoading(true);
+            formik.resetForm()
+        }
+        setData(false);
+        setLoading(false);
       }
-      setModal(!modal)
-      setData(false);
-      setLoading(false);
+      }catch(error){
+        console.log(error)
+        setModalError(true)
+        setLoading(false)
+      }
     }
     onSubmit();
   }, [data])
@@ -105,17 +120,20 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
+                error = {Boolean(formik.touched.event_name && formik.errors.event_name)}
+                helperText={formik.touched.event_name && formik.errors.event_name}
                 label="Seleccione el evento"
-                name="event"
-                //onChange={formik.handleChange}
+                name="event_name"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                //value={formik.values.state}
+                value={formik.values.event_name}
                 variant="outlined"
               >
                 {eventsTitle.map((option, key) => (
-                  <option key={key}
+                  <option key={key} value={option}
                   >
                     {option}
                   </option>
@@ -139,18 +157,31 @@ export const NewsRegisterForm = (props) => {
             </Grid>
             <Grid item md={12} xs={12} sx={{float:'left', width:'50%'}}>
               <TextareaAutosize
-                style={{ 
-                        height:'9.3rem', 
-                        padding:'0.75rem', 
-                        border:'0.8px solid #E3E3E3', 
-                        borderRadius:'0.6rem',
-                        width:'100%', 
-                        maxWidth:'100%', 
-                        fontFamily: 'Inter',
-                        fontStyle: 'normal',
-                        fontWeight:'400',
-                        fontSize: '16px',
-                        lineHeight: '24px'}}
+                id = "description"
+                style={formik.errors.description && formik.touched.description ? {
+                  height:'9.3rem', 
+                  padding:'0.75rem', 
+                  borderRadius:'0.6rem',
+                  width:'100%', 
+                  maxWidth:'100%', 
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight:'400',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  border:'0.8px solid #e76063'
+                } : 
+                { height:'9.3rem', 
+                  padding:'0.75rem', 
+                  border:'0.8px solid #E3E3E3', 
+                  borderRadius:'0.6rem',
+                  width:'100%', 
+                  maxWidth:'100%', 
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight:'400',
+                  fontSize: '16px',
+                  lineHeight: '24px' }}
                 aria-label="Descripcion"
                 name="description"
                 placeholder='Detalles *'
@@ -160,7 +191,9 @@ export const NewsRegisterForm = (props) => {
                 value={formik.values.description}
                 variant="outlined"
               />
-              
+              {formik.errors.description && formik.touched.description ? 
+                <div style={{color:'#e76063', fontSize:'0.75rem'}}>{formik.errors.description}</div>
+              : null }
             </Grid>
           </Grid>
           
@@ -196,11 +229,13 @@ export const NewsRegisterForm = (props) => {
       {(modal == true) ? <ModalAlert 
         title={"Noticia registrada"} 
         message={"La noticia fue registrada exitosamente!"} modalState={modal}
-        setModalState={setModal}/> : 
-        <ModalAlert 
-        title={"Noticia registrada"} 
-        message={"La noticia fue registrada exitosamente!"} modalState={modal}
-        setModalState={setModal}/>
+        setModalState={setModal}/> : null
+      } 
+      {(modalError == true) ? 
+      <ModalAlert 
+        title={"Noticia NO registrada"} 
+        message={"La noticia NO se pudo registrar!"} modalState={modalError}
+        setModalState={setModalError}/> : null
       } 
     </form>
   );

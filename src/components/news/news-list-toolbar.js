@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { Search as SearchIcon } from '../../icons/search';  
 import {NewsRegisterForm} from '../news/news-register-form'
 import {useStyles} from "../modals/modalAlert"
-
 export const NewsListToolbar = (props) => {
     const [buttonNews, setButtonNews] = useState(false);
     const styles = useStyles();     
+
     return(
         <Box {...props}>
         <Box
