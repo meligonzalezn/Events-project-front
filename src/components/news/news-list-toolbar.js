@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {Box,Button,Card,CardContent,TextField,InputAdornment,SvgIcon,Typography, Modal} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { Search as SearchIcon } from '../../icons/search';  
+import {Box,Button,Typography, Modal} from '@mui/material';
+import { useState } from 'react';
+ 
 import {NewsRegisterForm} from '../news/news-register-form'
 import {useStyles} from "../modals/modalAlert"
 
@@ -42,31 +42,6 @@ export const NewsListToolbar = (props) => {
                     Actualizar noticia
                 </Button>
             </Box>
-        </Box>
-        <Box sx={{ mt: 3 }}>
-            <Card>
-            <CardContent>
-                <Box sx={{ maxWidth: 500 }}>
-                <TextField
-                    fullWidth
-                    InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                        <SvgIcon
-                            fontSize="small"
-                            color="action"
-                        >
-                            <SearchIcon />
-                        </SvgIcon>
-                        </InputAdornment>
-                    )
-                    }}
-                    placeholder="Buscar noticia"
-                    variant="outlined"
-                />
-                </Box>
-            </CardContent>
-            </Card>
         </Box>
         {(buttonNews == true) ? 
         <Modal open={buttonNews} onClose={() => setButtonNews(!buttonNews)}>

@@ -1,16 +1,15 @@
 import Head from 'next/head';
 import axios from 'axios'
-import { Box, Container, Grid, Pagination, CircularProgress } from '@mui/material';
-import { products } from '../__mocks__/products';
+import { Box, Container, Grid, Pagination, CircularProgress, Card,CardContent,TextField,InputAdornment,SvgIcon } from '@mui/material';
+import { Search as SearchIcon } from '../icons/search'; 
 import { NewsListToolbar } from '../components/news/news-list-toolbar';
 import { NewsCard } from '../components/news/news-card';
 import { DashboardLayout } from '../components/dashboard-layout';
-import {DataEventsComplete} from "../utils/newsAxios";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Noticias = () => {
   const [dataNews, setDataNews] = useState();
-
+  const [searchNew, setSearchNew] = useState('')
   axios.get("http://localhost:8000/News/").then((res) => {
     setDataNews(res.data)
   })
@@ -36,16 +35,43 @@ const Noticias = () => {
       }}
     >
       <Container maxWidth={false}>
+
         <NewsListToolbar />
+        <Box sx={{ mt: 3 }}>
+          <Card>
+            <CardContent>
+                <Box sx={{ maxWidth: 500 }}>
+                <TextField
+                    onChange={(event) => {setSearchNew(event.target.value)}}
+                    fullWidth
+                    InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                        <SvgIcon
+                            fontSize="small"
+                            color="action"
+                        >
+                            <SearchIcon />
+                        </SvgIcon>
+                        </InputAdornment>
+                    )
+                    }}
+                    placeholder="Buscar noticia"
+                    variant="outlined"
+                />
+                </Box>
+            </CardContent>
+            </Card>
+        </Box>
         <Box sx={{ pt: 3 }}>
           <Grid
             container
             spacing={3}
           >
-            {dataNews.map((news) => (
+            {dataNews.map((news, key) => (
               <Grid
                 item
-                key={news.id}
+                key={key}
                 lg={4}
                 md={6}
                 xs={12}
