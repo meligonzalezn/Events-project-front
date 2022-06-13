@@ -1,11 +1,27 @@
 import Head from 'next/head';
-import { Box, Container, Grid, Pagination } from '@mui/material';
+import axios from 'axios'
+import { Box, Container, Grid, Pagination, CircularProgress } from '@mui/material';
 import { products } from '../__mocks__/products';
 import { NewsListToolbar } from '../components/news/news-list-toolbar';
 import { NewsCard } from '../components/news/news-card';
 import { DashboardLayout } from '../components/dashboard-layout';
+import {DataEventsComplete} from "../utils/newsAxios";
+import { useEffect, useState } from 'react';
 
-const Noticias = () => (
+const Noticias = () => {
+  const [dataNews, setDataNews] = useState();
+
+  axios.get("http://localhost:8000/News/").then((res) => {
+    setDataNews(res.data)
+  })
+  
+  if(dataNews === undefined) {
+    return( 
+    <div style={{display:'flex', justifyContent:'center', alignItems:'center', margin:'auto'}}>
+      <CircularProgress></CircularProgress>  
+    </div>)
+  }
+  return(
   <>
     <Head>
       <title>
@@ -26,15 +42,15 @@ const Noticias = () => (
             container
             spacing={3}
           >
-            {products.map((product) => (
+            {dataNews.map((news) => (
               <Grid
                 item
-                key={product.id}
+                key={news.id}
                 lg={4}
                 md={6}
                 xs={12}
               >
-                <NewsCard news={product} />
+                <NewsCard news={news} />
               </Grid>
             ))}
           </Grid>
@@ -55,7 +71,8 @@ const Noticias = () => (
       </Container>
     </Box>
   </>
-);
+  )
+};
 
 Noticias.getLayout = (page) => (
   <DashboardLayout>

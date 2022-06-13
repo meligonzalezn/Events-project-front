@@ -12,17 +12,20 @@ export const NewsCard = ({ news, ...rest }) => (
     }}
     {...rest}
   >
-    <CardContent>
+    <CardContent sx={{padding:0}}>
+      
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          pb: 3
+          pb: 3,
         }}
       >
-        <Avatar
+        <img
+          style={{height:'290px', width:'100%', objectFit:'cover'}}
           alt="Product"
-          src={news.media}
+          src={"https://res.cloudinary.com/dxx9kwg6t/"+news.Media_file}
+          onError={(e)=>{e.target.onerror = null; e.target.src="https://res.cloudinary.com/dxx9kwg6t/image/upload/v1655159261/media/images_videos_news/il-news-and-press-default-card-img_kcsr9g.jpg"}}
           variant="square"
         />
       </Box>
@@ -32,14 +35,15 @@ export const NewsCard = ({ news, ...rest }) => (
         gutterBottom
         variant="h5"
       >
-        {news.title}
+        {news.Title}
       </Typography>
       <Typography
         align="center"
         color="textPrimary"
         variant="body1"
+        sx={{marginBottom:'8.4px'}}
       >
-        {news.description}
+        {news.Summary}
       </Typography>
     </CardContent>
     <Box sx={{ flexGrow: 1 }} />
@@ -64,31 +68,14 @@ export const NewsCard = ({ news, ...rest }) => (
             sx={{ pl: 1 }}
             variant="body2"
           >
-            Updated 2hr ago
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <DownloadIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            {news.totalDownloads}
-            {' '}
-            Downloads
+            Editado: <b></b>
+            {news.Edition_date}
           </Typography>
         </Grid>
       </Grid>
     </Box>
   </Card>
+ 
 );
 
 NewsCard.propTypes = {

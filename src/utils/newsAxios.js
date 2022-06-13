@@ -11,8 +11,9 @@ async function eventsData () {
       eventsTitle.push(value.Title)
     })
   })
-  return eventsTitle;
+  return {eventsTitle};
 } 
+
 eventsData()
 /**
  * This function creates JSON with the news's data and insert them to database

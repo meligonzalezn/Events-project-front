@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Search as SearchIcon } from '../../icons/search';  
 import {NewsRegisterForm} from '../news/news-register-form'
 import {useStyles} from "../modals/modalAlert"
+
 export const NewsListToolbar = (props) => {
     const [buttonNews, setButtonNews] = useState(false);
     const styles = useStyles();     
@@ -25,14 +26,21 @@ export const NewsListToolbar = (props) => {
             >
             Noticias
             </Typography>
-            <Box sx={{ m: 1 }}>
-            <Button
-                color="primary"
-                variant="contained"
-                onClick={() => setButtonNews(!buttonNews)}
-            >
-                Añadir noticia
-            </Button>
+            <Box sx={{ m: 1, gap:'12px', display:'flex'}}>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => setButtonNews(!buttonNews)}
+                >
+                    Añadir noticia
+                </Button>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => console.log("aquí se hace el update")}
+                >
+                    Actualizar noticia
+                </Button>
             </Box>
         </Box>
         <Box sx={{ mt: 3 }}>
