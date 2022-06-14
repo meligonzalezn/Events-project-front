@@ -53,4 +53,19 @@ async function createNews(metadata) {
   return {request, eventsDataAll};
 }
 
-export { createNews, eventsData, eventsTitle, executed}
+/**
+* We get the news titles registered in database
+*/
+let newsTitle = []
+async function newsData () {
+  await axios.get("http://localhost:8000/News/").then((res) => {
+    res.data.map((value) => {
+      newsTitle.push(value.Title)
+    })
+  })
+  return {newsTitle};
+} 
+
+newsData()
+
+export { createNews, eventsData, eventsTitle, executed, newsTitle}
