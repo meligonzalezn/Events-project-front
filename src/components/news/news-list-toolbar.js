@@ -1,12 +1,13 @@
 import axios from 'axios'
 import {Box,Button,Typography, Modal} from '@mui/material';
 import { useState } from 'react';
- 
 import {NewsRegisterForm} from '../news/news-register-form'
+import { NewsUpdateForm } from './news-update-form';
 import {useStyles} from "../modals/modalAlert"
 
 export const NewsListToolbar = (props) => {
     const [buttonNews, setButtonNews] = useState(false);
+    const [updateNews, setUpdateNews] = useState(false);
     const styles = useStyles();     
 
     return(
@@ -37,18 +38,25 @@ export const NewsListToolbar = (props) => {
                 <Button
                     color="primary"
                     variant="contained"
-                    onClick={() => console.log("aquí se hace el update")}
+                    onClick={() => setUpdateNews(!updateNews)}
                 >
                     Actualizar noticia
                 </Button>
             </Box>
         </Box>
         {(buttonNews == true) ? 
-        <Modal open={buttonNews} onClose={() => setButtonNews(!buttonNews)}>
-            <div className={styles.modal}>
-                <NewsRegisterForm ></NewsRegisterForm>
-            </div>
-        </Modal>:<></>}
+            <Modal open={buttonNews} onClose={() => setButtonNews(!buttonNews)}>
+                <div className={styles.modal}>
+                    <NewsRegisterForm ></NewsRegisterForm>
+                </div>
+            </Modal>:<></>}
+        {(updateNews == true ) ? 
+            <Modal open={updateNews} onClose={() => setUpdateNews(!updateNews)}>
+                <div className={styles.modal} style={{width:'500px'}}>
+                    <NewsUpdateForm></NewsUpdateForm>
+                </div>
+            </Modal>:<></>
+        }
     </Box>
     )
   };

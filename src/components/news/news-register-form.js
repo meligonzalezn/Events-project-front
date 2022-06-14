@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { createNews, eventsTitle, executed} from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
-import { border } from '@mui/system';
+
 /** 
  * @param {{}} props 
  * @returns React component.
