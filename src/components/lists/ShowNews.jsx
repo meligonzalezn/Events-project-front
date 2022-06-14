@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Box, Container, Grid, Pagination } from '@mui/material';
-import { products } from 'src/__mocks__/products';
-import { NewsNavbar } from '../news/NewsNavbar';
-import { NewCard } from '../news/NewCard';
+import { Box, Card, CardContent, Container, Grid, InputAdornment, Pagination, SvgIcon, TextField } from '@mui/material';
+import { Search as SearchIcon } from '../../icons/search';
 import { useRouter } from 'next/router';
 import LinearLoader from '../loaders/LinealLoader';
+import { NewsListToolbar } from '../news/news-list-toolbar';
+import axios from 'axios';
+import NewsCard from '../news/news-card';
 
 const NEWS_PER_PAGE = 6;
 
@@ -18,12 +19,25 @@ export default function ShowNews(props) {
   const [page, setPage] = useState(1); // We display 6 news per page.
   const [loading, setLoading] = useState(true);
   const [numPages, setNumPages] = useState(0);
+  const [dataNews, setDataNews] = useState();
+  const [searchNew, setSearchNew] = useState('')
+
   const router = useRouter();
 
   useEffect(() => {
-    // TODO Obtener las noticias.
-    setNumPages(Math.ceil(products.length / NEWS_PER_PAGE));
-    setLoading(false);
+    /**
+     * Obtiene las noticias de la BD.
+     */
+    const getNews = async () => {
+      const request = await axios.get("http://localhost:8000/News/");
+      const dataN = request.data;
+      setDataNews(dataN);
+      setNumPages(Math.ceil(dataN.length / NEWS_PER_PAGE));
+      setLoading(false);
+      console.log(dataN);
+    }
+
+    getNews();
   }, [])
 
   /**
@@ -47,10 +61,10 @@ export default function ShowNews(props) {
   const displayPageElements = () => {
     let elements = [];
 
-    for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, products.length); i++) {
+    for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, dataNews.length); i++) {
       elements.push(
         <Grid key={i} item lg={4} md={6} xs={12} name={i}>
-          <NewCard id={i.toString()} new={products[i]} onClick={testClick} />
+          <NewsCard id={dataNews[i].id} new={dataNews[i]} onClick={testClick} />
         </Grid>
       );
     }
@@ -77,7 +91,32 @@ export default function ShowNews(props) {
   } else return (
     <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
       <Container maxWidth={false}>
-        <NewsNavbar />
+        <NewsListToolbar />
+
+        <Box sx={{ mt: 3 }}>
+          <Card>
+            <CardContent>
+              <Box sx={{ maxWidth: 500 }}>
+                <TextField
+                  onChange={(event) => { setSearchNew(event.target.value) }}
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SvgIcon fontSize="small" color="action">
+                          <SearchIcon />
+                        </SvgIcon>
+                      </InputAdornment>
+                    )
+                  }}
+                  placeholder="Buscar noticia"
+                  variant="outlined"
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
             {displayPageElements()}

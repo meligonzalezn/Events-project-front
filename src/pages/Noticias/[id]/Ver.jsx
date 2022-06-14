@@ -15,7 +15,7 @@ export default function VerNoticias() {
           Ver Noticia
         </title>
       </Head>
-      <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
+      <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
         <ViewNew id={id}></ViewNew>
       </Box>
     </>

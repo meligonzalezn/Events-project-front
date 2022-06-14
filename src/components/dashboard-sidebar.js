@@ -33,13 +33,8 @@ const items = [
     title: 'Products'
   },
   {
-<<<<<<< HEAD
     href: '/Noticias',
     icon: (<NewspaperIcon fontSize="small" />),
-=======
-    href: '/noticias',
-    icon: (<UserIcon fontSize="small" />),
->>>>>>> 2dcd0d0389c9077acf71c0adbab6ff6a205d432e
     title: 'Noticias'
   },
   {
@@ -106,18 +101,18 @@ export const DashboardSidebar = (props) => {
       >
         <div>
           <Box sx={{ p: 4 }}>
-            <NextLink 
+            <NextLink
               href="/"
               passHref
             >
-              <a style={{display:'flex', textDecoration:'none', alignItems:'center', gap:'0.75rem'}}>
+              <a style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
                 <Logo
                   sx={{
                     height: 42,
                     width: 42
                   }}
                 />
-                <Typography sx={{color:'#7B61FF', fontWeight:'bold'}}>ABC</Typography>
+                <Typography sx={{ color: '#7B61FF', fontWeight: 'bold' }}>ABC</Typography>
               </a>
             </NextLink>
           </Box>
