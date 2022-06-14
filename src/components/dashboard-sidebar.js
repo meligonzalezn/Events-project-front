@@ -2,12 +2,11 @@ import { useEffect } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { Box, Button, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
 import { Lock as LockIcon } from '../icons/lock';
-import { Selector as SelectorIcon } from '../icons/selector';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import { User as UserIcon } from '../icons/user';
 import { UserAdd as UserAddIcon } from '../icons/user-add';
@@ -34,8 +33,13 @@ const items = [
     title: 'Products'
   },
   {
+<<<<<<< HEAD
     href: '/Noticias',
     icon: (<NewspaperIcon fontSize="small" />),
+=======
+    href: '/noticias',
+    icon: (<UserIcon fontSize="small" />),
+>>>>>>> 2dcd0d0389c9077acf71c0adbab6ff6a205d432e
     title: 'Noticias'
   },
   {
@@ -88,7 +92,6 @@ export const DashboardSidebar = (props) => {
         onClose?.();
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.asPath]
   );
 
@@ -102,58 +105,21 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Box sx={{ p: 3 }}>
-            <NextLink
+          <Box sx={{ p: 4 }}>
+            <NextLink 
               href="/"
               passHref
             >
-              <a>
+              <a style={{display:'flex', textDecoration:'none', alignItems:'center', gap:'0.75rem'}}>
                 <Logo
                   sx={{
                     height: 42,
                     width: 42
                   }}
                 />
+                <Typography sx={{color:'#7B61FF', fontWeight:'bold'}}>ABC</Typography>
               </a>
             </NextLink>
-          </Box>
-          <Box sx={{ px: 2 }}>
-            <Box
-              sx={{
-                alignItems: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
-                px: 3,
-                py: '11px',
-                borderRadius: 1
-              }}
-            >
-              <div>
-                <Typography
-                  color="inherit"
-                  variant="subtitle1"
-                >
-                  Acme Inc
-                </Typography>
-                <Typography
-                  color="neutral.400"
-                  variant="body2"
-                >
-                  Your tier
-                  {' '}
-                  : Premium
-                </Typography>
-              </div>
-              <SelectorIcon
-                sx={{
-                  color: 'neutral.500',
-                  width: 14,
-                  height: 14
-                }}
-              />
-            </Box>
           </Box>
         </div>
         <Divider
@@ -173,56 +139,6 @@ export const DashboardSidebar = (props) => {
           ))}
         </Box>
         <Divider sx={{ borderColor: '#2D3748' }} />
-        <Box
-          sx={{
-            px: 2,
-            py: 3
-          }}
-        >
-          <Typography
-            color="neutral.100"
-            variant="subtitle2"
-          >
-            Need more features?
-          </Typography>
-          <Typography
-            color="neutral.500"
-            variant="body2"
-          >
-            Check out our Pro solution template.
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              mt: 2,
-              mx: 'auto',
-              width: '160px',
-              '& img': {
-                width: '100%'
-              }
-            }}
-          >
-            <img
-              alt="Go to pro"
-              src="/static/images/sidebar_pro.png"
-            />
-          </Box>
-          <NextLink
-            href="https://material-kit-pro-react.devias.io/"
-            passHref
-          >
-            <Button
-              color="secondary"
-              component="a"
-              endIcon={(<OpenInNewIcon />)}
-              fullWidth
-              sx={{ mt: 2 }}
-              variant="contained"
-            >
-              Pro Live Preview
-            </Button>
-          </NextLink>
-        </Box>
       </Box>
     </>
   );
