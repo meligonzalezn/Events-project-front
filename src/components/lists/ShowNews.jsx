@@ -6,6 +6,7 @@ import LinearLoader from '../loaders/LinealLoader';
 import { NewsListToolbar } from '../news/news-list-toolbar';
 import axios from 'axios';
 import NewsCard from '../news/news-card';
+import { findAllWithWord } from 'src/utils/searchInStrings';
 
 const NEWS_PER_PAGE = 6;
 
@@ -20,7 +21,8 @@ export default function ShowNews(props) {
   const [loading, setLoading] = useState(true);
   const [numPages, setNumPages] = useState(0);
   const [dataNews, setDataNews] = useState();
-  const [searchNew, setSearchNew] = useState('')
+  const [searchedNews, setSearchedNews] = useState();
+  const [succesfulRegister, setSuccessfulRegister] = useState(false);
 
   const router = useRouter();
 
@@ -32,13 +34,20 @@ export default function ShowNews(props) {
       const request = await axios.get("http://localhost:8000/News/");
       const dataN = request.data;
       setDataNews(dataN);
+      setSearchedNews(dataN);
       setNumPages(Math.ceil(dataN.length / NEWS_PER_PAGE));
       setLoading(false);
-      console.log(dataN);
     }
 
     getNews();
   }, [])
+
+  // Agrega noticias creadas sin recargar la página.
+  useEffect(() => {
+    if (succesfulRegister == false) return;
+
+    router.reload();
+  }, [succesfulRegister])
 
   /**
    * WIP
@@ -49,7 +58,8 @@ export default function ShowNews(props) {
    */
   const testClick = (e) => {
     const newSelected = e.target.id;
-    router.push("Noticias/[id]/Ver", `Noticias/${newSelected}/Ver`);
+    localStorage.setItem('noticia', JSON.stringify(searchedNews[newSelected]));
+    router.push("Noticias/[id]/Ver", `Noticias/${searchedNews[newSelected].Title}/Ver`);
   }
 
   /**
@@ -61,10 +71,15 @@ export default function ShowNews(props) {
   const displayPageElements = () => {
     let elements = [];
 
-    for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, dataNews.length); i++) {
+    // Ordena las noticias por mas reciente en fecha de creación.
+    searchedNews.sort(function (a, b) {
+      return new Date(b["Edition_date"]) - new Date(a["Edition_date"]);
+    })
+
+    for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, searchedNews.length); i++) {
       elements.push(
         <Grid key={i} item lg={4} md={6} xs={12} name={i}>
-          <NewsCard id={dataNews[i].id} new={dataNews[i]} onClick={testClick} />
+          <NewsCard id={i} new={searchedNews[i]} onClick={testClick} />
         </Grid>
       );
     }
@@ -81,6 +96,13 @@ export default function ShowNews(props) {
     setPage(value);
   }
 
+  const handleSearchNews = (e) => {
+    const searchedValue = e.target.value;
+    const dataN = findAllWithWord(searchedValue, dataNews, "Title");
+    setSearchedNews(dataN);
+    setNumPages(Math.ceil(dataN.length / NEWS_PER_PAGE));
+  }
+
   if (loading) {
     return (
       <LinearLoader
@@ -91,14 +113,14 @@ export default function ShowNews(props) {
   } else return (
     <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
       <Container maxWidth={false}>
-        <NewsListToolbar />
+        <NewsListToolbar setSuccessfulRegister={setSuccessfulRegister} />
 
         <Box sx={{ mt: 3 }}>
           <Card>
             <CardContent>
               <Box sx={{ maxWidth: 500 }}>
                 <TextField
-                  onChange={(event) => { setSearchNew(event.target.value) }}
+                  onChange={handleSearchNews}
                   fullWidth
                   InputProps={{
                     startAdornment: (
