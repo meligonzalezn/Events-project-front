@@ -65,7 +65,7 @@ async function update(metadata) {
   }
 
   try {
-    const request = await axios.put("http://localhost:8000/User/" + data.id + "/update/", user)
+    const request = await axios.put("http://localhost:8000/User/" + data.id + "/", user)
     return [request, null];
 
   } catch (err) {
