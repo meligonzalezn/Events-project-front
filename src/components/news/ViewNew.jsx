@@ -4,23 +4,39 @@ import { useEffect, useState } from 'react';
 import LinearLoader from '../loaders/LinealLoader';
 import AuthorCard from './AuthorCard';
 import axios from 'axios';
+import EventRegisterCard from '../events/RegisterCard';
 
 /**
- * 
- * @param {{id: string}} props 
+ * Proporciona la vista completa de una noticia, con datos del autor
+ * y el titulo, resumen, imagen y descripción de la noticia.
+ * @param {} props 
  * @returns 
  */
 export default function ViewNew(props) {
   const [loading, setLoading] = useState(true);
   const [theNew, setTheNew] = useState({});
+  const [autor, setAutor] = useState({});
 
   useEffect(() => {
+    /**
+     * Obtiene la noticia del local storage. También obtiene el autor de
+     * la noticia si no está guardado en el local storage, o si el autor
+     * guardado no coincide con el de la noticia.
+     */
     const getNoticia = async () => {
-      const request = await axios.get(`http://localhost:8000/News/${props.id}/`);
-      const data = request.data;
-      setTheNew(data);
+      const noticia = JSON.parse(localStorage.getItem("noticia"));
+      let dataUser;
+
+      if (localStorage.getItem("autor") == undefined || JSON.parse(localStorage.getItem("autor")).id != noticia.ID_user) {
+        const userRequest = await axios.get(`http://localhost:8000/User/${noticia.ID_user}/`);
+        dataUser = userRequest.data;
+        localStorage.setItem("autor", JSON.stringify(dataUser));
+      } else dataUser = JSON.parse(localStorage.getItem("autor"));
+
+      console.log(dataUser);
+      setTheNew(noticia);
+      setAutor(dataUser);
       setLoading(false);
-      console.log(data);
     }
 
     getNoticia();
@@ -53,7 +69,8 @@ export default function ViewNew(props) {
           <div />
 
           <div>
-            <AuthorCard></AuthorCard>
+            <AuthorCard autor={autor} editionTime={theNew.Edition_date} />
+            <EventRegisterCard />
           </div>
 
           <div className='wrapperCenter'>
@@ -74,14 +91,6 @@ export default function ViewNew(props) {
                 variant="square"
               />
             </Box>
-
-            <Typography align="left" color="textPrimary" variant="body1" sx={{ marginBottom: '8.4px', pt: 4, px: 1 }}>
-              {theNew.Description}
-            </Typography>
-
-            <Typography align="left" color="textPrimary" variant="body1" sx={{ marginBottom: '8.4px', pt: 4, px: 1 }}>
-              {theNew.Description}
-            </Typography>
 
             <Typography align="left" color="textPrimary" variant="body1" sx={{ marginBottom: '8.4px', pt: 4, px: 1 }}>
               {theNew.Description}
