@@ -1,18 +1,37 @@
 import axios from 'axios'
 import { Box, Button, Typography, Modal } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { NewsRegisterForm } from '../news/news-register-form'
 import { useStyles } from "../modals/modalAlert"
 
 /**
  * 
- * @param {{setSuccessfulRegister: function}} props 
+ * @param {{setSuccessfulRegister: function, isEmployee: boolean}} props 
  * @returns 
  */
 export const NewsListToolbar = (props) => {
   const [buttonNews, setButtonNews] = useState(false);
   const styles = useStyles();
+
+  const showButtons = () => {
+    if (!props.isEmployee) return (<></>);
+    return (
+      <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
+        <Button color="primary" variant="contained"
+          onClick={() => setButtonNews(!buttonNews)}
+        >
+          Añadir noticia
+        </Button>
+
+        <Button color="primary" variant="contained"
+          onClick={() => console.log("aquí se hace el update")}
+        >
+          Actualizar noticia
+        </Button>
+      </Box>
+    )
+  }
 
   return (
     <Box {...props}>
@@ -26,19 +45,7 @@ export const NewsListToolbar = (props) => {
           Noticias
         </Typography>
 
-        <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
-          <Button color="primary" variant="contained"
-            onClick={() => setButtonNews(!buttonNews)}
-          >
-            Añadir noticia
-          </Button>
-
-          <Button color="primary" variant="contained"
-            onClick={() => console.log("aquí se hace el update")}
-          >
-            Actualizar noticia
-          </Button>
-        </Box>
+        {showButtons()}
       </Box>
       {(buttonNews == true) ?
         <Modal open={buttonNews} onClose={() => setButtonNews(!buttonNews)}>

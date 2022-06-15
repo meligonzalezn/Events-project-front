@@ -13,7 +13,7 @@ const NEWS_PER_PAGE = 6;
 /**
  * Muestra todas as noticias registradas en la base de datos mediante
  * paginación.
- * @param {*} props 
+ * @param {{isEmployee: boolean}} props 
  * @returns 
  */
 export default function ShowNews(props) {
@@ -113,7 +113,7 @@ export default function ShowNews(props) {
   } else return (
     <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
       <Container maxWidth={false}>
-        <NewsListToolbar setSuccessfulRegister={setSuccessfulRegister} />
+        <NewsListToolbar isEmployee={props.isEmployee} setSuccessfulRegister={setSuccessfulRegister} />
 
         <Box sx={{ mt: 3 }}>
           <Card>

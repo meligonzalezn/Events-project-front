@@ -4,6 +4,8 @@ import ShowNews from 'src/components/lists/ShowNews';
 
 export default function Noticias(props) {
 
+  // TODO obtener el rol del usuario de la sesión.
+
   return (
     <>
       <Head>
@@ -12,7 +14,7 @@ export default function Noticias(props) {
         </title>
       </Head>
 
-      <ShowNews />
+      <ShowNews isEmployee={true} />
     </>
   )
 }
