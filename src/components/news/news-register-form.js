@@ -1,20 +1,20 @@
 import * as Yup from 'yup';
-import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, Select, MenuItem, InputLabel } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormik } from 'formik';
 import { createNews, eventsTitle, executed } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
-import { border } from '@mui/system';
+//import Select from 'react-select'
 /** 
- * @param {{setSuccessfulRegister: function}} props 
+ * @param {{setSuccessfulRegister: function}} props  
  * @returns React component.
  */
 export const NewsRegisterForm = (props) => {
   const [data, setData] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
-  const [modalError, setModalError] = useState(false)
+  const [modalError, setModalError] = useState(false);
   const date = new Date()
 
   const formik = useFormik({
@@ -24,7 +24,7 @@ export const NewsRegisterForm = (props) => {
       summary: '',
       //When user creates a news default state is active
       state: 'Activo',
-      event_name: 'Evento',
+      event_name: '',
       media_file: null,
       edition_date: date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
 
@@ -37,7 +37,7 @@ export const NewsRegisterForm = (props) => {
       event_name: Yup
         .string().required('Requerido'),
       summary: Yup
-        .string().required('Es necesario escribir un resumen'),
+        .string().required('Porfavor ingrese el resumen'),
       media_file: Yup
         .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)')
     })
@@ -54,19 +54,23 @@ export const NewsRegisterForm = (props) => {
         if (!data) return;
         setLoading(true);
         if (formik.isValid) {
+          console.log("los valores que registro fue: ", formik.values)
           await createNews(formik);
           if (executed === true) {
+            console.log("Ya se ejecucó la petición")
             setModal(!modal)
             setLoading(!loading);
             formik.resetForm();
           }
+          console.log("Que se supone que ha pasado aquí")
           setData(false);
           setLoading(false)
         }
       } catch (error) {
         console.log(error)
         setModalError(true)
-        setLoading(false)
+        console.log("Aquí ocurre un error")
+        //setLoading(!loading)
       }
     }
     onSubmit();
@@ -86,6 +90,7 @@ export const NewsRegisterForm = (props) => {
     formik.setErrors(resp);
     setData(true);
   }
+
 
   return (
     <form
@@ -120,23 +125,18 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
+                id="event_name"
+                name="event_name"
+                label="Seleccione el evento *"
+                select
                 error={Boolean(formik.touched.event_name && formik.errors.event_name)}
                 helperText={formik.touched.event_name && formik.errors.event_name}
-                label="Seleccione el evento"
-                name="event_name"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
                 value={formik.values.event_name}
+                onChange={formik.handleChange}
                 variant="outlined"
               >
                 {eventsTitle.map((option, key) => (
-                  <option key={key} value={option}
-                  >
-                    {option}
-                  </option>
+                  <MenuItem value={option} key={key}>{option}</MenuItem>
                 ))}
               </TextField>
             </Grid>
@@ -144,15 +144,16 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={12} xs={12} >
               <TextField
                 fullWidth
-                error={Boolean(formik.touched.summary && formik.errors.summary)}
-                helperText={formik.touched.summary && formik.errors.summary}
                 label="Resumen"
                 name="summary"
+                required
+                variant="outlined"
+                SelectProps={{ native: true }}
+                error={Boolean(formik.touched.summary && formik.errors.summary)}
+                helperText={formik.touched.summary && formik.errors.summary}
+                value={formik.values.summary}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                required
-                value={formik.values.summary}
-                variant="outlined"
               />
             </Grid>
             <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { Box, Button, Typography, Modal } from '@mui/material';
-import { useEffect, useState } from 'react';
-
+import { useState } from 'react';
 import { NewsRegisterForm } from '../news/news-register-form'
 import { useStyles } from "../modals/modalAlert"
 
@@ -13,6 +12,7 @@ import { useStyles } from "../modals/modalAlert"
 export const NewsListToolbar = (props) => {
   const [buttonNews, setButtonNews] = useState(false);
   const styles = useStyles();
+  
 
   const showButtons = () => {
     if (!props.isEmployee) return (<></>);
