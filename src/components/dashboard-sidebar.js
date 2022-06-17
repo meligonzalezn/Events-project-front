@@ -12,6 +12,7 @@ import { User as UserIcon } from '../icons/user';
 import { UserAdd as UserAddIcon } from '../icons/user-add';
 import { Users as UsersIcon } from '../icons/users';
 import { XCircle as XCircleIcon } from '../icons/x-circle';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 
@@ -32,8 +33,8 @@ const items = [
     title: 'Products'
   },
   {
-    href: '/noticias',
-    icon: (<UserIcon fontSize="small" />),
+    href: '/Noticias',
+    icon: (<NewspaperIcon fontSize="small" />),
     title: 'Noticias'
   },
   {
@@ -45,6 +46,11 @@ const items = [
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
+  },
+  {
+    href: '/consultar_users',
+    icon: (<CogIcon fontSize="small" />),
+    title: 'consultar'
   },
   {
     href: '/login',
@@ -95,18 +101,18 @@ export const DashboardSidebar = (props) => {
       >
         <div>
           <Box sx={{ p: 4 }}>
-            <NextLink 
+            <NextLink
               href="/"
               passHref
             >
-              <a style={{display:'flex', textDecoration:'none', alignItems:'center', gap:'0.75rem'}}>
+              <a style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
                 <Logo
                   sx={{
                     height: 42,
                     width: 42
                   }}
                 />
-                <Typography sx={{color:'#7B61FF', fontWeight:'bold'}}>ABC</Typography>
+                <Typography sx={{ color: '#7B61FF', fontWeight: 'bold' }}>ABC</Typography>
               </a>
             </NextLink>
           </Box>

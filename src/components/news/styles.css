@@ -1,0 +1,50 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 2% 20% 2% 74% 2%;
+}
+
+.ownOverflow{
+  display: inline-block;
+  vertical-align: top;
+  white-space: pre-line;
+  width: full;
+  height: 67.9vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.allHeight{
+  width: full;
+  height: 82.5vh;
+}
+
+.toCenter{
+  grid-area: a;
+  justify-self: center;
+  align-self: center;
+}
+
+.wrapperCenter{
+  display: grid;
+  width: 100%;
+  grid-template-areas: "a";
+}
+
+.wrapperLeftRight{
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-areas: "left right";
+}
+
+.leftItem{
+  grid-area: left;
+  justify-self: end;
+  align-self: end;
+}
+
+.rightItem{
+  grid-area: right;
+  justify-self: start;
+  align-self: end;
+}

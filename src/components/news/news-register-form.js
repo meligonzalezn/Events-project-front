@@ -1,20 +1,20 @@
 import * as Yup from 'yup';
-import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormik } from 'formik';
-import { createNews, eventsTitle, executed} from 'src/utils/newsAxios';
+import { createNews, eventsTitle } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
 
 /** 
- * @param {{}} props 
+ * @param {{setSuccessfulRegister: function}} props  
  * @returns React component.
  */
 export const NewsRegisterForm = (props) => {
   const [data, setData] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
-  const [modalError, setModalError] = useState(false)
+  const [modalError, setModalError] = useState(false);
   const date = new Date()
 
   const formik = useFormik({
@@ -24,9 +24,9 @@ export const NewsRegisterForm = (props) => {
       summary: '',
       //When user creates a news default state is active
       state: 'Activo',
-      event_name: 'Evento',
+      event_name: '',
       media_file: null,
-      edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate() 
+      edition_date: date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
 
     },
     validationSchema: Yup.object().shape({
@@ -37,12 +37,12 @@ export const NewsRegisterForm = (props) => {
       event_name: Yup
         .string().required('Requerido'),
       summary: Yup
-        .string().required('Es necesario escribir un resumen'),
+        .string().required('Porfavor ingrese el resumen'),
       media_file: Yup
         .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)')
     })
   });
-  
+
 
   useEffect(() => {
     /**
@@ -50,33 +50,31 @@ export const NewsRegisterForm = (props) => {
      * @returns 
      */
     const onSubmit = async () => {
+      if (!data) return;
       try {
-        if (!data) return;
-        setLoading(true);
         if (formik.isValid) {
           await createNews(formik);
-          if(executed === true){
-            setModal(!modal)
-            setLoading(!loading);
-            formik.resetForm()
+          setLoading(true)
         }
         setData(false);
         setLoading(false)
-      }
-      }catch(error){
+        setModal(!modal)
+        formik.resetForm();
+      } catch (error) {
         console.log(error)
         setModalError(true)
         setLoading(false)
+        setData(false)
       }
     }
     onSubmit();
   }, [data])
-  
+
   /**
    * This function validates fields
    * @param {} e
    */
-   const markErrors = async (e) => {
+  const markErrors = async (e) => {
     const [resp] = await Promise.all([formik.validateForm]);
 
     for (var i in formik.values) {
@@ -86,6 +84,7 @@ export const NewsRegisterForm = (props) => {
     formik.setErrors(resp);
     setData(true);
   }
+
 
   return (
     <form
@@ -120,23 +119,18 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
-                error = {Boolean(formik.touched.event_name && formik.errors.event_name)}
-                helperText={formik.touched.event_name && formik.errors.event_name}
-                label="Seleccione el evento"
+                id="event_name"
                 name="event_name"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                required
+                label="Seleccione el evento *"
                 select
-                SelectProps={{ native: true }}
+                error={Boolean(formik.touched.event_name && formik.errors.event_name)}
+                helperText={formik.touched.event_name && formik.errors.event_name}
                 value={formik.values.event_name}
+                onChange={formik.handleChange}
                 variant="outlined"
               >
                 {eventsTitle.map((option, key) => (
-                  <option key={key} value={option}
-                  >
-                    {option}
-                  </option>
+                  <MenuItem value={option} key={key}>{option}</MenuItem>
                 ))}
               </TextField>
             </Grid>
@@ -144,44 +138,53 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={12} xs={12} >
               <TextField
                 fullWidth
-                error={Boolean(formik.touched.summary && formik.errors.summary)}
-                helperText={formik.touched.summary && formik.errors.summary}
                 label="Resumen"
                 name="summary"
+                required
+                variant="outlined"
+                SelectProps={{ native: true }}
+                error={Boolean(formik.touched.summary && formik.errors.summary)}
+                helperText={formik.touched.summary && formik.errors.summary}
+                value={formik.values.summary}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                required
-                value={formik.values.summary}
-                variant="outlined"
               />
             </Grid>
-            <Grid item md={12} xs={12} sx={{float:'left', width:'50%'}}>
+            <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>
               <TextareaAutosize
-                id = "description"
+                id="description"
+                maxRows={10000}
                 style={formik.errors.description && formik.touched.description ? {
-                  height:'9.3rem', 
-                  padding:'0.75rem', 
-                  borderRadius:'0.6rem',
-                  width:'100%', 
-                  maxWidth:'100%', 
+                  height: '9.3rem',
+                  padding: '0.75rem',
+                  borderRadius: '0.6rem',
+                  width: '100%',
+                  maxWidth: '100%',
+                  maxHeight: '17rem',
                   fontFamily: 'Inter',
                   fontStyle: 'normal',
-                  fontWeight:'400',
+                  fontWeight: '400',
                   fontSize: '16px',
                   lineHeight: '24px',
-                  border:'0.8px solid #e76063'
-                } : 
-                { height:'9.3rem', 
-                  padding:'0.75rem', 
-                  border:'0.8px solid #E3E3E3', 
-                  borderRadius:'0.6rem',
-                  width:'100%', 
-                  maxWidth:'100%', 
-                  fontFamily: 'Inter',
-                  fontStyle: 'normal',
-                  fontWeight:'400',
-                  fontSize: '16px',
-                  lineHeight: '24px' }}
+                  border: '0.8px solid #e76063', 
+                  overflow:'auto',
+                  resize:'vertical'
+                } :
+                  {
+                    height: '9.3rem',
+                    padding: '0.75rem',
+                    border: '0.8px solid #E3E3E3',
+                    borderRadius: '0.6rem',
+                    width: '100%',
+                    maxWidth: '100%',
+                    maxHeight:'17rem',
+                    fontFamily: 'Inter',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    resize:'vertical'
+                  }}
                 aria-label="Descripcion"
                 name="description"
                 placeholder='Detalles *'
@@ -191,52 +194,55 @@ export const NewsRegisterForm = (props) => {
                 value={formik.values.description}
                 variant="outlined"
               />
-              {formik.errors.description && formik.touched.description ? 
-                <div style={{color:'#e76063', fontSize:'0.75rem'}}>{formik.errors.description}</div>
-              : null }
+              {formik.errors.description && formik.touched.description ?
+                <div style={{ color: '#e76063', fontSize: '0.75rem' }}>{formik.errors.description}</div>
+                : null}
             </Grid>
           </Grid>
-          
+
         </CardContent>
         <Divider />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap:'0.75rem', alignItems:'center' }} >
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
           <div>
-            <input 
-              style={{display:'none'}}
+            <input
+              style={{ display: 'none' }}
               id="media_file"
               type="file"
               accept='.png, .jpg, jpeg, .mp4, .mkv'
               name="media_file"
               required
               onChange={(event) => formik.setFieldValue("media_file", event.target.files[0])}
-              >
+            >
             </input>
-            <label htmlFor="media_file" 
-              style={{color:'#5048E5', fontFamily: 'Inter', fontStyle: 'normal',
-                    fontWeight: '600',fontSize: '0.87rem',lineHeight: '1.5rem', cursor:'pointer'}}>
+            <label htmlFor="media_file"
+              style={{
+                color: '#5048E5', fontFamily: 'Inter', fontStyle: 'normal',
+                fontWeight: '600', fontSize: '0.87rem', lineHeight: '1.5rem', cursor: 'pointer'
+              }}>
               Subir archivo
             </label>
           </div>
-          <LoadingButton 
-            loading={loading} 
-            color="primary" 
-            variant="contained" 
-            onClick={(e) => { markErrors(e)}}>
+          <LoadingButton
+            loading={loading}
+            color="primary"
+            variant="contained"
+            onClick={(e) => { markErrors(e) && setLoading(!loading) && console.log("Aquí debe empezar a cargar sin importar que")}}>
             Registrar Noticia
           </LoadingButton>
         </Box>
       </Card>
-      {(modal == true) ? <ModalAlert 
-        title={"Noticia registrada"} 
+      {(modal == true) ? <ModalAlert
+        title={"Noticia registrada"}
         message={"La noticia fue registrada exitosamente!"} modalState={modal}
-        setModalState={setModal}/> : null
-      } 
-      {(modalError == true) ? 
-      <ModalAlert 
-        title={"Noticia NO registrada"} 
-        message={"La noticia NO se pudo registrar!"} modalState={modalError}
-        setModalState={setModalError}/> : null
-      } 
+        setSuccessfulRegister={props.setSuccessfulRegister}
+        setModalState={setModal} /> : null
+      }
+      {(modalError == true) ?
+        <ModalAlert
+          title={"Noticia NO registrada"}
+          message={"La noticia NO se pudo registrar!"} modalState={modalError}
+          setModalState={setModalError} /> : null
+      }
     </form>
   );
 }
