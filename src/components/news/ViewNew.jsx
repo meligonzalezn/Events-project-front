@@ -32,8 +32,6 @@ export default function ViewNew(props) {
         dataUser = userRequest.data;
         localStorage.setItem("autor", JSON.stringify(dataUser));
       } else dataUser = JSON.parse(localStorage.getItem("autor"));
-
-      console.log(dataUser);
       setTheNew(noticia);
       setAutor(dataUser);
       setLoading(false);

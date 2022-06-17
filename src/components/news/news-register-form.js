@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
-import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, Select, MenuItem, InputLabel } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useFormik } from 'formik';
-import { createNews, eventsTitle, executed } from 'src/utils/newsAxios';
+import { createNews, eventsTitle } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
-//import Select from 'react-select'
+
 /** 
  * @param {{setSuccessfulRegister: function}} props  
  * @returns React component.
@@ -50,27 +50,21 @@ export const NewsRegisterForm = (props) => {
      * @returns 
      */
     const onSubmit = async () => {
+      if (!data) return;
       try {
-        if (!data) return;
-        setLoading(true);
         if (formik.isValid) {
-          console.log("los valores que registro fue: ", formik.values)
           await createNews(formik);
-          if (executed === true) {
-            console.log("Ya se ejecucó la petición")
-            setModal(!modal)
-            setLoading(!loading);
-            formik.resetForm();
-          }
-          console.log("Que se supone que ha pasado aquí")
-          setData(false);
-          setLoading(false)
+          setLoading(true)
         }
+        setData(false);
+        setLoading(false)
+        setModal(!modal)
+        formik.resetForm();
       } catch (error) {
         console.log(error)
         setModalError(true)
-        console.log("Aquí ocurre un error")
-        //setLoading(!loading)
+        setLoading(false)
+        setData(false)
       }
     }
     onSubmit();
@@ -159,18 +153,22 @@ export const NewsRegisterForm = (props) => {
             <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>
               <TextareaAutosize
                 id="description"
+                maxRows={10000}
                 style={formik.errors.description && formik.touched.description ? {
                   height: '9.3rem',
                   padding: '0.75rem',
                   borderRadius: '0.6rem',
                   width: '100%',
                   maxWidth: '100%',
+                  maxHeight: '17rem',
                   fontFamily: 'Inter',
                   fontStyle: 'normal',
                   fontWeight: '400',
                   fontSize: '16px',
                   lineHeight: '24px',
-                  border: '0.8px solid #e76063'
+                  border: '0.8px solid #e76063', 
+                  overflow:'auto',
+                  resize:'vertical'
                 } :
                   {
                     height: '9.3rem',
@@ -179,11 +177,13 @@ export const NewsRegisterForm = (props) => {
                     borderRadius: '0.6rem',
                     width: '100%',
                     maxWidth: '100%',
+                    maxHeight:'17rem',
                     fontFamily: 'Inter',
                     fontStyle: 'normal',
                     fontWeight: '400',
                     fontSize: '16px',
-                    lineHeight: '24px'
+                    lineHeight: '24px',
+                    resize:'vertical'
                   }}
                 aria-label="Descripcion"
                 name="description"
@@ -226,7 +226,7 @@ export const NewsRegisterForm = (props) => {
             loading={loading}
             color="primary"
             variant="contained"
-            onClick={(e) => { markErrors(e) }}>
+            onClick={(e) => { markErrors(e) && setLoading(!loading) && console.log("Aquí debe empezar a cargar sin importar que")}}>
             Registrar Noticia
           </LoadingButton>
         </Box>

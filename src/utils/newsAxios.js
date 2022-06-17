@@ -4,7 +4,6 @@ import axios from 'axios'
 * We get the events titles registered in database
 */
 let eventsTitle = []
-let executed = false; 
 async function eventsData () {
   await axios.get("http://localhost:8000/Events/").then((res) => {
     res.data.map((value) => {
@@ -21,7 +20,6 @@ eventsData()
  */
 async function createNews(metadata) {
   const data = metadata.values;
-  console.log("los datos que recibe son: ", data)
   let eventSelected = {}
   let id_event_selected;
   const eventsDataAll = await axios.get("http://localhost:8000/Events/").then((res) => {
@@ -29,10 +27,9 @@ async function createNews(metadata) {
     id_event_selected = eventSelected.id 
     return id_event_selected;
   })
-  console.log("el id que leyó fue: ", id_event_selected)
   let form_data = new FormData()
   form_data.append('ID_event', id_event_selected)
-  // This value is default for now
+  // This value is default for now (it has to be fetch the user id when login)
   form_data.append('ID_user', 1)
   form_data.append('Title', data.title)
   form_data.append('Description', data.description)
@@ -47,11 +44,10 @@ async function createNews(metadata) {
 
   }
   const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
-    executed = true;
     return res;
   });
 
   return {request, eventsDataAll};
 }
 
-export { createNews, eventsData, eventsTitle, executed}
+export { createNews, eventsData, eventsTitle}

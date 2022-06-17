@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal, Grid, Typography, Divider } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import { width } from '@mui/system';
 
 export const useStyles = makeStyles((theme) => ({
   modal: {
