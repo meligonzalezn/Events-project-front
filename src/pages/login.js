@@ -7,15 +7,21 @@ import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Facebook as FacebookIcon } from '../icons/facebook';
 import { Google as GoogleIcon } from '../icons/google';
+import { login, loggout, is_logged } from 'src/utils/loginAxios';
+import { useEffect, useState } from 'react';
 
 const Login = () => {
+  const [Upload, setUpload] = useState(false)
+  const [UploadFailed, setUploadFailed] = useState(null)
+  const [IsLogged, setIsLogged] = useState(null)
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123'
+      email: '',
+      password: ''
     },
-    validationSchema: Yup.object({
+    validationSchema: Yup.object().shape({
       email: Yup
         .string()
         .email(
@@ -28,16 +34,46 @@ const Login = () => {
         .max(255)
         .required(
           'Password is required')
-    }),
-    onSubmit: () => {
-      router.push('/');
-    }
+    })
   });
 
+  useEffect(async () => {
+    if (Upload == true) {
+      const [response, error] = await login(formik.values.email, formik.values.password)
+      if (error) {
+        setUploadFailed(error.data ? error.data : "Internal Error")
+      }
+      else {
+        setIsLogged(true)
+        router.push('/')
+      }
+      setUpload(false)
+    }
+  }, [Upload])
+
+  /**
+   * Valida los campos, revisando que las validaciones se cumplan, y tocando (marcando que ya se tocaron)
+   * los campos que existen.
+   * @param {} e 
+   */
+  const markErrors = async (e) => {
+    e.preventDefault()
+    setUploadFailed(null)
+    const [resp] = await Promise.all([formik.validateForm]);
+
+    for (var i in formik.values) {
+      var key = i;
+      formik.setFieldTouched(key, true);
+    }
+    formik.setErrors(resp);
+
+    if (!formik.errors.email && !formik.errors.password)
+      setUpload(true);
+  }
   return (
     <>
       <Head>
-        <title>Login | Material Kit</title>
+        <title>Login to ABC Company</title>
       </Head>
       <Box
         component="main"
@@ -49,82 +85,13 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
-          <NextLink
-            href="/"
-            passHref
-          >
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
-              Dashboard
-            </Button>
-          </NextLink>
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={markErrors}>
             <Box sx={{ my: 3 }}>
               <Typography
                 color="textPrimary"
                 variant="h4"
               >
                 Sign in
-              </Typography>
-              <Typography
-                color="textSecondary"
-                gutterBottom
-                variant="body2"
-              >
-                Sign in on the internal platform
-              </Typography>
-            </Box>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                item
-                xs={12}
-                md={6}
-              >
-                <Button
-                  color="info"
-                  fullWidth
-                  startIcon={<FacebookIcon />}
-                  onClick={formik.handleSubmit}
-                  size="large"
-                  variant="contained"
-                >
-                  Login with Facebook
-                </Button>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={6}
-              >
-                <Button
-                  fullWidth
-                  color="error"
-                  startIcon={<GoogleIcon />}
-                  onClick={formik.handleSubmit}
-                  size="large"
-                  variant="contained"
-                >
-                  Login with Google
-                </Button>
-              </Grid>
-            </Grid>
-            <Box
-              sx={{
-                pb: 1,
-                pt: 3
-              }}
-            >
-              <Typography
-                align="center"
-                color="textSecondary"
-                variant="body1"
-              >
-                or login with email address
               </Typography>
             </Box>
             <TextField
@@ -165,30 +132,18 @@ const Login = () => {
                 Sign In Now
               </Button>
             </Box>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              Don&apos;t have an account?
-              {' '}
-              <NextLink
-                href="/register"
-              >
-                <Link
-                  to="/register"
-                  variant="subtitle2"
-                  underline="hover"
-                  sx={{
-                    cursor: 'pointer'
-                  }}
-                >
-                  Sign Up
-                </Link>
-              </NextLink>
-            </Typography>
+            {UploadFailed != null ?
+              <Box sx={{ my: 3 }}>
+                <Typography className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1j5m5yj-MuiFormHelperText-root">
+                  {UploadFailed}
+                </Typography>
+              </Box> : <></>
+            }
+
           </form>
         </Container>
       </Box>
+
     </>
   );
 };

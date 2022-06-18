@@ -17,8 +17,6 @@ export default function UserForm(props) {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() =>console.log("XD"), [])
-
   const router = useRouter();
   const formik = useFormik({
     initialValues: {

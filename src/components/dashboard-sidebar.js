@@ -43,19 +43,14 @@ const items = [
     title: 'Settings'
   },
   {
-    href: '/consultar_users',
+    href: '/Usuarios',
     icon: (<CogIcon fontSize="small" />),
     title: 'consultar'
   },
   {
-    href: '/login',
-    icon: (<LockIcon fontSize="small" />),
-    title: 'Login'
-  },
-  {
-    href: '/register',
+    href: '/loggout',
     icon: (<UserAddIcon fontSize="small" />),
-    title: 'Register'
+    title: 'Loggout'
   },
   {
     href: '/404',
