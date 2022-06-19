@@ -1,14 +1,16 @@
 import * as Yup from 'yup';
-import { newsDataAll, newsDataComplete, eventsTitle, eventSelected } from 'src/utils/newsAxios';
+import { newsDataAll, newsDataComplete, eventsTitle, eventSelected, updateNewsData } from 'src/utils/newsAxios';
 import ReactDOM from 'react-dom';
 import { useFormik } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, Link } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NewsDropdown } from './news-dropdown';
 
 export const NewsUpdateForm = (props) => {
+    const [data, setData] = useState(false);
     const [newsName, setNewsName] = useState('');
+    const [loadingSearch, setLoadingSearch] = useState(false);
     const [loading, setLoading] = useState(false);
     const [displayForm, setDisplayForm] = useState(false);
     const [newsTitle, setNewsTitle] = useState(false);
@@ -16,7 +18,6 @@ export const NewsUpdateForm = (props) => {
     const [newsSummary, setNewsSummary] = useState(false);
     const [newsState, setNewsState] = useState(false);
     const [nameEvent, setNameEvent] = useState(false);
-    const [newsMediaFile, setNewsMediaFile] = useState(false);
     const states = ['Activo', 'Inactivo' ]
     const date = new Date()
     
@@ -46,9 +47,6 @@ export const NewsUpdateForm = (props) => {
     
         },
         validationSchema: validationSchema, 
-        onSubmit: (values) => {
-          console.log("Hola, esto todavía no tiene nada")
-        }
       });   
       
     /**
@@ -56,10 +54,61 @@ export const NewsUpdateForm = (props) => {
      * and set state to display form.
      */
     const executeFunction = async () => {
-      await newsDataAll(newsName)
-      setDisplayForm(true)
-      console.log("entonces el contenido es: ", newsDataComplete)
+      try {
+        await newsDataAll(newsName)
+        setDisplayForm(true)
+        //If display form state is true is because information was found successfully and loading has to stop
+        if(displayForm === true){
+          setLoadingSearch(false)
+        }
+      }
+      catch(error){
+        console.log("donde se imprime", error)
+      }
     }
+
+    useEffect(() => {
+      /**
+       * This function verifies all validations and insert a news to database
+       * @returns 
+       */
+      const onSubmit = async () => {
+        if (!data) return;
+        try {
+          if (formik.isValid) {
+            await updateNewsData(formik);
+            setLoading(true)
+          }
+          setData(false);
+          setLoading(false)
+          //setModal(!modal)
+          formik.resetForm();
+        } catch (error) {
+          console.log(error)
+          //setModalError(true)
+          setLoading(false)
+          setData(false)
+        }
+      }
+      onSubmit();
+    }, [data])
+    
+
+      /**
+   * This function validates fields
+   * @param {} e
+   */
+  const markErrors = async (e) => {
+    const [resp] = await Promise.all([formik.validateForm]);
+
+    for (var i in formik.values) {
+      var key = i;
+      formik.setFieldTouched(key, true);
+    }
+    formik.setErrors(resp);
+    setData(true);
+  }
+
 
     return(
         <form
@@ -77,10 +126,10 @@ export const NewsUpdateForm = (props) => {
                       <NewsDropdown newsNameState={newsName} setNewsNameState={setNewsName}></NewsDropdown>
                         <Grid item md={12} xs={12} > 
                           <LoadingButton
-                            loading={loading}
+                            loading={loadingSearch}
                             color="primary"
                             variant="contained"
-                            onClick={() => executeFunction()}>
+                            onClick={() => executeFunction() && setLoadingSearch(!loadingSearch)}>
                             Buscar
                           </LoadingButton>
                         </Grid>
@@ -234,7 +283,7 @@ export const NewsUpdateForm = (props) => {
                         loading={loading}
                         color="primary"
                         variant="contained"
-                        onClick={(e) => { console.log("por ahora nada xd")}}>
+                        onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
                         Actualizar Noticia
                       </LoadingButton>
                     </Box>

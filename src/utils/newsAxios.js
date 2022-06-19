@@ -6,12 +6,18 @@ import axios from 'axios'
 */
 let eventsTitle = []
 async function eventsData () {
-  await axios.get("http://localhost:8000/Events/").then((res) => {
-    res.data.map((value) => {
-      eventsTitle.push(value.Title)
+  try{
+    await axios.get("http://localhost:8000/Events/").then((res) => {
+      res.data.map((value) => {
+        eventsTitle.push(value.Title)
+      })
     })
-  })
-  return {eventsTitle};
+    return {eventsTitle};
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
 } 
 
 eventsData()
@@ -44,11 +50,16 @@ async function createNews(metadata) {
     'content-type': 'multipart/form-data'
 
   }
-  const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
-    return res;
-  });
-
-  return {request, eventsDataAll};
+  try {
+    const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
+      return res;
+    });
+    return {request, eventsDataAll}
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
 }
 
 /**
@@ -57,12 +68,18 @@ async function createNews(metadata) {
 */
 let newsTitle = []
 async function newsData () {
-  await axios.get("http://localhost:8000/News/").then((res) => {
-    res.data.map((value) => {
-      newsTitle.push(value.Title)
+  try{
+    await axios.get("http://localhost:8000/News/").then((res) => {
+      res.data.map((value) => {
+        newsTitle.push(value.Title)
+      })
     })
-  })
-  return {newsTitle};
+    return {newsTitle};
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
 } 
 
 newsData()
@@ -74,20 +91,70 @@ newsData()
 let newsDataComplete = {};
 let newsEventData = {};
 let eventSelected;
-async function newsDataAll(newsTitle){
-  await axios.get("http://localhost:8000/News/").then((res) => {
-    newsDataComplete = res.data.find((element) => element.Title === newsTitle)
-    console.log("La información que se tiene es: ", newsDataComplete);
-    return newsDataComplete; 
-  })
-  await axios.get("http://localhost:8000/Events/").then((res) => {
-    newsEventData = res.data.find((element) => element.id === newsDataComplete.ID_event)
-    eventSelected = newsEventData.Title
-    console.log("ya se tiene el nombre del evento", eventSelected)
-    return eventSelected;
-  })
 
+async function newsDataAll(newsTitle){
+  try{
+    await axios.get("http://localhost:8000/News/").then((res) => {
+      console.log("el id de la noticia es: ", res.data.id)
+      newsDataComplete = res.data.find((element) => element.Title === newsTitle)
+      console.log("La información que se tiene es: ", newsDataComplete);
+      return newsDataComplete; 
+    })
+    await axios.get("http://localhost:8000/Events/").then((res) => {
+      newsEventData = res.data.find((element) => element.id === newsDataComplete.ID_event)
+      eventSelected = newsEventData.Title
+      console.log("ya se tiene el nombre del evento", eventSelected)
+      return eventSelected;
+    })
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
+}
+/**
+ * This function performs the update of the data in the news model
+ * @param {*} metadata 
+ */
+async function updateNewsData(metadata){
+  const data = metadata.values;
+  
+  console.log("entonces los datos que se reciben para enviar al back son:  ", data)
+  let eventUpdateSelected = {}
+  let idEventSelectedUpdate;
+  const eventsDataAllUpdate = await axios.get("http://localhost:8000/Events/").then((res) => {
+    eventUpdateSelected = res.data.find((element) => element.Title === data.event_name)  
+    idEventSelectedUpdate = eventUpdateSelected.id 
+    return idEventSelectedUpdate;
+  })
+  let form_data = new FormData()
+  form_data.append('ID_event', idEventSelectedUpdate)
+  // This value is default for now (it has to be fetch the user id when login)
+  form_data.append('ID_user', 1)
+  form_data.append('Title', data.title)
+  form_data.append('Description', data.description)
+  form_data.append('Summary', data.summary)
+  form_data.append('State', data.state)
+  if(data.media_file)
+    form_data.append('Media_file', data.media_file, data.media_file.name)
+  form_data.append('Edition_date', data.edition_date)
+
+  const config = {
+    'content-type': 'multipart/form-data'
+
+  }
+  try {
+    const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
+      console.log("La respuesta si se cumplió la petición es: ", res) 
+      return res;
+    });
+    return {request, eventsDataAllUpdate}
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
 }
 
 
-export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected}
+export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected, updateNewsData}
