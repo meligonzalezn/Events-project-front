@@ -58,8 +58,8 @@ export const NewsListToolbar = (props) => {
         </Modal> : <></>}
       {(updateNews == true ) ? 
           <Modal open={updateNews} onClose={() => setUpdateNews(!updateNews)}>
-              <div className={styles.modal} style={{width:'500px'}}>
-                <NewsUpdateForm></NewsUpdateForm>
+              <div className={styles.modal} style={{width:'700px'}}>
+                <NewsUpdateForm ></NewsUpdateForm>
               </div>
           </Modal>:<></>
       }

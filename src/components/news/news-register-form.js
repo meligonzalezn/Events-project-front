@@ -226,7 +226,7 @@ export const NewsRegisterForm = (props) => {
             loading={loading}
             color="primary"
             variant="contained"
-            onClick={(e) => { markErrors(e) && setLoading(!loading) && console.log("Aquí debe empezar a cargar sin importar que")}}>
+            onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
             Registrar Noticia
           </LoadingButton>
         </Box>

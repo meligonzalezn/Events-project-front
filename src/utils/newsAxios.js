@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 /**
-* We get the events titles registered in database
+  * We get the events titles registered in database
+  * @param {} 
 */
 let eventsTitle = []
 async function eventsData () {
@@ -51,7 +52,8 @@ async function createNews(metadata) {
 }
 
 /**
-* We get the news titles registered in database
+  * We get the news titles registered in database
+  * @param {}
 */
 let newsTitle = []
 async function newsData () {
@@ -65,4 +67,27 @@ async function newsData () {
 
 newsData()
 
-export { createNews, eventsData, eventsTitle, newsTitle}
+/**
+ * We get the news data completed to display in form
+ * @param {newsTitle}
+ */
+let newsDataComplete = {};
+let newsEventData = {};
+let eventSelected;
+async function newsDataAll(newsTitle){
+  await axios.get("http://localhost:8000/News/").then((res) => {
+    newsDataComplete = res.data.find((element) => element.Title === newsTitle)
+    console.log("La información que se tiene es: ", newsDataComplete);
+    return newsDataComplete; 
+  })
+  await axios.get("http://localhost:8000/Events/").then((res) => {
+    newsEventData = res.data.find((element) => element.id === newsDataComplete.ID_event)
+    eventSelected = newsEventData.Title
+    console.log("ya se tiene el nombre del evento", eventSelected)
+    return eventSelected;
+  })
+
+}
+
+
+export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected}
