@@ -21,13 +21,9 @@ const App = (props) => {
 
   useEffect(async () => {
     const [_, error] = await is_logged();
-    if(error){
-      setLogged(false)
-      router.push("/login")
-    }else{
-      setLogged(true)
-    }
-  },[router.asPath])
+    console.log("logged", error == null)
+    setLogged(error == null)
+  }, [router.asPath])
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -44,13 +40,13 @@ const App = (props) => {
       </Head>
 
       {Logged ?
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {getLayout(<Component {...pageProps} />)}
-        </ThemeProvider>
-      </LocalizationProvider>
-      : <Login></Login>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {getLayout(<Component {...pageProps} />)}
+          </ThemeProvider>
+        </LocalizationProvider>
+        : <Login></Login>
       }
     </CacheProvider>
   );

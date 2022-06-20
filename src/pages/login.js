@@ -45,7 +45,11 @@ const Login = () => {
       }
       else {
         setIsLogged(true)
-        router.push('/')
+        console.log(router.pathname)
+        if(router.pathname === '/')
+          router.reload()
+        else
+          router.push('/')
       }
       setUpload(false)
     }
