@@ -44,9 +44,7 @@ async function createNews(metadata) {
   form_data.append('State', data.state)
   if(data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
-    console.log("entonces: ", data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
-  console.log("cuando se crear una noticia es")
   const config = {
     'content-type': 'multipart/form-data'
 
@@ -97,7 +95,6 @@ async function newsDataAll(newsTitle){
   try{
     await axios.get("http://localhost:8000/News/").then((res) => {
       newsDataComplete = res.data.find((element) => element.Title === newsTitle)
-      console.log("La noticia que traemos es: ", newsDataComplete.id)
       return newsDataComplete; 
     })
     await axios.get("http://localhost:8000/Events/").then((res) => {
@@ -117,7 +114,6 @@ async function newsDataAll(newsTitle){
  */
 async function updateNewsData(metadata){
   const data = metadata.values;
-  console.log("La información que se recibió del formulario es: ", data)
   let eventUpdateSelected = {}
   let idEventSelectedUpdate;
   const eventsDataAllUpdate = await axios.get("http://localhost:8000/Events/").then((res) => {
@@ -134,13 +130,18 @@ async function updateNewsData(metadata){
   form_data.append('Summary', data.summary)
   form_data.append('State', data.state)
   if(data.media_file)
+    if (data.media_file === newsDataComplete.Media_file){
+      form_data.append('Media_file', data.media_file)
+    }
+    else{
       form_data.append('Media_file', data.media_file, data.media_file.name)
+    }
   form_data.append('Edition_date', data.edition_date)
-  console.log("Lo que se debe tener dentro del form data ", form_data.get("Media_file"))
   const config = {
     'content-type': 'multipart/form-data'
 
   }
+
   try {
     const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
       console.log("La respuesta si se cumplió la petición es: ", res) 

@@ -18,7 +18,6 @@ export const NewsUpdateForm = (props) => {
     const [newsSummary, setNewsSummary] = useState(false);
     const [newsState, setNewsState] = useState(false);
     const [nameEvent, setNameEvent] = useState(false);
-    const [newsMediaFile, setNewsMediaFile] = useState(false);
     const states = ['Activo', 'Inactivo' ]
     const date = new Date()
     
@@ -44,13 +43,12 @@ export const NewsUpdateForm = (props) => {
           summary: newsDataComplete.Summary,
           state: newsDataComplete.State,
           event_name: eventSelected,
-          media_file: new File ([""], newsDataComplete.Media_file), 
+          media_file: newsDataComplete.Media_file,  
           edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate() 
     
         },
         validationSchema: validationSchema, 
       });   
-      
     /**
      * This function executes petition to get the data of the news that user wants to update
      * and set state to display form.
@@ -65,7 +63,7 @@ export const NewsUpdateForm = (props) => {
         }
       }
       catch(error){
-        console.log("donde se imprime", error)
+        console.log(error)
       }
     }
 
@@ -78,10 +76,6 @@ export const NewsUpdateForm = (props) => {
         if (!data) return;
         try {
           if (formik.isValid) {
-            if(newsMediaFile === false){
-              formik.setFieldValue("media_file", new File ([""], newsDataComplete.Media_file))
-            }
-            console.log("Los valores dentro del formulario son: ", formik.values)
             await updateNewsData(formik);
             setLoading(true)
           }
@@ -135,6 +129,7 @@ export const NewsUpdateForm = (props) => {
                             loading={loadingSearch}
                             color="primary"
                             variant="contained"
+                            disabled={newsName === ''}
                             onClick={() => executeFunction() && setLoadingSearch(!loadingSearch)}>
                             Buscar
                           </LoadingButton>
@@ -274,7 +269,7 @@ export const NewsUpdateForm = (props) => {
                         accept='.png, .jpg, jpeg, .mp4, .mkv'
                         name="media_file"
                         required
-                        onChange={(event) => formik.setFieldValue("media_file", event.target.files[0]) && setNewsMediaFile(true)}
+                        onChange={(event) => formik.setFieldValue("media_file", event.target.files[0])}
                       >
                       </input>
                         <label htmlFor="media_file"
