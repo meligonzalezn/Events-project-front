@@ -44,8 +44,9 @@ async function createNews(metadata) {
   form_data.append('State', data.state)
   if(data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
+    console.log("entonces: ", data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
-
+  console.log("cuando se crear una noticia es")
   const config = {
     'content-type': 'multipart/form-data'
 
@@ -95,15 +96,13 @@ let eventSelected;
 async function newsDataAll(newsTitle){
   try{
     await axios.get("http://localhost:8000/News/").then((res) => {
-      console.log("el id de la noticia es: ", res.data.id)
       newsDataComplete = res.data.find((element) => element.Title === newsTitle)
-      console.log("La información que se tiene es: ", newsDataComplete);
+      console.log("La noticia que traemos es: ", newsDataComplete.id)
       return newsDataComplete; 
     })
     await axios.get("http://localhost:8000/Events/").then((res) => {
       newsEventData = res.data.find((element) => element.id === newsDataComplete.ID_event)
       eventSelected = newsEventData.Title
-      console.log("ya se tiene el nombre del evento", eventSelected)
       return eventSelected;
     })
   }
@@ -118,8 +117,7 @@ async function newsDataAll(newsTitle){
  */
 async function updateNewsData(metadata){
   const data = metadata.values;
-  
-  console.log("entonces los datos que se reciben para enviar al back son:  ", data)
+  console.log("La información que se recibió del formulario es: ", data)
   let eventUpdateSelected = {}
   let idEventSelectedUpdate;
   const eventsDataAllUpdate = await axios.get("http://localhost:8000/Events/").then((res) => {
@@ -136,9 +134,9 @@ async function updateNewsData(metadata){
   form_data.append('Summary', data.summary)
   form_data.append('State', data.state)
   if(data.media_file)
-    form_data.append('Media_file', data.media_file, data.media_file.name)
+      form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
-
+  console.log("Lo que se debe tener dentro del form data ", form_data.get("Media_file"))
   const config = {
     'content-type': 'multipart/form-data'
 
