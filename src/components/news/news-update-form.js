@@ -6,7 +6,12 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, Link } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { NewsDropdown } from './news-dropdown';
+import { ModalAlert } from '../modals/modalAlert';
 
+/** 
+ * @param {{setSuccessfulRegister: function}} props  
+ * @returns React component.
+ */
 export const NewsUpdateForm = (props) => {
     const [data, setData] = useState(false);
     const [newsName, setNewsName] = useState('');
@@ -18,6 +23,8 @@ export const NewsUpdateForm = (props) => {
     const [newsSummary, setNewsSummary] = useState(false);
     const [newsState, setNewsState] = useState(false);
     const [nameEvent, setNameEvent] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [modalError, setModalError] = useState(false);
     const states = ['Activo', 'Inactivo' ]
     const date = new Date()
     
@@ -81,11 +88,13 @@ export const NewsUpdateForm = (props) => {
           }
           setData(false);
           setLoading(false)
-          //setModal(!modal)
-          formik.resetForm();
+          setModal(!modal)
+          setDisplayForm(false);
+          setLoadingSearch(false)
+          setNewsName('')
         } catch (error) {
           console.log(error)
-          //setModalError(true)
+          setModalError(true)
           setLoading(false)
           setData(false)
         }
@@ -289,7 +298,19 @@ export const NewsUpdateForm = (props) => {
                       </LoadingButton>
                     </Box>
                 </div>}
-            </Card>   
+            </Card>
+            {(modal == true) ? <ModalAlert
+              title={"Noticia actualizada"}
+              message={"La noticia fue actualizada exitosamente!"} modalState={modal}
+              setSuccessfulRegister={props.setSuccessfulRegister}
+              setModalState={setModal} /> : null
+            }
+            {(modalError == true) ?
+              <ModalAlert
+                title={"Noticia NO actualizada"}
+                message={"La noticia NO se pudo actualizar!"} modalState={modalError}
+                setModalState={setModalError} /> : null
+            }   
         </form>
     )
 

@@ -59,7 +59,7 @@ export const NewsListToolbar = (props) => {
       {(updateNews == true ) ? 
           <Modal open={updateNews} onClose={() => setUpdateNews(!updateNews)}>
               <div className={styles.modal} style={{width:'700px'}}>
-                <NewsUpdateForm ></NewsUpdateForm>
+                <NewsUpdateForm setSuccessfulRegister={props.setSuccessfulRegister} ></NewsUpdateForm>
               </div>
           </Modal>:<></>
       }
