@@ -144,7 +144,6 @@ async function updateNewsData(metadata){
 
   try {
     const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
-      console.log("La respuesta si se cumplió la petición es: ", res) 
       return res;
     });
     return {request, eventsDataAllUpdate}
