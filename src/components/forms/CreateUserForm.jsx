@@ -10,15 +10,12 @@ import { useEffect, useState } from 'react';
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
  * 
- * @param {{}} props 
+ * @param {{finalFunction: function, type: string, imageChanged: boolean}} props 
  * @returns React component.
  */
 export default function UserForm(props) {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() =>console.log("XD"), [])
-
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -28,8 +25,7 @@ export default function UserForm(props) {
       Phone: props.Phone ? props.Phone : '',
       rol: props.Role ? props.Role : 'Administrador',
       Password: props.Password ? props.Password : '',
-      BeforePassword: props.Password ? props.Password : '',
-      id: props.id
+      BeforePassword: props.Password ? props.Password : ''
     },
     validationSchema: Yup.object().shape({
       Name: Yup
@@ -65,9 +61,10 @@ export default function UserForm(props) {
       setLoading(true);
 
       if (confirmPass.isValid && formik.isValid) {
-        await props.finalFunction(formik)
-        setLoading(!loading);
-        router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+        console.log("wat")
+        // await props.finalFunction(formik)
+        // setLoading(!loading);
+        // router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
       }
 
       setUpload(false);
@@ -84,6 +81,7 @@ export default function UserForm(props) {
    */
   const markErrors = async (e) => {
     const [resp, respc] = await Promise.all([formik.validateForm, confirmPass.validateForm]);
+    // TODO check this again :/
 
     for (var i in formik.values) {
       var key = i;
@@ -111,7 +109,6 @@ export default function UserForm(props) {
           subheader="Registre al usuario que desea"
           title="Usuario"
         />
-        {console.log("props", props)}
 
         <Divider />
 
