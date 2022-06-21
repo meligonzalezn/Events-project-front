@@ -5,7 +5,7 @@ import { EventDetails } from '../../components/event/event-profile-details';
 import { DashboardLayout } from '../../components/dashboard-layout';
 
 
-const Event = () => {
+const CreateEvent = () => {
   const {MapRender, getPlace} = MapComponent(); 
   const mapsCard = MapRender();
   return(
@@ -50,10 +50,10 @@ const Event = () => {
   </>
 );}
 
-Event.getLayout = (page) => (
+CreateEvent.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default Event;
+export default CreateEvent;

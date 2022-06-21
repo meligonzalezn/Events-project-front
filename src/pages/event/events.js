@@ -1,21 +1,26 @@
 import Head from "next/head";
-import { Box, Container, Grid, Pagination } from "@mui/material";
-import { products } from "../../__mocks__/products";
-import { ProductListToolbar } from "../../components/product/product-list-toolbar";
-import { ProductCard } from "../../components/product/product-card";
+import { Box, Container, Grid, Pagination,  CircularProgress } from "@mui/material";
+import { usePagination } from '@mui/material/Pagination';
+import { EventListToolbar } from "../../components/event/event-list-toolbar";
+import { EventCard } from "../../components/event/event-card";
 import { DashboardLayout } from "../../components/dashboard-layout";
+//import { Pagination } from "../../components/pagination/pagination"
 import { useState, useEffect } from "react";
 import axios from 'axios'
-const Products = () => {
+
+const Events = () => {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [eventsPerPage, setEventsPerPage] = useState(10);
+  const [eventsPerPage, setEventsPerPage] = useState(3);
+  
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   useEffect(()=> {
 
     const fetchEvents = async () => {
-        setLoading(true)
         const res = await axios.get("http://localhost:8000/Events/")
         setEvents(res.data)
         setLoading(false)
@@ -25,11 +30,18 @@ const Products = () => {
     
   }, []);
 
-  console.log("eventos: ", events);
-  return (
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  return ( loading? 
+    <div style={{display:'flex', justifyContent:'center', alignItems:'center', margin:'auto'}}>
+      <CircularProgress></CircularProgress>  
+    </div>
+  :
     <>
       <Head>
-        <title>Products | Material Kit</title>
+        <title>Eventos</title>
       </Head>
       <Box
         component="main"
@@ -39,12 +51,12 @@ const Products = () => {
         }}
       >
         <Container maxWidth={false}>
-          <ProductListToolbar />
+          <EventListToolbar />
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
-              {products.map((product) => (
-                <Grid item key={product.id} lg={4} md={6} xs={12}>
-                  <ProductCard product={product} />
+              {currentEvents.map((event, key) => (
+                <Grid item key={key} lg={4} md={6} xs={12}>
+                  <EventCard event={event} />
                 </Grid>
               ))}
             </Grid>
@@ -56,7 +68,7 @@ const Products = () => {
               pt: 3,
             }}
           >
-            <Pagination color="primary" count={3} size="small" />
+            <Pagination color="primary" page={currentPage} onChange={handleChange} count={Math.ceil(events.length / eventsPerPage)} size="small" />
           </Box>
         </Container>
       </Box>
@@ -64,6 +76,6 @@ const Products = () => {
   );
 };
 
-Products.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Events.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
-export default Products;
+export default Events;
