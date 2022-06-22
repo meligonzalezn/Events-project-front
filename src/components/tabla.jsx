@@ -12,9 +12,6 @@ import { capitalizeWord } from 'src/utils/string-processing';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-
-
-
 /**
  * Make a table with next fields.
  * @param {{

@@ -10,13 +10,12 @@ import { useEffect, useState } from 'react';
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
  * 
- * @param {{}} props 
+ * @param {{finalFunction: function, type: string, userImage: file}} props 
  * @returns React component.
  */
 export default function UserForm(props) {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -24,10 +23,10 @@ export default function UserForm(props) {
       LastName: props.LastName ? props.LastName : '',
       Email: props.Email ? props.Email : '',
       Phone: props.Phone ? props.Phone : '',
-      rol: props.Role ? props.Role : 'Administrador',
+      Role: props.Role ? props.Role : 'Administrador',
       Password: props.Password ? props.Password : '',
-      BeforePassword: props.Password ? props.Password : '',
-      id: props.id
+      Image: props.userImage,
+      BeforePassword: props.Password ? props.Password : ''
     },
     validationSchema: Yup.object().shape({
       Name: Yup
@@ -53,6 +52,10 @@ export default function UserForm(props) {
         .string().max(255).required('Digite su contraseña').oneOf([formik.values.Password], 'La contraseña no coincide')
     })
   });
+
+  useEffect(() => {
+    formik.setFieldValue('Image', props.userImage);
+  }, [props.userImage])
 
   useEffect(() => {
     /**
@@ -81,7 +84,7 @@ export default function UserForm(props) {
    * @param {} e 
    */
   const markErrors = async (e) => {
-    const [resp, respc] = await Promise.all([formik.validateForm, confirmPass.validateForm]);
+    const [resp, respc] = await Promise.all([formik.validateForm(), confirmPass.validateForm()]);
 
     for (var i in formik.values) {
       var key = i;
@@ -93,8 +96,6 @@ export default function UserForm(props) {
       confirmPass.setFieldTouched(key, true);
     }
 
-    formik.setErrors(resp);
-    confirmPass.setErrors(respc);
     setUpload(true);
   }
 
@@ -109,7 +110,6 @@ export default function UserForm(props) {
           subheader="Registre al usuario que desea"
           title="Usuario"
         />
-        {console.log("props", props)}
 
         <Divider />
 
@@ -211,12 +211,12 @@ export default function UserForm(props) {
               <TextField
                 fullWidth
                 label="Seleccione Rol"
-                name="rol"
+                name="Role"
                 onChange={formik.handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={formik.values.rol}
+                value={formik.values.Role}
                 variant="outlined"
               >
                 {roles.map((option) => (

@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { is_logged } from 'src/utils/loginAxios';
 import Login from './login';
+import '../components/news/styles.css';
 
 const clientSideEmotionCache = createEmotionCache();
 
