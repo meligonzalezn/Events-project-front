@@ -8,8 +8,9 @@ import { createEmotionCache } from '../utils/create-emotion-cache';
 import { theme } from '../theme';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { is_logged } from 'src/utils/loginAxios';
+import { has_perms, is_logged } from 'src/utils/loginAxios';
 import Login from './login';
+import NotFound from './404';
 import '../components/news/styles.css';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -17,13 +18,28 @@ const clientSideEmotionCache = createEmotionCache();
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const [Logged, setLogged] = useState(false)
+  const [HasAccess, setHasAccess] = useState(false)
+  const [Loading, setLoading] = useState(true)
 
   const router = useRouter()
 
   useEffect(async () => {
-    const [_, error] = await is_logged();
-    console.log("logged", error == null)
-    setLogged(error == null)
+    //User is logged?
+    is_logged().then(([_, error]) => {
+      
+      setLogged(error == null)
+      
+      if (error == null) {
+        //User has permissions ?
+        has_perms(router.asPath).then(([_, error]) => {
+          console.log("actualizado ? ", _, error)
+          setHasAccess(error == null)
+          setLoading(false)
+        })
+      } else {
+        setLoading(false)
+      }
+    })
   }, [router.asPath])
 
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -40,15 +56,21 @@ const App = (props) => {
         />
       </Head>
 
-      {Logged ?
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {getLayout(<Component {...pageProps} />)}
-          </ThemeProvider>
-        </LocalizationProvider>
-        : <Login></Login>
-      }
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {Loading ?
+            <h1>Cargando :)</h1>
+            :
+            Logged ?
+              HasAccess ?
+                getLayout(<Component {...pageProps} />)
+                :
+                <NotFound />
+              : <Login />
+          }
+        </ThemeProvider>
+      </LocalizationProvider>
     </CacheProvider>
   );
 };
