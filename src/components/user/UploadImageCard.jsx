@@ -6,8 +6,7 @@ import { defaultUserIcon } from 'src/utils/defaultImages';
  * defecto en caso de no haber subido ninguna imagen. Se brinda
  * la opción de subir la imagen desde la card mediante un boton.
  * 
- * @param {{image: string, setImage: function, setImageChanged: function,
- *          imageChanged: boolean}} props 
+ * @param {{image: string, setImage: function}} props 
  * @returns React component
  */
 export default function UserUploadImageCard(props) {
@@ -19,14 +18,13 @@ export default function UserUploadImageCard(props) {
   const handleImageUpload = (e) => {
     const image = e.target.files[0];
     props.setImage(image);
-    props.setImageChanged(true);
   }
 
   return (
     <Card {...props}>
       <CardContent>
         <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-          <Avatar src={props.imageChanged ? URL.createObjectURL(props.image) : props.image} sx={{ height: 128, mb: 2, width: 128 }} />
+          <Avatar src={props.image != defaultUserIcon ? URL.createObjectURL(props.image) : props.image} sx={{ height: 128, mb: 2, width: 128 }} />
           <Typography align='center' color="textSecondary" variant="body2" >
             Inserte aquí la imagen que desea ver de perfil
           </Typography>

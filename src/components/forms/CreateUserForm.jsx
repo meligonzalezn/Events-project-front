@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
  * 
- * @param {{finalFunction: function, type: string, imageChanged: boolean}} props 
+ * @param {{finalFunction: function, type: string, userImage: file}} props 
  * @returns React component.
  */
 export default function UserForm(props) {
@@ -23,8 +23,9 @@ export default function UserForm(props) {
       LastName: props.LastName ? props.LastName : '',
       Email: props.Email ? props.Email : '',
       Phone: props.Phone ? props.Phone : '',
-      rol: props.Role ? props.Role : 'Administrador',
+      Role: props.Role ? props.Role : 'Administrador',
       Password: props.Password ? props.Password : '',
+      Image: props.userImage,
       BeforePassword: props.Password ? props.Password : ''
     },
     validationSchema: Yup.object().shape({
@@ -53,6 +54,10 @@ export default function UserForm(props) {
   });
 
   useEffect(() => {
+    formik.setFieldValue('Image', props.userImage);
+  }, [props.userImage])
+
+  useEffect(() => {
     /**
    * Verifica si se cumplen las validaciones establecidas e inserta al nuevo usuario en la BD.
    */
@@ -61,10 +66,9 @@ export default function UserForm(props) {
       setLoading(true);
 
       if (confirmPass.isValid && formik.isValid) {
-        console.log("wat")
-        // await props.finalFunction(formik)
-        // setLoading(!loading);
-        // router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+        await props.finalFunction(formik)
+        setLoading(!loading);
+        router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
       }
 
       setUpload(false);
@@ -80,8 +84,7 @@ export default function UserForm(props) {
    * @param {} e 
    */
   const markErrors = async (e) => {
-    const [resp, respc] = await Promise.all([formik.validateForm, confirmPass.validateForm]);
-    // TODO check this again :/
+    const [resp, respc] = await Promise.all([formik.validateForm(), confirmPass.validateForm()]);
 
     for (var i in formik.values) {
       var key = i;
@@ -93,8 +96,6 @@ export default function UserForm(props) {
       confirmPass.setFieldTouched(key, true);
     }
 
-    formik.setErrors(resp);
-    confirmPass.setErrors(respc);
     setUpload(true);
   }
 
@@ -210,12 +211,12 @@ export default function UserForm(props) {
               <TextField
                 fullWidth
                 label="Seleccione Rol"
-                name="rol"
+                name="Role"
                 onChange={formik.handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={formik.values.rol}
+                value={formik.values.Role}
                 variant="outlined"
               >
                 {roles.map((option) => (

@@ -9,7 +9,6 @@ import UserUploadImageCard from 'src/components/user/UploadImageCard';
 import { defaultUserIcon } from 'src/utils/defaultImages';
 export default function CrearUsuario(props) {
   const [userImage, setUserImage] = useState(defaultUserIcon);
-  const [imageChanged, setImageChanged] = useState(false);
 
   return (
     <>
@@ -32,10 +31,10 @@ export default function CrearUsuario(props) {
 
           <Grid container spacing={3} >
             <Grid item lg={4} md={6} xs={12} >
-              <UserUploadImageCard image={userImage} setImage={setUserImage} setImageChanged={setImageChanged} imageChanged={imageChanged} />
+              <UserUploadImageCard image={userImage} setImage={setUserImage} />
             </Grid>
             <Grid item lg={8} md={6} xs={12} >
-              <CreateUserForm type='Crear' finalFunction={createUser} userImage={userImage} imageChanged={imageChanged} />
+              <CreateUserForm type='Crear' finalFunction={createUser} userImage={userImage} />
             </Grid>
           </Grid>
         </Container>
