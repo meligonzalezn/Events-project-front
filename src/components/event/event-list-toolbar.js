@@ -36,7 +36,7 @@ import {
         <Button
           color="primary"
           variant="contained"
-          onClick={ () => router.push('/event/create_event')}
+          onClick={ () => router.push('/Crear_evento')}
         >
           Añadir evento
         </Button>

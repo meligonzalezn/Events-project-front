@@ -58,7 +58,7 @@ export const EventDetails = ({eventPlace}) => {
       if ( formik.isValid ) {
         await createEvent(formik).then((res) => console.log( "res: ",res));
         setLoading(!loading);
-        router.push('/event/events')
+        router.push('/Eventos')
         //router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
       }
 

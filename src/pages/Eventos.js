@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { Box, Container, Grid, Pagination,  CircularProgress } from "@mui/material";
 import { usePagination } from '@mui/material/Pagination';
-import { EventListToolbar } from "../../components/event/event-list-toolbar";
-import { EventCard } from "../../components/event/event-card";
-import { DashboardLayout } from "../../components/dashboard-layout";
+import { EventListToolbar } from "../components/event/event-list-toolbar";
+import { EventCard } from "../components/event/event-card";
+import { DashboardLayout } from "../components/dashboard-layout";
 //import { Pagination } from "../../components/pagination/pagination"
 import { useState, useEffect } from "react";
 import axios from 'axios'
