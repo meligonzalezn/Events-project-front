@@ -13,6 +13,7 @@ import { UserAdd as UserAddIcon } from '../icons/user-add';
 import { Users as UsersIcon } from '../icons/users';
 import { XCircle as XCircleIcon } from '../icons/x-circle';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 
@@ -39,7 +40,7 @@ const items = [
   },
   {
     href: '/Eventos',
-    icon: (<UserIcon fontSize="small" />),
+    icon: (<CalendarMonthIcon fontSize="small" />),
     title: 'Events'
   },
   {
