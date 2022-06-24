@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Box, Container, Grid, Pagination,  CircularProgress } from "@mui/material";
 import { usePagination } from '@mui/material/Pagination';
+import LinearLoader from '../components/loaders/LinealLoader';
 import { EventListToolbar } from "../components/event/event-list-toolbar";
 import { EventCard } from "../components/event/event-card";
 import { DashboardLayout } from "../components/dashboard-layout";
@@ -12,7 +13,7 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [eventsPerPage, setEventsPerPage] = useState(3);
+  const [eventsPerPage, setEventsPerPage] = useState(6);
   
   const handleChange = (event, value) => {
     setCurrentPage(value);
@@ -35,9 +36,10 @@ const Events = () => {
   const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
 
   return ( loading? 
-    <div style={{display:'flex', justifyContent:'center', alignItems:'center', margin:'auto'}}>
-      <CircularProgress></CircularProgress>  
-    </div>
+    <LinearLoader
+        upperMessage='Estamos cargando tus eventos'
+        lowerMessage='Por favor espera'
+      ></LinearLoader>
   :
     <>
       <Head>

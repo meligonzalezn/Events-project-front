@@ -1,5 +1,6 @@
 import { Divider, Grid, TextField, Card, CardHeader, CardContent } from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
+import LinearLoader from '../loaders/LinealLoader';
 import { useRef, useState } from "react";
 
 const MapComponent =  (props) => {
@@ -15,8 +16,10 @@ const MapComponent =  (props) => {
     });
 
     if (!isLoaded) {
-      return <Divider />;
-      //To do: Add something to show while map loads
+      return (<LinearLoader
+        upperMessage='Cargando mapa'
+      ></LinearLoader>);
+      
     }
 
     const setNewAddress = () => {
@@ -58,7 +61,7 @@ const MapComponent =  (props) => {
           </Autocomplete>
         </Grid>
         <Grid item md={12} xs={12}>
-          <GoogleMap center={markerValue} zoom={10} mapContainerStyle={{ width: "100%", height: "17rem" } }
+          <GoogleMap center={markerValue} zoom={17} mapContainerStyle={{ width: "100%", height: "17rem" } }
            options= {{streetViewControl: false}}>
             <Marker   position={markerValue} />
             {/* <Marker position={markerValue} draggable={true} onDrag={newDirection} /> */}

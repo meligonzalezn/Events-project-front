@@ -12,6 +12,7 @@ import {
   import { Search as SearchIcon } from '../../icons/search';
   import { Upload as UploadIcon } from '../../icons/upload';
   import { useRouter } from 'next/router';
+
   
   export const EventListToolbar = (props) => {
     const router = useRouter();
@@ -33,6 +34,7 @@ import {
           Eventos
         </Typography>
         <Box sx={{ m: 1 }}>
+        <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
         <Button
           color="primary"
           variant="contained"
@@ -40,6 +42,13 @@ import {
         >
           Añadir evento
         </Button>
+        <Button
+          color="primary"
+          variant="contained"
+        >
+          Actualizar evento
+        </Button>
+        </Box>
       </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
