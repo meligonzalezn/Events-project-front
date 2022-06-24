@@ -38,9 +38,9 @@ const items = [
     title: 'Noticias'
   },
   {
-    href: '/account',
+    href: '/Eventos',
     icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
+    title: 'Events'
   },
   {
     href: '/settings',
