@@ -1,0 +1,81 @@
+import Head from "next/head";
+import { Box, Container, Grid, Pagination,  CircularProgress } from "@mui/material";
+import { usePagination } from '@mui/material/Pagination';
+import { EventListToolbar } from "../components/event/event-list-toolbar";
+import { EventCard } from "../components/event/event-card";
+import { DashboardLayout } from "../components/dashboard-layout";
+//import { Pagination } from "../../components/pagination/pagination"
+import { useState, useEffect } from "react";
+import axios from 'axios'
+
+const Events = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [eventsPerPage, setEventsPerPage] = useState(3);
+  
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  useEffect(()=> {
+
+    const fetchEvents = async () => {
+        const res = await axios.get("http://localhost:8000/Events/")
+        setEvents(res.data)
+        setLoading(false)
+    }
+
+    fetchEvents();
+    
+  }, []);
+
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  return ( loading? 
+    <div style={{display:'flex', justifyContent:'center', alignItems:'center', margin:'auto'}}>
+      <CircularProgress></CircularProgress>  
+    </div>
+  :
+    <>
+      <Head>
+        <title>Eventos</title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8,
+        }}
+      >
+        <Container maxWidth={false}>
+          <EventListToolbar />
+          <Box sx={{ pt: 3 }}>
+            <Grid container spacing={3}>
+              {currentEvents.map((event, key) => (
+                <Grid item key={key} lg={4} md={6} xs={12}>
+                  <EventCard event={event} />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              pt: 3,
+            }}
+          >
+            <Pagination color="primary" page={currentPage} onChange={handleChange} count={Math.ceil(events.length / eventsPerPage)} size="small" />
+          </Box>
+        </Container>
+      </Box>
+    </>
+  );
+};
+
+Events.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+
+export default Events;
