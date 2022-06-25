@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import { useFormik } from 'formik';
 import { createNews, eventsTitle } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
-import { useRouter } from 'next/router';
 
 /** 
  * @param {} props  
@@ -17,7 +17,6 @@ export const NewsRegisterForm = (props) => {
   const [modal, setModal] = useState(false);
   const [modalError, setModalError] = useState(false);
   const date = new Date()
-  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -27,8 +26,8 @@ export const NewsRegisterForm = (props) => {
       state: 'Activo',
       event_name: '',
       media_file: null,
-      edition_date: date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
-
+      edition_date: date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate(),
+      finish_date: new Date()
     },
     validationSchema: Yup.object().shape({
       title: Yup
@@ -42,7 +41,9 @@ export const NewsRegisterForm = (props) => {
       media_file: Yup
         .mixed().required('Porfavor seleccione un archivo (jpg,jpeg,mp4,mkv)'),
       state: Yup
-        .string().required("Requerido") 
+        .string().required("Requerido"),
+      finish_date: Yup
+        .string().required("Requerido")
     })
   });
 
@@ -57,8 +58,10 @@ export const NewsRegisterForm = (props) => {
       try {
         if(!(formik.values.title == "" || formik.values.media_file == null || 
           formik.values.description == "" || formik.values.summary == "" ||
-          formik.values.state == "" || formik.values.event_name == "")){
+          formik.values.state == "" || formik.values.event_name == "" || 
+          formik.values.finish_date == "")){
             if(formik.isValid){
+              console.log("hola", formik.values)
               await createNews(formik)
               setModal(true)
               formik.resetForm()
@@ -113,7 +116,7 @@ export const NewsRegisterForm = (props) => {
 
         <CardContent>
           <Grid container spacing={3} >
-            <Grid item md={6} xs={12} >
+            <Grid item md={12} xs={12} >
               <TextField
                 fullWidth
                 error={Boolean(formik.touched.title && formik.errors.title)}
@@ -145,6 +148,13 @@ export const NewsRegisterForm = (props) => {
                   <MenuItem value={option} key={key}>{option}</MenuItem>
                 ))}
               </TextField>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <ResponsiveDatePicker 
+                name="finish_date" 
+                title="Fecha límite"  
+                onChange={(e) => {formik.setFieldValue('finish_date', e) && console.log("el formato", e)}}
+                value={formik.values.finish_date}/>
             </Grid>
 
             <Grid item md={12} xs={12} >

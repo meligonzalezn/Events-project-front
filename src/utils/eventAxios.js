@@ -110,4 +110,4 @@ async function enable(pk) {
 
 }
 
-export { createEvent, update }
+export { createEvent, update}

@@ -1,5 +1,21 @@
 import axios from 'axios'
 
+
+const formatDate = (date) => {
+  let d = new Date(date);
+  let month = (d.getMonth() + 1).toString();
+  let day = d.getDate().toString();
+  let year = d.getFullYear();
+  if (month.length < 2) {
+    month = '0' + month;
+  }
+  if (day.length < 2) {
+    day = '0' + day;
+  }
+  return [year, month, day].join('-');
+}
+
+
 /**
   * We get the events titles registered in database
   * @param {} 
@@ -20,7 +36,10 @@ async function eventsData () {
   }
 } 
 
+//Execute function
 eventsData()
+
+
 /**
  * This function creates JSON with the news's data and insert them to database
  * @param {} metadata
@@ -45,12 +64,15 @@ async function createNews(metadata) {
   if(data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
+  form_data.append('Finish_date', formatDate(data.finish_date))
+  console.log("los datos que se guardaron son: ", form_data.get("Finish_date"))
   const config = {
     'content-type': 'multipart/form-data'
 
   }
   try {
     const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
+      console.log("al crear la noticia se guardan ", res)
       return res;
     });
     return {request, eventsDataAll}
