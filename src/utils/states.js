@@ -1,12 +1,12 @@
 const states = [
     {
-      value: 'activo',
-      label: 'Activo'
+      value: "active",
+      label: "Activo",
     },
     {
-      value: 'inactivo',
-      label: 'Inactivo'
+      value: "inactive",
+      label: "Inactivo",
     },
   ];
 
-export {states}
+  export {states};
