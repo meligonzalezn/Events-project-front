@@ -1,13 +1,24 @@
 import Head from 'next/head';
 import { Box ,Container, Grid } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
-
+import { NewsUpdateForm } from 'src/components/news/news-update-form';
+import { newsData } from 'src/utils/newsAxios';
+import { useEffect } from 'react';
 /**
  * 
- * @param {{setSuccessfulRegister: function}} props 
+ * @param {{}} props 
  * @returns 
  */
+
+
+
 const UpdateNews = (props) => {
+
+  //Fetching titles of news
+  useEffect(() => {
+      newsData()
+  }, [])
+
   return(
   <>
     <Head>
@@ -29,7 +40,7 @@ const UpdateNews = (props) => {
             md={6}
             xs={12}
           >
-            {/*<NewsRegisterForm setSuccessfulRegister={props.setSuccessfulRegister}></NewsRegisterForm>*/}
+            <NewsUpdateForm />
           </Grid>
       </Container>
     </Box>

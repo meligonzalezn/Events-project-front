@@ -7,7 +7,9 @@ import { NewsListToolbar } from '../news/news-list-toolbar';
 import axios from 'axios';
 import NewsCard from '../news/news-card';
 import { findAllWithWord } from 'src/utils/searchInStrings';
-import CreateNews from 'src/pages/crear_noticia';
+import CreateNews from 'src/pages/CrearNoticia';
+import UpdateNews from 'src/pages/ActualizarNoticia';
+import { newsData } from 'src/utils/newsAxios';
 
 const NEWS_PER_PAGE = 6;
 
@@ -24,6 +26,7 @@ export default function ShowNews(props) {
   const [dataNews, setDataNews] = useState();
   const [searchedNews, setSearchedNews] = useState();
   const [createNews, setCreateNews] = useState(false);
+  const [updateNews, setUpdateNews] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +40,8 @@ export default function ShowNews(props) {
       setSearchedNews(dataN);
       setNumPages(Math.ceil(dataN.length / NEWS_PER_PAGE));
       setLoading(false);
+      //Fetching titles of news
+      newsData()
     }
 
     getNews();
@@ -106,9 +111,10 @@ export default function ShowNews(props) {
     )
   } else return (
     <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
-      {!createNews ?       
+      {(!createNews && !updateNews) ?       
         <Container maxWidth={false}>
-          <NewsListToolbar isEmployee={props.isEmployee} setCreateNewsState={setCreateNews} createNewsState={createNews} />
+          <NewsListToolbar isEmployee={props.isEmployee} setCreateNewsState={setCreateNews} createNewsState={createNews} 
+                          setUpdateNewsState={setUpdateNews} updateNewsState={updateNews} />
           <Box sx={{ mt: 3 }}>
             <Card>
               <CardContent>
@@ -143,7 +149,11 @@ export default function ShowNews(props) {
               onChange={handlePageChange} />
           </Box>
         </Container> : 
-        <CreateNews/>
+        <>
+          {(createNews == true && updateNews == false ) ? <CreateNews/> : null || 
+            (createNews == false && updateNews == true )  ? <UpdateNews/> : null
+          }
+        </>
     }
     </Box>
   )

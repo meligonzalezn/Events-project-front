@@ -7,9 +7,9 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import { useEffect, useState } from 'react';
 import { NewsDropdown } from './news-dropdown';
 import { ModalAlert } from '../modals/modalAlert';
-
+import { useRouter } from 'next/router';
 /** 
- * @param {{setSuccessfulRegister: function}} props  
+ * @param {{}} props  
  * @returns React component.
  */
 export const NewsUpdateForm = (props) => {
@@ -64,11 +64,6 @@ export const NewsUpdateForm = (props) => {
       try {
         await newsDataAll(newsName)
         setDisplayForm(true)
-        console.log("se supone que aquí funcionó bien la búsqueda")
-        //If display form state is true is because information was found successfully and loading has to stop
-        if(displayForm === true){
-          setLoadingSearch(false)
-        }
       }
       catch(error){
         console.log(error)
@@ -83,17 +78,28 @@ export const NewsUpdateForm = (props) => {
       const onSubmit = async () => {
         if (!data) return;
         try {
-          if (formik.isValid) {
-            await updateNewsData(formik);
-            setLoading(true)
-          }
-          setData(false);
+          if(!(formik.values.title == "" || formik.values.media_file == null || 
+            formik.values.description == "" || formik.values.summary == "" ||
+            formik.values.state == "" || formik.values.event_name == "")){
+              if(formik.isValid){
+                await updateNewsData(formik)
+                setModal(true)
+                formik.resetForm()
+              }
+              setData(false);
+              setLoading(false)
+              setModal(!modal)
+              setDisplayForm(false);
+              setLoadingSearch(false)
+              setNewsName('')
+            }
+          else {
+            setModalError(true);
+            }
           setLoading(false)
-          setModal(!modal)
-          setDisplayForm(false);
-          setLoadingSearch(false)
-          setNewsName('')
-        } catch (error) {
+          setData(false)
+          }
+        catch(error){
           console.log(error)
           setModalError(true)
           setLoading(false)
@@ -124,7 +130,7 @@ export const NewsUpdateForm = (props) => {
         <form
             autoComplete="off"
             {...props}>
-            <Card>
+            <Card sx={{width:'700px', margin:'auto'}}>
                 <CardHeader
                     subheader="Actualice la noticia que desee aquí"
                     title="Noticia"
@@ -303,13 +309,15 @@ export const NewsUpdateForm = (props) => {
             {(modal == true) ? <ModalAlert
               title={"Noticia actualizada"}
               message={"La noticia fue actualizada exitosamente!"} modalState={modal}
-              setSuccessfulRegister={props.setSuccessfulRegister}
+              modalSuccess={true} 
+              routeURL={"/Noticias"}
               setModalState={setModal} /> : null
             }
             {(modalError == true) ?
               <ModalAlert
                 title={"Noticia NO actualizada"}
                 message={"La noticia NO se pudo actualizar!"} modalState={modalError}
+                modalSuccess={false}
                 setModalState={setModalError} /> : null
             }   
         </form>

@@ -40,7 +40,7 @@ export const NewsRegisterForm = (props) => {
       summary: Yup
         .string().required('Porfavor ingrese el resumen'),
       media_file: Yup
-        .mixed().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)'),
+        .mixed().required('Porfavor seleccione un archivo (jpg,jpeg,mp4,mkv)'),
       state: Yup
         .string().required("Requerido") 
     })

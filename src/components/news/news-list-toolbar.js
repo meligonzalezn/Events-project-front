@@ -3,14 +3,13 @@ import { Box, Button, Typography, Modal } from '@mui/material';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useStyles } from '../modals/modalAlert';
-import { NewsUpdateForm } from './news-update-form';
 /**
  * 
- * @param {{setCreateNewsState: function, isEmployee: boolean, createNewsState: boolean}}
+ * @param {{setCreateNewsState: function, isEmployee: boolean, createNewsState: boolean, 
+ *          setUpdateNewsState: function, updateNewsState: boolean}}
  * @returns 
  */
 export const NewsListToolbar = (props) => {
-  const [updateNews, setUpdateNews] = useState(false);
   const styles = useStyles();
   const router = useRouter();
   const showButtons = () => {
@@ -18,7 +17,7 @@ export const NewsListToolbar = (props) => {
     return (
       <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
         <Button color="primary" variant="contained"
-          onClick={() => {router.push('/crear_noticia') && props.setCreateNewsState(!props.createNewsState)}}
+          onClick={() => {router.push('/CrearNoticia') && props.setCreateNewsState(!props.createNewsState)}}
         >
           Añadir noticia
         </Button>
@@ -26,7 +25,7 @@ export const NewsListToolbar = (props) => {
         <Button
           color="primary"
           variant="contained"
-          onClick={() => setUpdateNews(!updateNews)}
+          onClick={() => {router.push("/ActualizarNoticia") && props.setUpdateNewsState(!props.updateNewsState)}}
         >
           Actualizar noticia
         </Button>
@@ -48,13 +47,6 @@ export const NewsListToolbar = (props) => {
 
           {showButtons()}
         </Box> 
-      {(updateNews == true ) ? 
-          <Modal open={updateNews} onClose={() => setUpdateNews(!updateNews)}>
-              <div className={styles.modal} style={{width:'700px'}}>
-                <NewsUpdateForm />
-              </div>
-          </Modal>:<></>
-      }
     </Box>
   )
 };

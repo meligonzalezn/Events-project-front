@@ -1,5 +1,5 @@
 import { newsTitle } from "src/utils/newsAxios";
-import { Grid, TextField, MenuItem  } from '@mui/material';
+import { Grid, TextField, MenuItem } from '@mui/material';
 
 /**
  * Component that shows news registered in the database in a dropdown 
@@ -18,6 +18,11 @@ export const NewsDropdown = ({newsNameState, setNewsNameState}) => {
             value={newsNameState}
             onChange={(event) => setNewsNameState(event.target.value)}
             variant="outlined"
+            SelectProps={{
+                MenuProps: {
+                  sx: { maxHeight: '50%' }
+                }
+              }}
             >
             {newsTitle.map((option, key) => (
                 <MenuItem value={option} key={key}>{option}</MenuItem>

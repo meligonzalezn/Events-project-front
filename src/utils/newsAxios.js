@@ -81,7 +81,6 @@ async function newsData () {
   }
 } 
 
-newsData()
 
 /**
  * We get the news data completed to display in form
@@ -148,4 +147,4 @@ async function updateNewsData(metadata){
 }
 
 
-export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected, updateNewsData}
+export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected, updateNewsData, newsData}
