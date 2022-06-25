@@ -32,7 +32,7 @@ const App = (props) => {
       if (error == null) {
         //User has permissions ?
         has_perms(router.asPath).then(([_, error]) => {
-          console.log("actualizado ? ", _, error)
+          // console.log("actualizado ? ", _, error)
           setHasAccess(error == null)
           setLoading(false)
         })
