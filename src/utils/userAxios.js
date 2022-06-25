@@ -1,5 +1,6 @@
 import axios from 'axios'
 const { createHash } = require('crypto');
+import { defaultUserIcon } from './defaultImages';
 
 /**
  * Get all register of User from DB
@@ -28,27 +29,28 @@ async function getUsers() {
  */
 async function createUser(metadata) {
   const data = metadata.values;
-  const user = {
-    Name: data.Name + " " + data.LastName,
-    Email: data.Email,
-    Phone: data.Phone,
-    Role: data.Role,
-    State: true,
-    Password: createHash("sha256").update(data.password).digest("hex")
-  }
+
+  let form_data = new FormData();
+  form_data.append('Name', data.Name);
+  form_data.append('Last_name', data.LastName);
+  form_data.append('Email', data.Email);
+  form_data.append('Phone', data.Phone);
+  form_data.append('Role', data.Role);
+  form_data.append('State', true);
+  form_data.append('Password', data.Password);
+
+  if (data.Image != defaultUserIcon)
+    form_data.append('Media_file', data.Image, data.Image.name);
+
+  const config = { 'content-type': 'multipart/form-data' }
 
   try {
-
-    const request = await axios.post("http://localhost:8000/User/", user, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-
-    // console.log(request)
+    const request = await axios.post("http://localhost:8000/User/", form_data, config);
+    console.log(request);
     return [request, null];
   }
   catch (err) {
+    console.log(err);
     return [null, err]
   }
 }
