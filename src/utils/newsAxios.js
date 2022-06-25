@@ -141,17 +141,10 @@ async function updateNewsData(metadata){
     'content-type': 'multipart/form-data'
 
   }
-
-  try {
-    const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
-      return res;
-    });
-    return {request, eventsDataAllUpdate}
-  }
-  catch(error){
-    console.log(error)
-    return [null, error]
-  }
+  const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
+    return res;
+  });
+  return {request, eventsDataAllUpdate}
 }
 
 

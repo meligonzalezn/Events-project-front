@@ -64,6 +64,7 @@ export const NewsUpdateForm = (props) => {
       try {
         await newsDataAll(newsName)
         setDisplayForm(true)
+        console.log("se supone que aquí funcionó bien la búsqueda")
         //If display form state is true is because information was found successfully and loading has to stop
         if(displayForm === true){
           setLoadingSearch(false)

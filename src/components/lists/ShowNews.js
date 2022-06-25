@@ -7,6 +7,7 @@ import { NewsListToolbar } from '../news/news-list-toolbar';
 import axios from 'axios';
 import NewsCard from '../news/news-card';
 import { findAllWithWord } from 'src/utils/searchInStrings';
+import CreateNews from 'src/pages/crear_noticia';
 
 const NEWS_PER_PAGE = 6;
 
@@ -22,8 +23,7 @@ export default function ShowNews(props) {
   const [numPages, setNumPages] = useState(0);
   const [dataNews, setDataNews] = useState();
   const [searchedNews, setSearchedNews] = useState();
-  const [succesfulRegister, setSuccessfulRegister] = useState(false);
-
+  const [createNews, setCreateNews] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,12 +42,6 @@ export default function ShowNews(props) {
     getNews();
   }, [])
 
-  // Agrega noticias creadas sin recargar la página.
-  useEffect(() => {
-    if (succesfulRegister == false) return;
-
-    router.reload();
-  }, [succesfulRegister])
 
   /**
    * WIP
@@ -112,43 +106,45 @@ export default function ShowNews(props) {
     )
   } else return (
     <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
-      <Container maxWidth={false}>
-        <NewsListToolbar isEmployee={props.isEmployee} setSuccessfulRegister={setSuccessfulRegister} />
+      {!createNews ?       
+        <Container maxWidth={false}>
+          <NewsListToolbar isEmployee={props.isEmployee} setCreateNewsState={setCreateNews} createNewsState={createNews} />
+          <Box sx={{ mt: 3 }}>
+            <Card>
+              <CardContent>
+                <Box sx={{ maxWidth: 500 }}>
+                  <TextField
+                    onChange={handleSearchNews}
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SvgIcon fontSize="small" color="action">
+                            <SearchIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      )
+                    }}
+                    placeholder="Buscar noticia"
+                    variant="outlined"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
 
-        <Box sx={{ mt: 3 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ maxWidth: 500 }}>
-                <TextField
-                  onChange={handleSearchNews}
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SvgIcon fontSize="small" color="action">
-                          <SearchIcon />
-                        </SvgIcon>
-                      </InputAdornment>
-                    )
-                  }}
-                  placeholder="Buscar noticia"
-                  variant="outlined"
-                />
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-
-        <Box sx={{ pt: 3 }}>
-          <Grid container spacing={3}>
-            {displayPageElements()}
-          </Grid>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
-          <Pagination page={page} color="primary" count={numPages} size="small"
-            onChange={handlePageChange} />
-        </Box>
-      </Container>
+          <Box sx={{ pt: 3 }}>
+            <Grid container spacing={3}>
+              {displayPageElements()}
+            </Grid>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
+            <Pagination page={page} color="primary" count={numPages} size="small"
+              onChange={handlePageChange} />
+          </Box>
+        </Container> : 
+        <CreateNews/>
+    }
     </Box>
   )
 }

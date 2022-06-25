@@ -5,9 +5,10 @@ import { useFormik } from 'formik';
 import { createNews, eventsTitle } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
+import { useRouter } from 'next/router';
 
 /** 
- * @param {{setSuccessfulRegister: function}} props  
+ * @param {} props  
  * @returns React component.
  */
 export const NewsRegisterForm = (props) => {
@@ -16,7 +17,7 @@ export const NewsRegisterForm = (props) => {
   const [modal, setModal] = useState(false);
   const [modalError, setModalError] = useState(false);
   const date = new Date()
-
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -39,7 +40,9 @@ export const NewsRegisterForm = (props) => {
       summary: Yup
         .string().required('Porfavor ingrese el resumen'),
       media_file: Yup
-        .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)')
+        .mixed().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)'),
+      state: Yup
+        .string().required("Requerido") 
     })
   });
 
@@ -52,15 +55,24 @@ export const NewsRegisterForm = (props) => {
     const onSubmit = async () => {
       if (!data) return;
       try {
-        if (formik.isValid) {
-          await createNews(formik);
-          setLoading(true)
-        }
-        setData(false);
+        if(!(formik.values.title == "" || formik.values.media_file == null || 
+          formik.values.description == "" || formik.values.summary == "" ||
+          formik.values.state == "" || formik.values.event_name == "")){
+            if(formik.isValid){
+              await createNews(formik)
+              setModal(true)
+              formik.resetForm()
+            }
+            setLoading(false)
+            setData(false) 
+          }
+        else {
+          setModalError(true);
+          }
         setLoading(false)
-        setModal(!modal)
-        formik.resetForm();
-      } catch (error) {
+        setData(false)
+        }
+      catch(error){
         console.log(error)
         setModalError(true)
         setLoading(false)
@@ -76,13 +88,13 @@ export const NewsRegisterForm = (props) => {
    */
   const markErrors = async (e) => {
     const [resp] = await Promise.all([formik.validateForm]);
-
     for (var i in formik.values) {
       var key = i;
       formik.setFieldTouched(key, true);
     }
     formik.setErrors(resp);
     setData(true);
+    setLoading(!loading)
   }
 
 
@@ -92,7 +104,7 @@ export const NewsRegisterForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...props}
     >
-      <Card>
+      <Card sx={{width:'700px', margin:'auto'}}>
         <CardHeader
           subheader="Registre aquí una noticia"
           title="Noticia"
@@ -155,7 +167,7 @@ export const NewsRegisterForm = (props) => {
                 id="description"
                 maxRows={10000}
                 style={formik.errors.description && formik.touched.description ? {
-                  height: '9.3rem',
+                  height: '17rem',
                   padding: '0.75rem',
                   borderRadius: '0.6rem',
                   width: '100%',
@@ -171,7 +183,7 @@ export const NewsRegisterForm = (props) => {
                   resize:'vertical'
                 } :
                   {
-                    height: '9.3rem',
+                    height: '17rem',
                     padding: '0.75rem',
                     border: '0.8px solid #E3E3E3',
                     borderRadius: '0.6rem',
@@ -183,7 +195,8 @@ export const NewsRegisterForm = (props) => {
                     fontWeight: '400',
                     fontSize: '16px',
                     lineHeight: '24px',
-                    resize:'vertical'
+                    resize:'vertical', 
+                    overflow:'auto'
                   }}
                 aria-label="Descripcion"
                 name="description"
@@ -221,6 +234,9 @@ export const NewsRegisterForm = (props) => {
               }}>
               Subir archivo
             </label>
+            {formik.errors.media_file && formik.touched.media_file ?
+                <div style={{ color: '#e76063', fontSize: '0.75rem' }}>{formik.errors.media_file}</div>
+                : null}
           </div>
           <LoadingButton
             loading={loading}
@@ -231,16 +247,19 @@ export const NewsRegisterForm = (props) => {
           </LoadingButton>
         </Box>
       </Card>
-      {(modal == true) ? <ModalAlert
+      {(modal == true) ? 
+      <ModalAlert
         title={"Noticia registrada"}
         message={"La noticia fue registrada exitosamente!"} modalState={modal}
-        setSuccessfulRegister={props.setSuccessfulRegister}
+        modalSuccess={true} 
+        routeURL={"/Noticias"}
         setModalState={setModal} /> : null
       }
       {(modalError == true) ?
         <ModalAlert
           title={"Noticia NO registrada"}
-          message={"La noticia NO se pudo registrar!"} modalState={modalError}
+          message={"La noticia NO se pudo registrar, complete todos los campos"} modalState={modalError} 
+          modalSuccess={false}
           setModalState={setModalError} /> : null
       }
     </form>
