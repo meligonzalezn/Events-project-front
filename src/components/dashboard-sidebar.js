@@ -43,6 +43,11 @@ const items = [
     title: 'Account'
   },
   {
+    href: '/Escarapela',
+    icon: (<UserIcon fontSize="small" />),
+    title: 'Escarapela'
+  },
+  {
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
