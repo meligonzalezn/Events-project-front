@@ -7,8 +7,6 @@ import { NewsListToolbar } from '../news/news-list-toolbar';
 import axios from 'axios';
 import NewsCard from '../news/news-card';
 import { findAllWithWord } from 'src/utils/searchInStrings';
-import CreateNews from 'src/pages/CrearNoticia';
-import UpdateNews from 'src/pages/ActualizarNoticia';
 
 const NEWS_PER_PAGE = 6;
 
@@ -25,8 +23,7 @@ export default function ShowNews(props) {
   const [dataNews, setDataNews] = useState();
   const [searchedNews, setSearchedNews] = useState();
   const router = useRouter();
-  let date = new Date;
-  let currentDate = date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
+
 
   useEffect(() => {
     /**
@@ -35,8 +32,14 @@ export default function ShowNews(props) {
     const getNews = async () => {
       const request = await axios.get("http://localhost:8000/News/");
       const dataN = request.data;
-      const dataNfilter = dataN.filter((value) =>  value.State == "Activo" && currentDate >= value.Finish_date)
-      console.log("daklsdnlas", dataN)
+      const dataNfilter = dataN.filter((value) => {
+        var date = new Date;
+        var currentDate = date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
+        var valueDate = new Date (value.Finish_date)
+        var dateValues = valueDate.getFullYear() + '-' + parseInt(valueDate.getMonth() + 1) + "-" + parseInt(valueDate.getDate() + 1)
+        return (currentDate <= dateValues && value.State == 'Activo')
+      }
+         )
       setDataNews(dataNfilter);
       setSearchedNews(dataNfilter);
       setNumPages(Math.ceil(dataNfilter.length / NEWS_PER_PAGE));
@@ -45,7 +48,6 @@ export default function ShowNews(props) {
     }
     getNews();
   }, [])
-    console.log("holas, los valores son: ", dataNews)
 
   /**
    * WIP

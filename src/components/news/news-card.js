@@ -44,8 +44,16 @@ export default function NewsCard(props) {
               Editado: <b></b>
               {props.new.Edition_date}
             </Typography>
-          </Grid>
 
+          </Grid>
+          <Grid item sx={{ alignItems: "center", display: "flex", paddingTop:'5px !important' }}>
+            <ClockIcon color="action" />
+
+            <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
+              Finalización: <b></b>
+              {props.new.Finish_date}
+            </Typography>
+          </Grid>
           <Grid item sx={{ alignItems: 'center', display: 'flex' }}>
             <Button onClick={props.onClick} id={props.id} variant="outlined">Ver Más</Button>
           </Grid>
