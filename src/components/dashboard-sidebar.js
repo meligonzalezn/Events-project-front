@@ -13,6 +13,7 @@ import { UserAdd as UserAddIcon } from '../icons/user-add';
 import { Users as UsersIcon } from '../icons/users';
 import { XCircle as XCircleIcon } from '../icons/x-circle';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 
@@ -38,9 +39,9 @@ const items = [
     title: 'Noticias'
   },
   {
-    href: '/account',
-    icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
+    href: '/Eventos',
+    icon: (<CalendarMonthIcon fontSize="small" />),
+    title: 'Events'
   },
   {
     href: '/Escarapela',
@@ -53,19 +54,14 @@ const items = [
     title: 'Settings'
   },
   {
-    href: '/consultar_users',
+    href: '/Usuarios',
     icon: (<CogIcon fontSize="small" />),
     title: 'consultar'
   },
   {
-    href: '/login',
-    icon: (<LockIcon fontSize="small" />),
-    title: 'Login'
-  },
-  {
-    href: '/register',
+    href: '/loggout',
     icon: (<UserAddIcon fontSize="small" />),
-    title: 'Register'
+    title: 'Loggout'
   },
   {
     href: '/404',
