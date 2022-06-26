@@ -1,13 +1,15 @@
 import * as Yup from 'yup';
-import { newsDataAll, newsDataComplete, eventsTitle, eventSelected, updateNewsData } from 'src/utils/newsAxios';
+import axios from 'axios';
+import { newsDataAll, newsDataComplete, eventSelected, updateNewsData} from 'src/utils/newsAxios';
 import ReactDOM from 'react-dom';
 import { useFormik } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
+import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, Link } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { NewsDropdown } from './news-dropdown';
 import { ModalAlert } from '../modals/modalAlert';
-import { useRouter } from 'next/router';
+
 /** 
  * @param {{}} props  
  * @returns React component.
@@ -25,6 +27,7 @@ export const NewsUpdateForm = (props) => {
     const [nameEvent, setNameEvent] = useState(false);
     const [modal, setModal] = useState(false);
     const [modalError, setModalError] = useState(false);
+    const [eventsDataState, setEventsDataState] = useState();
     const states = ['Activo', 'Inactivo' ]
     const date = new Date()
     
@@ -38,7 +41,11 @@ export const NewsUpdateForm = (props) => {
       summary: Yup
         .string().required('Es necesario escribir un resumen'),
       media_file: Yup
-        .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)')     
+        .object().required('Porfavor seleccione al menos 1 archivo (jpg,jpeg,mp4,mkv)'), 
+      state: Yup
+        .string().required("Requerido"),
+      finish_date: Yup
+        .string().required("Requerido")    
     });
 
     const formik = useFormik({
@@ -51,8 +58,8 @@ export const NewsUpdateForm = (props) => {
           state: newsDataComplete.State,
           event_name: eventSelected,
           media_file: newsDataComplete.Media_file,  
-          edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate() 
-    
+          edition_date:date.getFullYear()+'-'+parseInt(date.getMonth()+1)+"-"+date.getDate(),
+          finish_date: newsDataComplete.Finish_date
         },
         validationSchema: validationSchema, 
       });   
@@ -71,6 +78,22 @@ export const NewsUpdateForm = (props) => {
     }
 
     useEffect(() => {
+      
+      /**
+      * We get the events registered in database
+      * @param {} 
+      */
+      const eventsData = async () => {
+        try {
+          const eventsRequest =  await axios.get("http://localhost:8000/Events/")
+          setEventsDataState(eventsRequest.data)
+        }
+        catch(error){
+          console.log(error)
+          return [null, error]
+        }
+      }
+
       /**
        * This function verifies all validations and insert a news to database
        * @returns 
@@ -78,27 +101,18 @@ export const NewsUpdateForm = (props) => {
       const onSubmit = async () => {
         if (!data) return;
         try {
-          if(!(formik.values.title == "" || formik.values.media_file == null || 
-            formik.values.description == "" || formik.values.summary == "" ||
-            formik.values.state == "" || formik.values.event_name == "")){
-              if(formik.isValid){
-                await updateNewsData(formik)
-                setModal(true)
-                formik.resetForm()
-              }
-              setData(false);
-              setLoading(false)
-              setModal(!modal)
-              setDisplayForm(false);
-              setLoadingSearch(false)
-              setNewsName('')
-            }
-          else {
-            setModalError(true);
-            }
-          setLoading(false)
-          setData(false)
+          if(formik.isValid){
+            await updateNewsData(formik)
+            setModal(true)
+            formik.resetForm()
           }
+          setData(false);
+          setLoading(false)
+          setModal(!modal)
+          setDisplayForm(false);
+          setLoadingSearch(false)
+          setNewsName('')
+        }
         catch(error){
           console.log(error)
           setModalError(true)
@@ -107,6 +121,7 @@ export const NewsUpdateForm = (props) => {
         }
       }
       onSubmit();
+      eventsData() 
     }, [data])
     
 
@@ -155,7 +170,7 @@ export const NewsUpdateForm = (props) => {
                 <div>
                   <CardContent> 
                       <Grid container spacing={3} >
-                        <Grid item md={6} xs={12} >
+                        <Grid item md={12} xs={12} >
                           <TextField
                             sx = {{marginTop:'0.9rem'}}
                             fullWidth
@@ -185,10 +200,18 @@ export const NewsUpdateForm = (props) => {
                             variant="outlined"
                             
                           >
-                            {eventsTitle.map((option, key) => (
-                              <MenuItem value={option} key={key}>{option}</MenuItem>
-                            ))}
+                            {eventsDataState ?
+                            eventsDataState.map((option, key) => (<MenuItem value={option.Title} key={key}>{option.Title}</MenuItem>)) : 
+                            <MenuItem disabled value="default" key="default"><CircularProgress sx={{margin:'auto'}}></CircularProgress> </MenuItem>
+                            }
                           </TextField>
+                        </Grid>
+                        <Grid item md={6} xs={12} sx = {{marginTop:'15px'}}>
+                          <ResponsiveDatePicker 
+                            name="finish_date" 
+                            title="Fecha límite"  
+                            onChange={(event) => formik.setFieldValue("finish_date", event)}
+                            value={formik.values.finish_date}/>
                         </Grid>
                         <Grid item md={6} xs={12} >
                           <TextField
@@ -255,7 +278,8 @@ export const NewsUpdateForm = (props) => {
                                 fontWeight: '400',
                                 fontSize: '16px',
                                 lineHeight: '24px',
-                                resize:'vertical'
+                                resize:'vertical', 
+                                overflow:'auto'
                               }}
                             aria-label="Descripcion"
                             name="description"

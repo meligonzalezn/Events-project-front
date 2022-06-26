@@ -9,7 +9,6 @@ import NewsCard from '../news/news-card';
 import { findAllWithWord } from 'src/utils/searchInStrings';
 import CreateNews from 'src/pages/CrearNoticia';
 import UpdateNews from 'src/pages/ActualizarNoticia';
-import { newsData } from 'src/utils/newsAxios';
 
 const NEWS_PER_PAGE = 6;
 
@@ -25,9 +24,9 @@ export default function ShowNews(props) {
   const [numPages, setNumPages] = useState(0);
   const [dataNews, setDataNews] = useState();
   const [searchedNews, setSearchedNews] = useState();
-  const [createNews, setCreateNews] = useState(false);
-  const [updateNews, setUpdateNews] = useState(false);
   const router = useRouter();
+  let date = new Date;
+  let currentDate = date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
 
   useEffect(() => {
     /**
@@ -36,17 +35,17 @@ export default function ShowNews(props) {
     const getNews = async () => {
       const request = await axios.get("http://localhost:8000/News/");
       const dataN = request.data;
-      setDataNews(dataN);
-      setSearchedNews(dataN);
-      setNumPages(Math.ceil(dataN.length / NEWS_PER_PAGE));
+      const dataNfilter = dataN.filter((value) =>  value.State == "Activo" && currentDate >= value.Finish_date)
+      console.log("daklsdnlas", dataN)
+      setDataNews(dataNfilter);
+      setSearchedNews(dataNfilter);
+      setNumPages(Math.ceil(dataNfilter.length / NEWS_PER_PAGE));
       setLoading(false);
-      //Fetching titles of news
-      newsData()
+      
     }
-
     getNews();
   }, [])
-
+    console.log("holas, los valores son: ", dataNews)
 
   /**
    * WIP
@@ -85,7 +84,6 @@ export default function ShowNews(props) {
 
     return elements;
   }
-
   /**
    * Cambia el valor de 'page' a la página seleccionada.
    * @param {useless} _ 
@@ -110,11 +108,9 @@ export default function ShowNews(props) {
       ></LinearLoader>
     )
   } else return (
-    <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
-      {(!createNews && !updateNews) ?       
+    <Box component="main" sx={{ flexGrow: 1, py: 4 }} >      
         <Container maxWidth={false}>
-          <NewsListToolbar isEmployee={props.isEmployee} setCreateNewsState={setCreateNews} createNewsState={createNews} 
-                          setUpdateNewsState={setUpdateNews} updateNewsState={updateNews} />
+          <NewsListToolbar isEmployee={props.isEmployee} />
           <Box sx={{ mt: 3 }}>
             <Card>
               <CardContent>
@@ -148,13 +144,7 @@ export default function ShowNews(props) {
             <Pagination page={page} color="primary" count={numPages} size="small"
               onChange={handlePageChange} />
           </Box>
-        </Container> : 
-        <>
-          {(createNews == true && updateNews == false ) ? <CreateNews/> : null || 
-            (createNews == false && updateNews == true )  ? <UpdateNews/> : null
-          }
-        </>
-    }
+        </Container> 
     </Box>
   )
 }

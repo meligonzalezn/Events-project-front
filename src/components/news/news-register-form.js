@@ -1,14 +1,15 @@
+import axios from 'axios'
 import * as Yup from 'yup';
-import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, CircularProgress } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import { useFormik } from 'formik';
-import { createNews, eventsTitle } from 'src/utils/newsAxios';
+import { createNews} from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
 
 /** 
- * @param {} props  
+ * @param {{}} props  
  * @returns React component.
  */
 export const NewsRegisterForm = (props) => {
@@ -16,6 +17,7 @@ export const NewsRegisterForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalError, setModalError] = useState(false);
+  const [eventsDataState, setEventsDataState] = useState('')
   const date = new Date()
   const formik = useFormik({
     initialValues: {
@@ -48,7 +50,22 @@ export const NewsRegisterForm = (props) => {
   });
 
 
+
   useEffect(() => {
+    /**
+    * We get the events registered in database
+    * @param {} 
+    */
+    const eventsData = async () => {
+      try {
+        const eventsRequest =  await axios.get("http://localhost:8000/Events/")
+        setEventsDataState(eventsRequest.data)
+      }
+      catch(error){
+        console.log(error)
+        return [null, error]
+      }
+    }
     /**
      * This function verifies all validations and insert a news to database
      * @returns 
@@ -61,7 +78,6 @@ export const NewsRegisterForm = (props) => {
           formik.values.state == "" || formik.values.event_name == "" || 
           formik.values.finish_date == "")){
             if(formik.isValid){
-              console.log("hola", formik.values)
               await createNews(formik)
               setModal(true)
               formik.resetForm()
@@ -83,6 +99,7 @@ export const NewsRegisterForm = (props) => {
       }
     }
     onSubmit();
+    eventsData();
   }, [data])
 
   /**
@@ -143,10 +160,11 @@ export const NewsRegisterForm = (props) => {
                 value={formik.values.event_name}
                 onChange={formik.handleChange}
                 variant="outlined"
-              >
-                {eventsTitle.map((option, key) => (
-                  <MenuItem value={option} key={key}>{option}</MenuItem>
-                ))}
+              > 
+                {eventsDataState ?
+                eventsDataState.map((option, key) => (<MenuItem value={option.Title} key={key}>{option.Title}</MenuItem>)) : 
+                <MenuItem disabled value="default" key="default"><CircularProgress sx={{margin:'auto'}}></CircularProgress> </MenuItem>
+                }
               </TextField>
             </Grid>
             <Grid item md={6} xs={12}>

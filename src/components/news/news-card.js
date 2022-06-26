@@ -1,4 +1,5 @@
 import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Clock as ClockIcon } from '../../icons/clock';
 
 /**
@@ -7,7 +8,6 @@ import { Clock as ClockIcon } from '../../icons/clock';
  * @returns React Component
  */
 export default function NewsCard(props) {
-
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <CardContent sx={{ padding: 0 }}>

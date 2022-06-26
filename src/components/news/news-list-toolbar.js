@@ -5,8 +5,7 @@ import { useRouter } from 'next/router';
 import { useStyles } from '../modals/modalAlert';
 /**
  * 
- * @param {{setCreateNewsState: function, isEmployee: boolean, createNewsState: boolean, 
- *          setUpdateNewsState: function, updateNewsState: boolean}}
+ * @param {{isEmployee: boolean}}
  * @returns 
  */
 export const NewsListToolbar = (props) => {
@@ -17,7 +16,7 @@ export const NewsListToolbar = (props) => {
     return (
       <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
         <Button color="primary" variant="contained"
-          onClick={() => {router.push('/CrearNoticia') && props.setCreateNewsState(!props.createNewsState)}}
+          onClick={() => {router.push('/CrearNoticia') }}
         >
           Añadir noticia
         </Button>
@@ -25,7 +24,7 @@ export const NewsListToolbar = (props) => {
         <Button
           color="primary"
           variant="contained"
-          onClick={() => {router.push("/ActualizarNoticia") && props.setUpdateNewsState(!props.updateNewsState)}}
+          onClick={() => {router.push("/ActualizarNoticia")}}
         >
           Actualizar noticia
         </Button>

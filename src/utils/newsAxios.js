@@ -17,30 +17,6 @@ const formatDate = (date) => {
 
 
 /**
-  * We get the events titles registered in database
-  * @param {} 
-*/
-let eventsTitle = []
-async function eventsData () {
-  try{
-    await axios.get("http://localhost:8000/Events/").then((res) => {
-      res.data.map((value) => {
-        eventsTitle.push(value.Title)
-      })
-    })
-    return {eventsTitle};
-  }
-  catch(error){
-    console.log(error)
-    return [null, error]
-  }
-} 
-
-//Execute function
-eventsData()
-
-
-/**
  * This function creates JSON with the news's data and insert them to database
  * @param {} metadata
  */
@@ -65,14 +41,12 @@ async function createNews(metadata) {
     form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
   form_data.append('Finish_date', formatDate(data.finish_date))
-  console.log("los datos que se guardaron son: ", form_data.get("Finish_date"))
   const config = {
     'content-type': 'multipart/form-data'
 
   }
   try {
     const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
-      console.log("al crear la noticia se guardan ", res)
       return res;
     });
     return {request, eventsDataAll}
@@ -82,27 +56,6 @@ async function createNews(metadata) {
     return [null, error]
   }
 }
-
-/**
-  * We get the news titles registered in database
-  * @param {}
-*/
-let newsTitle = []
-async function newsData () {
-  try{
-    await axios.get("http://localhost:8000/News/").then((res) => {
-      res.data.map((value) => {
-        newsTitle.push(value.Title)
-      })
-    })
-    return {newsTitle};
-  }
-  catch(error){
-    console.log(error)
-    return [null, error]
-  }
-} 
-
 
 /**
  * We get the news data completed to display in form
@@ -158,6 +111,7 @@ async function updateNewsData(metadata){
       form_data.append('Media_file', data.media_file, data.media_file.name)
     }
   form_data.append('Edition_date', data.edition_date)
+  form_data.append('Finish_date', formatDate(data.finish_date))
   const config = {
     'content-type': 'multipart/form-data'
 
@@ -169,4 +123,4 @@ async function updateNewsData(metadata){
 }
 
 
-export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected, updateNewsData, newsData}
+export { createNews, newsDataAll, newsDataComplete, eventSelected, updateNewsData}

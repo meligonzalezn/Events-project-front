@@ -14,11 +14,6 @@ import { useEffect } from 'react';
 
 const UpdateNews = (props) => {
 
-  //Fetching titles of news
-  useEffect(() => {
-      newsData()
-  }, [])
-
   return(
   <>
     <Head>
