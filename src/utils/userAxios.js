@@ -30,6 +30,7 @@ async function getUsers() {
 async function createUser(metadata) {
   const data = metadata.values;
 
+  let cipheredPassword = createHash("sha256").update(data.password).digest("hex")
   let form_data = new FormData();
   form_data.append('Name', data.Name);
   form_data.append('Last_name', data.LastName);
@@ -37,7 +38,7 @@ async function createUser(metadata) {
   form_data.append('Phone', data.Phone);
   form_data.append('Role', data.Role);
   form_data.append('State', true);
-  form_data.append('Password', data.Password);
+  form_data.append('Password', cipheredPassword);
 
   if (data.Image != defaultUserIcon)
     form_data.append('Media_file', data.Image, data.Image.name);
@@ -46,7 +47,6 @@ async function createUser(metadata) {
 
   try {
     const request = await axios.post("http://localhost:8000/User/", form_data, config);
-    console.log(request);
     return [request, null];
   }
   catch (err) {
