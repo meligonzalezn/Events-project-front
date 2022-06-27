@@ -44,6 +44,11 @@ const items = [
     title: 'Events'
   },
   {
+    href: '/Escarapela',
+    icon: (<UserIcon fontSize="small" />),
+    title: 'Escarapela'
+  },
+  {
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
