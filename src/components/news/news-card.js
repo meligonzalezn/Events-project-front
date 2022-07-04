@@ -1,4 +1,5 @@
 import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Clock as ClockIcon } from '../../icons/clock';
 
 /**
@@ -7,7 +8,6 @@ import { Clock as ClockIcon } from '../../icons/clock';
  * @returns React Component
  */
 export default function NewsCard(props) {
-
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <CardContent sx={{ padding: 0 }}>
@@ -36,16 +36,23 @@ export default function NewsCard(props) {
       <Divider />
 
       <Box sx={{ p: 2 }}>
-        <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
-          <Grid item sx={{ alignItems: 'center', display: 'flex' }}>
-            <ClockIcon color="action" />
-
-            <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
-              Editado: <b></b>
-              {props.new.Edition_date}
-            </Typography>
+        <Grid container spacing={2} sx={{display:'flex', justifyContent:'space-between'}}>
+          <Grid item sx={{ display: 'flex',  flexDirection:'column'}}>
+            <Grid item sx={{display: 'flex', alignItems:'center'}}>
+              <ClockIcon color="action" />
+              <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
+                Editado: <b></b>
+                {props.new.Edition_date}
+              </Typography>
+            </Grid>
+            <Grid item sx={{display: 'flex', alignItems:'center', paddingTop:'4px'}}>
+              <ClockIcon color="action" />
+              <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
+                Finalización: <b></b>
+                {props.new.Finish_date}
+              </Typography>
+            </Grid>
           </Grid>
-
           <Grid item sx={{ alignItems: 'center', display: 'flex' }}>
             <Button onClick={props.onClick} id={props.id} variant="outlined">Ver Más</Button>
           </Grid>

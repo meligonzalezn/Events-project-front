@@ -5,7 +5,6 @@ import LinearLoader from '../components/loaders/LinealLoader';
 import { EventListToolbar } from "../components/event/event-list-toolbar";
 import { EventCard } from "../components/event/event-card";
 import { DashboardLayout } from "../components/dashboard-layout";
-//import { Pagination } from "../../components/pagination/pagination"
 import { useState, useEffect } from "react";
 import axios from 'axios'
 

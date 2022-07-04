@@ -1,5 +1,6 @@
-import { newsTitle } from "src/utils/newsAxios";
-import { Grid, TextField, MenuItem  } from '@mui/material';
+import axios from "axios";
+import { Grid, TextField, MenuItem, CircularProgress } from '@mui/material';
+import { useEffect, useState } from "react";
 
 /**
  * Component that shows news registered in the database in a dropdown 
@@ -7,6 +8,26 @@ import { Grid, TextField, MenuItem  } from '@mui/material';
  * @returns {React Component}
  */
 export const NewsDropdown = ({newsNameState, setNewsNameState}) => {
+    const [newsData, setNewsData] = useState();
+    /**
+    * We get the news registered in database
+    * @param {} 
+    */
+       useEffect(() => {
+
+        const newsData = async () => {
+          try {
+            const newsRequest =  await axios.get("http://localhost:8000/News/")
+            setNewsData(newsRequest.data)
+          }
+          catch(error){
+            console.log(error)
+            return [null, error]
+          }
+        }
+        newsData() 
+      }, [])
+
     return (
         <Grid item md={12} xs={12} >
             <TextField
@@ -18,10 +39,16 @@ export const NewsDropdown = ({newsNameState, setNewsNameState}) => {
             value={newsNameState}
             onChange={(event) => setNewsNameState(event.target.value)}
             variant="outlined"
+            SelectProps={{
+                MenuProps: {
+                  sx: { maxHeight: '50%' }
+                }
+              }}
             >
-            {newsTitle.map((option, key) => (
-                <MenuItem value={option} key={key}>{option}</MenuItem>
-            ))}
+            {newsData ? newsData.map((option, key) => (
+                <MenuItem value={option.Title} key={key}>{option.Title}</MenuItem>
+            )): <MenuItem disabled value="default" key="default"><CircularProgress sx={{margin:'auto'}}></CircularProgress></MenuItem>}    
+
             </TextField>
         </Grid>
     )

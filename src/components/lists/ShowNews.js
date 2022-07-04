@@ -22,9 +22,8 @@ export default function ShowNews(props) {
   const [numPages, setNumPages] = useState(0);
   const [dataNews, setDataNews] = useState();
   const [searchedNews, setSearchedNews] = useState();
-  const [succesfulRegister, setSuccessfulRegister] = useState(false);
-
   const router = useRouter();
+
 
   useEffect(() => {
     /**
@@ -33,21 +32,22 @@ export default function ShowNews(props) {
     const getNews = async () => {
       const request = await axios.get("http://localhost:8000/News/");
       const dataN = request.data;
-      setDataNews(dataN);
-      setSearchedNews(dataN);
-      setNumPages(Math.ceil(dataN.length / NEWS_PER_PAGE));
+      const dataNfilter = dataN.filter((value) => {
+        var date = new Date;
+        var valueDate = new Date (value.Finish_date)
+        var dateValues = valueDate.getFullYear() + '-' + parseInt(valueDate.getMonth() + 1) + "-" + parseInt(valueDate.getDate() + 1)
+        var finishDateFinal = new Date(dateValues)
+        return (value.State == 'Activo' && !(date.getTime() >= finishDateFinal.getTime()))
+        }
+      )
+      setDataNews(dataNfilter);
+      setSearchedNews(dataNfilter);
+      setNumPages(Math.ceil(dataNfilter.length / NEWS_PER_PAGE));
       setLoading(false);
+      
     }
-
     getNews();
   }, [])
-
-  // Agrega noticias creadas sin recargar la página.
-  useEffect(() => {
-    if (succesfulRegister == false) return;
-
-    router.reload();
-  }, [succesfulRegister])
 
   /**
    * WIP
@@ -86,7 +86,6 @@ export default function ShowNews(props) {
 
     return elements;
   }
-
   /**
    * Cambia el valor de 'page' a la página seleccionada.
    * @param {useless} _ 
@@ -111,44 +110,43 @@ export default function ShowNews(props) {
       ></LinearLoader>
     )
   } else return (
-    <Box component="main" sx={{ flexGrow: 1, py: 4 }} >
-      <Container maxWidth={false}>
-        <NewsListToolbar isEmployee={props.isEmployee} setSuccessfulRegister={setSuccessfulRegister} />
+    <Box component="main" sx={{ flexGrow: 1, py: 4 }} >      
+        <Container maxWidth={false}>
+          <NewsListToolbar isEmployee={props.isEmployee} />
+          <Box sx={{ mt: 3 }}>
+            <Card>
+              <CardContent>
+                <Box sx={{ maxWidth: 500 }}>
+                  <TextField
+                    onChange={handleSearchNews}
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SvgIcon fontSize="small" color="action">
+                            <SearchIcon />
+                          </SvgIcon>
+                        </InputAdornment>
+                      )
+                    }}
+                    placeholder="Buscar noticia"
+                    variant="outlined"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
 
-        <Box sx={{ mt: 3 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ maxWidth: 500 }}>
-                <TextField
-                  onChange={handleSearchNews}
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SvgIcon fontSize="small" color="action">
-                          <SearchIcon />
-                        </SvgIcon>
-                      </InputAdornment>
-                    )
-                  }}
-                  placeholder="Buscar noticia"
-                  variant="outlined"
-                />
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-
-        <Box sx={{ pt: 3 }}>
-          <Grid container spacing={3}>
-            {displayPageElements()}
-          </Grid>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
-          <Pagination page={page} color="primary" count={numPages} size="small"
-            onChange={handlePageChange} />
-        </Box>
-      </Container>
+          <Box sx={{ pt: 3 }}>
+            <Grid container spacing={3}>
+              {displayPageElements()}
+            </Grid>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', pt: 3 }}>
+            <Pagination page={page} color="primary" count={numPages} size="small"
+              onChange={handlePageChange} />
+          </Box>
+        </Container> 
     </Box>
   )
 }

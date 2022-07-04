@@ -1,26 +1,21 @@
 import axios from 'axios'
 
-/**
-  * We get the events titles registered in database
-  * @param {} 
-*/
-let eventsTitle = []
-async function eventsData () {
-  try{
-    await axios.get("http://localhost:8000/Events/").then((res) => {
-      res.data.map((value) => {
-        eventsTitle.push(value.Title)
-      })
-    })
-    return {eventsTitle};
-  }
-  catch(error){
-    console.log(error)
-    return [null, error]
-  }
-} 
 
-eventsData()
+const formatDate = (date) => {
+  let d = new Date(date);
+  let month = (d.getMonth() + 1).toString();
+  let day = d.getDate().toString();
+  let year = d.getFullYear();
+  if (month.length < 2) {
+    month = '0' + month;
+  }
+  if (day.length < 2) {
+    day = '0' + day;
+  }
+  return [year, month, day].join('-');
+}
+
+
 /**
  * This function creates JSON with the news's data and insert them to database
  * @param {} metadata
@@ -45,6 +40,7 @@ async function createNews(metadata) {
   if(data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
+  form_data.append('Finish_date', formatDate(data.finish_date))
   const config = {
     'content-type': 'multipart/form-data'
 
@@ -60,28 +56,6 @@ async function createNews(metadata) {
     return [null, error]
   }
 }
-
-/**
-  * We get the news titles registered in database
-  * @param {}
-*/
-let newsTitle = []
-async function newsData () {
-  try{
-    await axios.get("http://localhost:8000/News/").then((res) => {
-      res.data.map((value) => {
-        newsTitle.push(value.Title)
-      })
-    })
-    return {newsTitle};
-  }
-  catch(error){
-    console.log(error)
-    return [null, error]
-  }
-} 
-
-newsData()
 
 /**
  * We get the news data completed to display in form
@@ -137,22 +111,16 @@ async function updateNewsData(metadata){
       form_data.append('Media_file', data.media_file, data.media_file.name)
     }
   form_data.append('Edition_date', data.edition_date)
+  form_data.append('Finish_date', formatDate(data.finish_date))
   const config = {
     'content-type': 'multipart/form-data'
 
   }
-
-  try {
-    const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
-      return res;
-    });
-    return {request, eventsDataAllUpdate}
-  }
-  catch(error){
-    console.log(error)
-    return [null, error]
-  }
+  const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
+    return res;
+  });
+  return {request, eventsDataAllUpdate}
 }
 
 
-export { createNews, eventsData, eventsTitle, newsTitle, newsDataAll, newsDataComplete, eventSelected, updateNewsData}
+export { createNews, newsDataAll, newsDataComplete, eventSelected, updateNewsData}
