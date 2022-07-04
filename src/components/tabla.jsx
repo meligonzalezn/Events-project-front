@@ -9,6 +9,8 @@ import Paper from '@mui/material/Paper';
 import DesplegableTabla from './desplegableTabla';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { capitalizeWord } from 'src/utils/string-processing';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 /**
  * Make a table with next fields.
@@ -24,9 +26,6 @@ import { capitalizeWord } from 'src/utils/string-processing';
  */
 export default function BasicTable(props) {
   let rows = props.rows;
-  const onClick = () => {
-    console.log("aaaa")
-  }
   return (
     <TableContainer component={Paper} sx={{ marginTop: "30px" }}>
       {console.log(rows)}
@@ -46,11 +45,15 @@ export default function BasicTable(props) {
                 key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell component="th" scope="row" onClick={onClick} style={{ cursor: 'pointer' }}>
-                  {capitalizeWord(row.Name)}
+                <TableCell component="th" scope="row" style={{ cursor: 'pointer' }}>
+                  <Link href={`/Usuarios/${row.id}/Editar`}>
+                    {capitalizeWord(row.Name)}
+                  </Link>
                 </TableCell>
-                <TableCell align='right' component="th" scope="row" onClick={onClick} style={{ cursor: 'pointer' }}>
-                  {capitalizeWord(row.Role)}
+                <TableCell align='right' component="th" scope="row" style={{ cursor: 'pointer' }}>
+                  <Link href={`/Usuarios/${row.id}/Editar`}>
+                    {capitalizeWord(row.Role)}
+                  </Link>
                 </TableCell>
                 <TableCell align='right'>
                   <DesplegableTabla id={row.id}></DesplegableTabla>
