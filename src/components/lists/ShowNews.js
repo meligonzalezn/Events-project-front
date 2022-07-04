@@ -34,12 +34,12 @@ export default function ShowNews(props) {
       const dataN = request.data;
       const dataNfilter = dataN.filter((value) => {
         var date = new Date;
-        var currentDate = date.getFullYear() + '-' + parseInt(date.getMonth() + 1) + "-" + date.getDate()
         var valueDate = new Date (value.Finish_date)
         var dateValues = valueDate.getFullYear() + '-' + parseInt(valueDate.getMonth() + 1) + "-" + parseInt(valueDate.getDate() + 1)
-        return (currentDate <= dateValues && value.State == 'Activo')
-      }
-         )
+        var finishDateFinal = new Date(dateValues)
+        return (value.State == 'Activo' && !(date.getTime() >= finishDateFinal.getTime()))
+        }
+      )
       setDataNews(dataNfilter);
       setSearchedNews(dataNfilter);
       setNumPages(Math.ceil(dataNfilter.length / NEWS_PER_PAGE));
