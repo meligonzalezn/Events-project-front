@@ -4,6 +4,13 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import CardCostAndPay from './CardCostAndPay';
+import PayCard from '../forms/PayCard';
 
 export default function AccordionPayMethods() {
   const [expanded, setExpanded] = React.useState(false);
@@ -12,56 +19,60 @@ export default function AccordionPayMethods() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  /**
+   * Obtiene el icono a desplegar según la selección del usuario.
+   */
+  const getIcon = (componentName) => {
+    if (expanded == componentName) return <RadioButtonCheckedIcon />;
+    return <RadioButtonUncheckedIcon />;
+  }
+
   return (
     <div>
       <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={getIcon('panel1')}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            General settings
+          <CreditCardIcon />
+          <Typography sx={{ width: '100%', flexShrink: 0 }}>
+            &nbsp;&nbsp;&nbsp;&nbsp;Tarjeta de Crédito
           </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>
         </AccordionSummary>
+
         <AccordionDetails>
-          <Typography>
-            Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-            Aliquam eget maximus est, id dignissim quam.
-          </Typography>
+          <PayCard />
         </AccordionDetails>
       </Accordion>
+
       <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={getIcon('panel2')}
           aria-controls="panel2bh-content"
           id="panel2bh-header"
         >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>Users</Typography>
-          <Typography sx={{ color: 'text.secondary' }}>
-            You are currently not an owner
+          <CreditCardIcon />
+          <Typography sx={{ width: '100%', flexShrink: 0 }}>
+            &nbsp;&nbsp;&nbsp;&nbsp;Tarjeta de Débito
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
-            varius pulvinar diam eros in elit. Pellentesque convallis laoreet
-            laoreet.
-          </Typography>
+          <PayCard />
         </AccordionDetails>
       </Accordion>
+
       <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={getIcon('panel3')}
           aria-controls="panel3bh-content"
           id="panel3bh-header"
         >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            Advanced settings
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>
-            Filtering has been entirely disabled for whole web server
+
+          <AccountBalanceIcon />
+
+          <Typography sx={{ width: '100%', flexShrink: 0 }}>
+            &nbsp;&nbsp;&nbsp;&nbsp;Transferencia desde tu banco con PSE
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -71,13 +82,18 @@ export default function AccordionPayMethods() {
           </Typography>
         </AccordionDetails>
       </Accordion>
+
       <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={getIcon('panel4')}
           aria-controls="panel4bh-content"
           id="panel4bh-header"
         >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>Personal data</Typography>
+          <LocalAtmIcon />
+
+          <Typography sx={{ width: '100%', flexShrink: 0 }}>
+            &nbsp;&nbsp;&nbsp;&nbsp;Efectivo
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
