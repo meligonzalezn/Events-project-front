@@ -26,7 +26,7 @@ export default function UserUploadImageCard(props) {
         <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
           <Avatar src={props.image != defaultUserIcon ? URL.createObjectURL(props.image) : props.image} sx={{ height: 128, mb: 2, width: 128 }} />
           <Typography align='center' color="textSecondary" variant="body2" >
-            Inserte aquí la imagen que desea ver de perfil
+            Inserte su foto de perfil
           </Typography>
         </Box>
       </CardContent>
