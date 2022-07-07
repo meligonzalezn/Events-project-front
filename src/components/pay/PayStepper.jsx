@@ -30,8 +30,9 @@ export default function PayStepper(props) {
     props.setValidStep(false);
   };
 
-  const handleReset = () => {
+  const handleBackToOrigin = () => {
     props.setActiveStep(0);
+    // ! Volver a la página de evento en la que se estaba.
   };
 
   return (
@@ -39,11 +40,11 @@ export default function PayStepper(props) {
       {props.activeStep === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+            Todos los pasos han sido completados exitosamente.
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
+            <Button onClick={handleBackToOrigin}>Volver al inicio</Button>
           </Box>
         </React.Fragment>
       ) : (
@@ -51,7 +52,7 @@ export default function PayStepper(props) {
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
-              disabled={props.activeStep === 0}
+              disabled={props.activeStep === 0 || props.activeStep >= 1}
               onClick={handleBack}
               sx={{ mr: 1 }}
             >
