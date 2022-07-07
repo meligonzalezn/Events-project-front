@@ -2,10 +2,15 @@ import * as Yup from 'yup';
 import { CardContent, Divider, Grid, TextField } from '@mui/material';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
+import { splitYearAndMonth } from 'src/utils/string-processing';
 
 const IDType = [{
   value: "CC",
   label: "CC"
+},
+{
+  value: "CE",
+  label: "CE"
 },
 {
   value: "TI",
@@ -15,44 +20,62 @@ const IDType = [{
 /**
  * 
  * 
- * @param {{setValidStep: function, validateData: boolean,
- *          setValidateData: function}} props 
+ * @param {{setValidStep: function, validateCard: boolean,
+ *          setValidateCard: function, cardType: string,
+ *          cardTypeSelected: string}} props 
  * @returns React component.
  */
 export default function PayCard(props) {
   const [upload, setUpload] = useState(false);
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+
+  Yup.addMethod(Yup.string, "validDate", function () {
+    return this.test(`validDate`, "La fecha de expiración no puede ser anterior a la fecha actual", function () {
+      const yearAndMonth = splitYearAndMonth(formik.values.Expiration);
+      const year = yearAndMonth[0];
+      const month = yearAndMonth[1];
+      if (year < currentYear || (year == currentYear && month < currentMonth)) {
+        return false;
+      }
+      return true;
+    })
+  })
+
+  Yup.addMethod(Yup.string, "cardNumber", function () {
+    return this.test(`cardNumber`, "El número de la tarjeta no es válido", function () {
+      return /^[0-9]+$/.test(formik.values.CardNumber);
+    })
+  })
+
   const formik = useFormik({
     initialValues: {
       CardNumber: '',
       FullName: '',
-      Expiration: '2022-07',
+      Expiration: `${currentYear}-${currentMonth > 9 ? currentMonth : '0' + currentMonth.toString()}`,
       CVV: '',
       IDType: 'CC',
       IDNumber: '',
     },
     validationSchema: Yup.object().shape({
       CardNumber: Yup
-        .string().required('Es necesario digitar el número de su tarjeta').max(16).min(16),
+        .string().required('Es necesario digitar el número de su tarjeta').cardNumber().max(16, "El número de la tarjeta debe constar de 16 digitos").min(16, "El número de la tarjeta debe constar de 16 digitos"),
       FullName: Yup
         .string().required('Es necesario digitar su nombre completo').max(120).min(6),
-      // Expiration: Yup
-      //   .required('Es necesario especificar la fecha de expiración'),
       CVV: Yup
-        .number().positive().required('Se precisa del CVV para efectuar el pago').max(5).min(3),
+        .string().required('Se precisa del CVV para efectuar el pago').max(5).min(3),
       IDNumber: Yup
-        .number().positive().required('Es necesario digitar el número de su identificacion').max(20).min(4),
+        .string().required('Es necesario digitar el número de su identificacion').max(20).min(4),
+      Expiration: Yup
+        .string().validDate()
     })
   });
-
-  useEffect(() => {
-    console.log(formik.values.Expiration)
-  }, [formik.values.Expiration])
 
   useEffect(() => {
     /**
    * Verifica si se cumplen las validaciones establecidas e inserta al nuevo usuario en la BD.
    */
-    const validateAndUploadData = async () => {
+    const validateAndUploadData = () => {
       if (!upload) return;
 
       if (formik.isValid) {
@@ -71,23 +94,20 @@ export default function PayCard(props) {
    * los campos que existen. 
    */
     const markErrors = async () => {
-      if (!props.validateData) return;
-
-      // ! Process cradNumber and ExpirationDate errors here. 
+      if (!props.validateCard || props.cardType !== props.cardTypeSelected) return;
+      props.setValidateCard(false);
 
       const [resp] = await Promise.all([formik.validateForm()]);
 
-      for (var i in formik.values) {
-        var key = i;
+      for (var key in formik.values) {
         formik.setFieldTouched(key, true);
       }
 
       setUpload(true);
-      props.setValidateData(false);
     }
 
     markErrors();
-  }, [props.validateData]);
+  }, [props.validateCard]);
 
   return (
     <form
@@ -110,7 +130,6 @@ export default function PayCard(props) {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               required
-              type="number"
               value={formik.values.CardNumber}
               variant="outlined"
             />
@@ -196,6 +215,7 @@ export default function PayCard(props) {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               type="number"
+              required
               value={formik.values.IDNumber}
               variant="outlined"
             />
