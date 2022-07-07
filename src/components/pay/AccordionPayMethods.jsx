@@ -11,13 +11,34 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import CardCostAndPay from './CardCostAndPay';
 import PayCard from '../forms/PayCard';
+import PayTransfer from '../forms/PayTransfer';
 
-export default function AccordionPayMethods() {
+/**
+ * 
+ * @param {{setValidStep: function, validateData: boolean,
+ *          setValidateData: function}} props 
+ * @returns 
+ */
+export default function AccordionPayMethods(props) {
   const [expanded, setExpanded] = React.useState(false);
+  const [validateCard, setValidateCard] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  React.useEffect((() => {
+    if (!props.validateData || !expanded) return;
+    props.setValidateData(false);
+
+    if (expanded === 'efectivo' || expanded === 'transferencia') {
+      props.setValidStep(true);
+      return;
+    }
+
+    setValidateCard(true);
+
+  }), [props.validateData])
 
   /**
    * Obtiene el icono a desplegar según la selección del usuario.
@@ -29,9 +50,9 @@ export default function AccordionPayMethods() {
 
   return (
     <div>
-      <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+      <Accordion expanded={expanded === 'credito'} onChange={handleChange('credito')}>
         <AccordionSummary
-          expandIcon={getIcon('panel1')}
+          expandIcon={getIcon('credito')}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
@@ -42,13 +63,13 @@ export default function AccordionPayMethods() {
         </AccordionSummary>
 
         <AccordionDetails>
-          <PayCard />
+          <PayCard setValidStep={props.setValidStep} validateCard={validateCard} setValidateCard={setValidateCard} cardType={'credito'} cardTypeSelected={expanded} />
         </AccordionDetails>
       </Accordion>
 
-      <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+      <Accordion expanded={expanded === 'debito'} onChange={handleChange('debito')}>
         <AccordionSummary
-          expandIcon={getIcon('panel2')}
+          expandIcon={getIcon('debito')}
           aria-controls="panel2bh-content"
           id="panel2bh-header"
         >
@@ -58,13 +79,13 @@ export default function AccordionPayMethods() {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <PayCard />
+          <PayCard setValidStep={props.setValidStep} validateCard={validateCard} setValidateCard={setValidateCard} cardType={'debito'} cardTypeSelected={expanded} />
         </AccordionDetails>
       </Accordion>
 
-      <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+      <Accordion expanded={expanded === 'transferencia'} onChange={handleChange('transferencia')}>
         <AccordionSummary
-          expandIcon={getIcon('panel3')}
+          expandIcon={getIcon('transferencia')}
           aria-controls="panel3bh-content"
           id="panel3bh-header"
         >
@@ -76,16 +97,13 @@ export default function AccordionPayMethods() {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-            amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </Typography>
+          <PayTransfer />
         </AccordionDetails>
       </Accordion>
 
-      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+      <Accordion expanded={expanded === 'efectivo'} onChange={handleChange('efectivo')}>
         <AccordionSummary
-          expandIcon={getIcon('panel4')}
+          expandIcon={getIcon('efectivo')}
           aria-controls="panel4bh-content"
           id="panel4bh-header"
         >
@@ -97,8 +115,7 @@ export default function AccordionPayMethods() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-            amet egestas eros, vitae egestas augue. Duis vel est augue.
+            Puedes realizar el pago en los corresponsales de Efecty o Gane.
           </Typography>
         </AccordionDetails>
       </Accordion>
