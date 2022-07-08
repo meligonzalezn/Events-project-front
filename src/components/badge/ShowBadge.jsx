@@ -19,10 +19,12 @@ export default function ShowBadge(props) {
      * Obtiene las escarapela desde el back.
      */
     const getBadge = async () => {
-      const user = 1;
-      const request = await axios.get(`http://localhost:8000/User/${user}/get_badge/`);
+      const user = 1; // TODO esto debe obtenerse de la session.
+      const event = 1; // TODO Esto debe obtenerse de otra parte.
+      const request = await axios.post(`http://localhost:8000/User/${user}/get_badge/`, { ID_Event: event });
       const data = request.data.url;
       console.log(data)
+      return;
       setBadgeURL(data)
       setLoading(false);
     }
@@ -31,7 +33,6 @@ export default function ShowBadge(props) {
   }, [])
 
   const downloadImage = () => {
-    // TODO generar el nombre de la escarapela con el nombre del usuario que la está descargando.
     saveAs(badgeURL, "escarapela")
   }
 
