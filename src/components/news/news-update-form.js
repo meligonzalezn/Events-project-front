@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
 import axios from 'axios';
 import { newsDataAll, newsDataComplete, eventSelected, updateNewsData} from 'src/utils/newsAxios';
-import ReactDOM from 'react-dom';
 import { useFormik } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
