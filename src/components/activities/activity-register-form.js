@@ -2,13 +2,10 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, CircularProgress } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
-
+import { createActivity } from 'src/utils/activitiesAxios';
 /** 
  * @param {{}} props  
  * @returns React component.
@@ -51,15 +48,14 @@ export const ActivityRegisterForm = (props) => {
      */
     const onSubmit = async () => {
       if (!data) return;
-      /*try {
-        if(!(formik.values.title == "" || formik.values.media_file == null || 
-          formik.values.description == "" || formik.values.summary == "" ||
-          formik.values.state == "" || formik.values.event_name == "" || 
-          formik.values.finish_date == "")){
+      try {
+        if(!(formik.values.title == "" || formik.values.date == "" || 
+          formik.values.init_hour == "" || formik.values.final_hour == "" ||
+          formik.values.details == "" || formik.values.space== "")){
             if(formik.isValid){
-              await createNews(formik)
+              await createActivity(formik)
               setModal(true)
-              formik.resetForm()
+              //formik.resetForm()
             }
             setLoading(false)
             setData(false) 
@@ -75,7 +71,7 @@ export const ActivityRegisterForm = (props) => {
         setModalError(true)
         setLoading(false)
         setData(false)
-      }*/
+      }
       
     }
     console.log("valores del formulario ", formik.values)

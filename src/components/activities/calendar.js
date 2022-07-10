@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction' 
-import { Modal, Grid, Typography, Divider } from '@mui/material';
+import { Modal} from '@mui/material';
 import { ActivityRegisterForm } from './activity-register-form';
 import { useStyles } from '../modals/modalAlert';
+import styled from "@emotion/styled";
 
+export const StyleWrapper = styled.div`
+  .fc .fc-button-primary {
+    background-color: #5048E5;
+  }`
 export const Calendar = () => {
     const [modalActivity, setModalActivity] = useState(false)
     const [dateSelectedState, SetDateSelectedState] = useState()
@@ -18,7 +23,7 @@ export const Calendar = () => {
         setModalActivity(!modalActivity)
     }
     return(
-        <> 
+        <StyleWrapper> 
             <FullCalendar  
                 plugins={[dayGridPlugin, interactionPlugin]}
                 dateClick={handleDateClick}
@@ -30,6 +35,6 @@ export const Calendar = () => {
                 </div>
             </Modal> : null
             }
-        </>
+        </StyleWrapper>
     )
 };

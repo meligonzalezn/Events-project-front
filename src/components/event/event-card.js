@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 import { Clock as ClockIcon } from "../../icons/clock";
 import { useRouter } from "next/router";
-
+import { eventSelectedID } from "src/utils/activitiesAxios";
 export const EventCard = ({ event, ...rest }) => {
   const router = useRouter();
   const image_url = () => {
@@ -80,7 +80,7 @@ export const EventCard = ({ event, ...rest }) => {
           </Button>
         </Grid>
         <Grid item sx={{ alignItems: 'center', display: 'flex' }}> 
-          <Button onClick={() => {router.push('/CrearActividad') }}  color="primary" variant="contained">
+          <Button onClick={() => {router.push('/CrearActividad') && eventSelectedID(event.id)}}  color="primary" variant="contained">
             Actividades
           </Button>
           </Grid>
