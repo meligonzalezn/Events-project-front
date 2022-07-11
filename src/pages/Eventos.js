@@ -1,46 +1,110 @@
 import Head from "next/head";
-import { Box, Container, Grid, Pagination,  CircularProgress } from "@mui/material";
-import { usePagination } from '@mui/material/Pagination';
+import { useEffect, useState } from 'react';
+import { Box, Card, CardContent, Container, Grid, InputAdornment, Pagination, SvgIcon, TextField } from '@mui/material';
+//import { Search as SearchIcon } from '../../icons/search';
+import { useRouter } from 'next/router';
 import LinearLoader from '../components/loaders/LinealLoader';
-import { EventListToolbar } from "../components/event/event-list-toolbar";
-import { EventCard } from "../components/event/event-card";
+import { EventListToolbar } from "../components/events/event-list-toolbar";
+import { EventCard } from "../components/events/event-card";
 import { DashboardLayout } from "../components/dashboard-layout";
-//import { Pagination } from "../../components/pagination/pagination"
-import { useState, useEffect } from "react";
-import axios from 'axios'
+import axios from 'axios';
+import { findAllWithWord } from 'src/utils/searchInStrings';
 
+const NEWS_PER_PAGE = 6;
+
+/**
+ * Muestra todas los eventos registrados en la base de datos mediante
+ * paginación.
+ * @param {} 
+ * @returns 
+ */
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const [page, setPage] = useState(1); // We display 6 news per page.
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [eventsPerPage, setEventsPerPage] = useState(6);
-  
-  const handleChange = (event, value) => {
-    setCurrentPage(value);
-  };
+  const [numPages, setNumPages] = useState(0);
+  const [dataEvents, setDataEvents] = useState();
+  const [searchedEvents, setSearchedEvents] = useState();
+  const [succesfulRegister, setSuccessfulRegister] = useState(false);
 
-  useEffect(()=> {
+  const router = useRouter();
 
-    const fetchEvents = async () => {
-        const res = await axios.get("http://localhost:8000/Events/")
-        setEvents(res.data)
-        setLoading(false)
+  useEffect(() => {
+    /**
+     * Obtiene los eventos de la BD.
+     */
+    const getEvents = async () => {
+      const request = await axios.get("http://localhost:8000/Events/");
+      const data = request.data;
+      setDataEvents(data);
+      setSearchedEvents(data);
+      setNumPages(Math.ceil(data.length / NEWS_PER_PAGE));
+      setLoading(false);
     }
 
-    fetchEvents();
-    
-  }, []);
+    getEvents();
+  }, [])
 
-  const indexOfLastEvent = currentPage * eventsPerPage;
-  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+  /**
+   * Debería acceder a la ventana donde muestra se muestra el evento
+   * @param {event} e 
+   */
+   const testClick = (e) => {
+    const eventSelected = e.target.id;
+    console.log("event:", eventSelected);
+    localStorage.setItem('evento', JSON.stringify(searchedEvents[eventSelected]));
+    //console.log("monda1", JSON.stringify(searchedEvents[eventSelected]))
+    router.push("Eventos/[id]/Ver", `Eventos/${searchedEvents[eventSelected].Title}/Ver`);
+  }
 
-  return ( loading? 
-    <LinearLoader
+
+
+  /**
+   * Obtiene los elementos para desplegar , según la pagina seleccionada
+   * @returns Array de Cards con los eventos de la pagina seleccionada
+   */
+  const displayPageElements = () => {
+    let elements = [];
+
+    // Ordena las noticias por mas reciente en fecha de creación.
+    searchedEvents.sort(function (a, b) {
+      return new Date(b["Finish_date"]) - new Date(a["Finish_date"]);
+    })
+
+    for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, searchedEvents.length); i++) {
+      elements.push(
+        <Grid key={i} item lg={4} md={6} xs={12} name={i}>
+          <EventCard  id={i} event={searchedEvents[i]}  onClick={testClick} />
+        </Grid>
+      );
+    }
+
+    return elements;
+  }
+
+  /**
+   * Cambia el valor de 'page' a la página seleccionada.
+   * @param {useless} _ 
+   * @param {int} value 
+   */
+  const handlePageChange = (_, value) => {
+    setPage(value);
+  }
+
+  const handleSearchEvents = (e) => {
+    const searchedValue = e.target.value;
+    const data = findAllWithWord(searchedValue, dataEvents, "Title");
+    setSearchedEvents(data);
+    setNumPages(Math.ceil(data.length / NEWS_PER_PAGE));
+  }
+
+  if (loading) {
+    return (
+      <LinearLoader
         upperMessage='Estamos cargando tus eventos'
         lowerMessage='Por favor espera'
       ></LinearLoader>
-  :
+    )
+  } else return (
     <>
       <Head>
         <title>Eventos</title>
@@ -53,14 +117,15 @@ const Events = () => {
         }}
       >
         <Container maxWidth={false}>
-          <EventListToolbar />
+          <EventListToolbar searchHandleChange={handleSearchEvents} />
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
-              {currentEvents.map((event, key) => (
+              {/* {currentEvents.map((event, key) => (
                 <Grid item key={key} lg={4} md={6} xs={12}>
                   <EventCard event={event} />
                 </Grid>
-              ))}
+              ))} */}
+              {displayPageElements()}
             </Grid>
           </Box>
           <Box
@@ -70,13 +135,16 @@ const Events = () => {
               pt: 3,
             }}
           >
-            <Pagination color="primary" page={currentPage} onChange={handleChange} count={Math.ceil(events.length / eventsPerPage)} size="small" />
+            {/* <Pagination color="primary" page={currentPage} onChange={handleChange} count={Math.ceil(events.length / eventsPerPage)} size="small" /> */}
+            <Pagination page={page} color="primary" count={numPages} size="small"
+            onChange={handlePageChange} />
           </Box>
         </Container>
       </Box>
     </>
   );
 };
+
 
 Events.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 

@@ -14,10 +14,10 @@ import {
   import { useRouter } from 'next/router';
 
   
-  export const EventListToolbar = (props) => {
+  export const EventListToolbar = ({searchHandleChange}) => {
     const router = useRouter();
     return (
-    <Box {...props}>
+    <Box >
       <Box
         sx={{
           alignItems: 'center',
@@ -69,6 +69,7 @@ import {
                     </InputAdornment>
                   )
                 }}
+                onChange= {searchHandleChange}
                 placeholder="Buscar evento"
                 variant="outlined"
               />
