@@ -11,17 +11,6 @@ const formatDate = (date) => {
     const dateArrayOrganized = [dateArray[2], dateArray[1], dateArray[0]]
     return dateArrayOrganized.join('-')
 }
-  
-/**
- * It recieves id and return it 
- * @param {*} eventID 
- * @returns 
- */
-var globalEventID;
-async function eventSelectedID(eventID){
-    globalEventID = eventID
-    return eventID
-}  
 
 
 /**
@@ -38,8 +27,9 @@ async function eventSelectedID(eventID){
         State: data.state, 
         Details: data.details, 
         Title: data.title, 
-        ID_Event: globalEventID  
+        ID_Event: localStorage.getItem('idEvent') 
     }
+    console.log("los  datos que se envian a  la BD son ", activity)
     try {
       const request = await axios.post("http://localhost:8000/Activity/", activity);
       return [request, null];
@@ -49,4 +39,4 @@ async function eventSelectedID(eventID){
       return [null, err]
     }
   }
-export { eventSelectedID, createActivity}
+export {createActivity}

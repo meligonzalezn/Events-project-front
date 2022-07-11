@@ -1,11 +1,14 @@
 import axios from 'axios';
 import * as Yup from 'yup';
-import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, CircularProgress } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, CircularProgress, Modal, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { ModalAlert } from '../modals/modalAlert';
+import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { createActivity } from 'src/utils/activitiesAxios';
+import { useRouter } from 'next/router';
+import { getId } from '../event/event-card';
 /** 
  * @param {{}} props  
  * @returns React component.
@@ -15,6 +18,8 @@ export const ActivityRegisterForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalError, setModalError] = useState(false);
+  const styles = useStyles();
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       /* This date is the one that returns calendar when user clicks to add
@@ -55,7 +60,7 @@ export const ActivityRegisterForm = (props) => {
             if(formik.isValid){
               await createActivity(formik)
               setModal(true)
-              //formik.resetForm()
+              formik.resetForm()
             }
             setLoading(false)
             setData(false) 
@@ -74,7 +79,6 @@ export const ActivityRegisterForm = (props) => {
       }
       
     }
-    console.log("valores del formulario ", formik.values)
     onSubmit();
   }, [data])
 
@@ -251,17 +255,24 @@ export const ActivityRegisterForm = (props) => {
         </Box>
       </Card>
       {(modal == true) ? 
-      <ModalAlert
-        title={"Noticia registrada"}
-        message={"La noticia fue registrada exitosamente!"} modalState={modal}
-        modalSuccess={true} 
-        routeURL={"/Noticias"}
-        setModalState={setModal} /> : null
+          <Modal open={modal}
+          onClose={() => {router.push('/CrearActividad') && window.location.reload()}}>
+          <div className={styles.modal} style={{ width: '25rem' }}>
+            <Grid sx={{ textAlign: 'center' }}>
+              <Grid sx={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', color: '#5048E5' }}>
+                <StickyNote2Icon></StickyNote2Icon>
+                <Typography variant='h2' sx={{ color: '#5048E5', fontSize: '1.87rem', marginBottom: '0.6rem' }}>Actividad registrada</Typography>
+              </Grid>
+              <Divider />
+              <Typography variant='subtitle1' sx={{ marginTop: '0.6rem' }}>La actividad se pudo registrar con éxito!!! </Typography>
+            </Grid>
+          </div>
+        </Modal> : null
       }
       {(modalError == true) ?
         <ModalAlert
-          title={"Noticia NO registrada"}
-          message={"La noticia NO se pudo registrar, complete todos los campos"} modalState={modalError} 
+          title={"Actividad NO registrada"}
+          message={"La actividad NO se pudo registrar, complete todos los campos"} modalState={modalError} 
           modalSuccess={false}
           setModalState={setModalError} /> : null
       }

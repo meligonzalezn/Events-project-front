@@ -1,10 +1,11 @@
 import { DashboardLayout } from '../components/dashboard-layout';
 import { Calendar } from 'src/components/activities/calendar';
+import { useRouter } from "next/router";
 
 const CreateActivity = () => {
   return(
-  <div style={{padding:'10px'}}>
-      <Calendar  />
+  <div style={{padding:'15px'}}>
+      <Calendar />
   </div>
 );}
 
