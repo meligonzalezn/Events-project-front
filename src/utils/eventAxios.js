@@ -110,4 +110,14 @@ async function enable(pk) {
 
 }
 
+async function get_event_participants(){
+  try{
+    const response = await axios.get("http://localhost:8000/Events/get_members")
+    return [response, null];
+
+  }catch(err){
+    return [null, err]
+  }
+}
+
 export { createEvent, update }
