@@ -9,10 +9,12 @@ import { Facebook as FacebookIcon } from '../icons/facebook';
 import { Google as GoogleIcon } from '../icons/google';
 import { login, loggout, is_logged } from 'src/utils/loginAxios';
 import { useEffect, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const Login = () => {
   const [Upload, setUpload] = useState(false)
   const [UploadFailed, setUploadFailed] = useState(null)
+  const [CaptchaSuccess, SetCaptchaSuccess] = useState(null)
   const [IsLogged, setIsLogged] = useState(null)
 
   const router = useRouter();
@@ -37,22 +39,30 @@ const Login = () => {
     })
   });
 
+  const onCaptchaCompleted = (e) => {
+    console.log(e);
+    SetCaptchaSuccess(e != null);
+  }
+
   useEffect(async () => {
-    if (Upload == true) {
-      const [response, error] = await login(formik.values.email, formik.values.password)
-      if (error) {
-        setUploadFailed(error.data ? error.data : "Internal Error")
-      }
-      else {
-        setIsLogged(true)
-        console.log(router.pathname)
-        if(router.pathname === '/')
-          router.reload()
-        else
-          router.push('/')
-      }
-      setUpload(false)
+    if (!Upload) return;
+    setUpload(false)
+    console.log("here")
+    const [_, error] = await login(formik.values.email, formik.values.password)
+    if (error) {
+      setUploadFailed(error.data ? error.data : "Internal Error")
+      return;
     }
+    if (CaptchaSuccess == null) {
+      setUploadFailed("Invalid Captcha. Please, Fill it again");
+      return;
+    }
+
+    setIsLogged(true)
+    if (router.pathname === '/')
+      router.reload()
+    else
+      router.push('/')
   }, [Upload])
 
   /**
@@ -123,6 +133,10 @@ const Login = () => {
               type="password"
               value={formik.values.password}
               variant="outlined"
+            />
+            <ReCAPTCHA
+              sitekey="6Lf3MPcgAAAAAH4iVvC8sFkZ2klZaO-SYr-tY-CN"
+              onChange={onCaptchaCompleted}
             />
             <Box sx={{ py: 2 }}>
               <Button

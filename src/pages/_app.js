@@ -12,41 +12,42 @@ import { has_perms, is_logged } from 'src/utils/loginAxios';
 import Login from './login';
 import NotFound from './404';
 import '../components/news/styles.css';
+import LinearLoader from 'src/components/loaders/LinealLoader';
 
 const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  // const [Logged, setLogged] = useState(false)  
-  // const [HasAccess, setHasAccess] = useState(false)
-  // const [Loading, setLoading] = useState(true)
+  const [Logged, setLogged] = useState(false)  
+  const [HasAccess, setHasAccess] = useState(false)
+  const [Loading, setLoading] = useState(true)
 
   //Fast enter
-  const [Logged, setLogged] = useState(true)
-  const [HasAccess, setHasAccess] = useState(true)
-  const [Loading, setLoading] = useState(false)
+  // const [Logged, setLogged] = useState(true)
+  // const [HasAccess, setHasAccess] = useState(true)
+  // const [Loading, setLoading] = useState(false)
 
 
   const router = useRouter()
 
-  // useEffect(async () => {
-  //   //User is logged?
-  //   is_logged().then(([_, error]) => {
+  useEffect(async () => {
+    //User is logged?
+    is_logged().then(([_, error]) => {
       
-  //     setLogged(error == null)
+      setLogged(error == null)
       
-  //     if (error == null) {
-  //       //User has permissions ?
-  //       has_perms(router.asPath).then(([_, error]) => {
-  //         // console.log("actualizado ? ", _, error)
-  //         setHasAccess(error == null)
-  //         setLoading(false)
-  //       })
-  //     } else {
-  //       setLoading(false)
-  //     }
-  //   })
-  // }, [router.asPath])
+      if (error == null) {
+        //User has permissions ?
+        has_perms(router.asPath).then(([_, error]) => {
+          // console.log("actualizado ? ", _, error)
+          setHasAccess(error == null)
+          setLoading(false)
+        })
+      } else {
+        setLoading(false)
+      }
+    })
+  }, [router.asPath])
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -66,7 +67,7 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {Loading ?
-            <h1>Cargando :)</h1>
+            <LinearLoader></LinearLoader>
             :
             Logged ?
               HasAccess ?
