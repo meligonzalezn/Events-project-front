@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { createActivity } from 'src/utils/activitiesAxios';
 import { useRouter } from 'next/router';
-import { getId } from '../event/event-card';
+
 /** 
  * @param {{}} props  
  * @returns React component.
