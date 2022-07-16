@@ -2,6 +2,8 @@ import React from 'react';
 import { Modal, Grid, Typography, Divider } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import { useRouter } from 'next/router';
+
 
 export const useStyles = makeStyles((theme) => ({
   modal: {
@@ -16,26 +18,25 @@ export const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const ModalAlert = ({ title, message, modalState, setModalState, setSuccessfulRegister }) => {
+export const ModalAlert = ({ title, message, modalState, setModalState, modalSuccess, routeURL}) => {
   const styles = useStyles();
+  const router = useRouter();
 
   /**
    * Cuando se define el método 'setSuccessfulRegister' se
    * ejecutará para notificar al evento padre de un suceso
    * exitoso.
    */
-  const thisOnClose = () => {
+  const onClose = () => {
     setModalState(!modalState);
-    if (setSuccessfulRegister != undefined) {
-      // Indica al componente padre que el registro de la noticia
-      // fue exitoso.
-      setSuccessfulRegister(true);
+    if(modalSuccess) {
+      router.push(routeURL)
     }
   }
 
   return (
     <Modal open={modalState}
-      onClose={thisOnClose}>
+      onClose={onClose}>
       <div className={styles.modal} style={{ width: '25rem' }}>
         <Grid sx={{ textAlign: 'center' }}>
           <Grid sx={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', color: '#5048E5' }}>

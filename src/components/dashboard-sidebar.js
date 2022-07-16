@@ -44,6 +44,11 @@ const items = [
     title: 'Events'
   },
   {
+    href: '/Escarapela',
+    icon: (<UserIcon fontSize="small" />),
+    title: 'Escarapela'
+  },
+  {
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
@@ -101,7 +106,7 @@ export const DashboardSidebar = (props) => {
               href="/"
               passHref
             >
-              <a style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
+              <a href='/' style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
                 <Logo
                   sx={{
                     height: 42,

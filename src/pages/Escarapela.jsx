@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { DashboardLayout } from '../components/dashboard-layout';
-import ShowNews from 'src/components/lists/ShowNews';
+import ShowBadge from 'src/components/badge/ShowBadge';
 
-export default function Noticias(props) {
+export default function Escarapela(props) {
 
   // TODO obtener el rol del usuario de la sesión.
 
@@ -10,15 +10,16 @@ export default function Noticias(props) {
     <>
       <Head>
         <title>
-          Noticias
+          Escarapela
         </title>
       </Head>
-      <ShowNews isEmployee={true} />
+
+      <ShowBadge />
     </>
   )
 }
 
-Noticias.getLayout = (page) => (
+Escarapela.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
