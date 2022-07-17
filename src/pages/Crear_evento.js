@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { Box, Divider ,Container, Grid, Typography } from '@mui/material';
 import MapComponent from '../components/map/map';
-import { EventDetails } from '../components/event/event-profile-details';
+import { EventDetails } from '../components/events/event-profile-details';
 import { DashboardLayout } from '../components/dashboard-layout';
 
 

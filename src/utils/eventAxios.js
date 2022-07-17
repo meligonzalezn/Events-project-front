@@ -36,8 +36,31 @@ async function getEvents() {
   }
 }
 
+
 /**
- *  Crea el JSON con los datos del usuario y lo inserta en la BD.
+  * We get the events titles registered in database
+  * @param {} 
+*/
+let eventsTitle = []
+async function getEventsTitle () {
+  try{
+    await axios.get("http://localhost:8000/Events/").then((res) => {
+      res.data.map((value) => {
+        eventsTitle.push(value.Title)
+      })
+    })
+    return {eventsTitle};
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
+} 
+
+getEventsTitle()
+
+/**
+ *  Creates the JSON with the event data and adds it in the BD
  * @param {} metadata 
  */
 async function createEvent(metadata) {
@@ -80,6 +103,27 @@ async function createEvent(metadata) {
   }
 }
 
+
+/**
+ * We get the event data completed to display in form
+ * @param {newsTitle}
+ */
+ let eventData = {};
+ 
+ async function getEventData(eventTitle){
+   try{
+     await axios.get("http://localhost:8000/Events/").then((res) => {
+       eventData = res.data.find((element) => element.Title === eventTitle)
+       return eventData;
+     })
+   }
+   catch(error){
+     console.log(error)
+     return [null, error]
+   }
+ }
+
+
 async function update(metadata) {
   const data = metadata.values;
   const event = {
@@ -120,4 +164,4 @@ async function get_event_participants(){
   }
 }
 
-export { createEvent, update }
+export { createEvent, update , eventsTitle, eventData, getEventData }
