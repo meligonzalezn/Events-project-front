@@ -32,7 +32,7 @@ LinearProgressWithLabel.propTypes = {
 /**
  * 
  * @param {{upperMessage: string, lowerMessage: string,
- *          setValidStep: function}} props 
+ *          setValidStep: function, setSuccessfulPay: function}} props 
  * @returns 
  */
 export default function SecuentialLoader(props) {
@@ -43,6 +43,18 @@ export default function SecuentialLoader(props) {
     const timer = setInterval(() => {
       setProgress((prevProgress) => (prevProgress >= 100 ? 100 : prevProgress + 1));
     }, 50);
+
+    /**
+     * Inserta los datos del pago a la BD.
+     */
+    const processPay = () => {
+      // TODO hacer exitoso el pago en la BD.
+
+      props.setSuccessfulPay(true);
+    }
+
+    processPay();
+
     return () => {
       clearInterval(timer);
     };

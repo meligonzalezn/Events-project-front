@@ -26,10 +26,40 @@ export default function Pagar(props) {
   const [displayComponent, setDisplayComponent] = useState(<></>);
   const [validStep, setValidStep] = useState(false);
   const [validateData, setValidateData] = useState(false);
+  const [successfulPay, setSuccessfulPay] = useState(false);
 
   useEffect(() => {
     setDisplayComponent(<PayUser setValidStep={setValidStep} validateData={validateData}
       setValidateData={setValidateData} />);
+
+    /**
+     * Deshace la reserva de cupos para las actividades seleccionadas.
+     */
+    const asyncTest = async () => {
+      setTimeout(() => {
+        if (successfulPay) return;
+
+        // TODO interactuar con la BD.
+      }, 8000);
+    }
+
+    const createData = () => {
+      const actividades = [
+        {
+          "id": 2,
+          "value": 23000
+        },
+        {
+          "id": 3,
+          "value": 21000
+        }
+      ]
+      localStorage.setItem("actividades", JSON.stringify(actividades));
+      localStorage.setItem("ID_User", "1");
+      localStorage.setItem("ID_Event", "1");
+    }
+
+    asyncTest();
   }, [])
 
   /**
@@ -38,7 +68,7 @@ export default function Pagar(props) {
   useEffect(() => {
     const handlePageChange = () => {
       if (activeStep == PROCESANDO_PAGO) {
-        setDisplayComponent(<SecuentialLoader upperMessage='Estamos procesando tu pago' lowerMessage='Por favor espera' setValidStep={setValidStep} />)
+        setDisplayComponent(<SecuentialLoader upperMessage='Estamos procesando tu pago' lowerMessage='Por favor espera' setValidStep={setValidStep} setSuccessfulPay={setSuccessfulPay} />)
       } else if (activeStep == METODO_PAGO) {
         setDisplayComponent(<PayMethod setValidStep={setValidStep} validateData={validateData}
           setValidateData={setValidateData} />);
