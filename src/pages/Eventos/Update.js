@@ -1,13 +1,19 @@
 import Head from 'next/head';
 import { Box, Divider ,Container, Grid, Typography } from '@mui/material';
-import MapComponent from '../components/map/map';
-import { EventDetails } from '../components/events/event-profile-details';
-import { DashboardLayout } from '../components/dashboard-layout';
+import MapComponent from 'src/components/map/map';
+import { EventDetails } from 'src/components/events/event-profile-details';
+import { DashboardLayout } from 'src/components/dashboard-layout';
+import LinearLoader from 'src/components/loaders/LinealLoader';
+import { useState } from 'react';
 
-
-const CreateEvent = () => {
-  const {MapRender, getPlace} = MapComponent(""); 
+const UpdateEvent = () => {
+  const [loading, setLoading] = useState(true);
+  const eventData = JSON.parse(localStorage.getItem("DatosEvento"));
+  console.log("EventData: ", eventData)
+  const {MapRender, getPlace} = MapComponent(eventData["Space"]); 
   const mapsCard = MapRender();
+  
+
   return(
   <>
     <Head>
@@ -42,7 +48,7 @@ const CreateEvent = () => {
             md={6}
             xs={12}
           >
-            <EventDetails  updateEvent={false} eventPlace={getPlace}  />
+            <EventDetails  updateEvent={true} eventValues={eventData} eventPlace={getPlace} />
           </Grid>
         </Grid>
       </Container>
@@ -50,10 +56,10 @@ const CreateEvent = () => {
   </>
 );}
 
-CreateEvent.getLayout = (page) => (
+UpdateEvent.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default CreateEvent;
+export default UpdateEvent;

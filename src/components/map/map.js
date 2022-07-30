@@ -3,8 +3,14 @@ import { useJsApiLoader, GoogleMap, Marker, Autocomplete } from "@react-google-m
 import LinearLoader from '../loaders/LinealLoader';
 import { useRef, useState } from "react";
 
-const MapComponent =  (props) => {
-  const [place, setPlace] = useState("");
+/**
+ * Formulario donde se digitarán los datos del usuario a crear.
+ * 
+ * @param {{}} initialPlaceValue  Can be "" or a place 
+ * @returns React component.
+ */
+const MapComponent =  (initialPlaceValue) => {
+  const [place, setPlace] = useState(initialPlaceValue);
 
   const MapRender = () => {
     const [markerValue, setMarkerValue] = useState({ lat: 48.85, lng: 2.2945 });
@@ -40,7 +46,7 @@ const MapComponent =  (props) => {
     };
 
     return (
-      <Card {...props}>
+      <Card>
         <CardHeader title="Ubicación" subheader="¿Donde se realizará el evento?" />
         <Divider />
         <CardContent>

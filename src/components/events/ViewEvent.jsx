@@ -27,21 +27,11 @@ export default function ViewEvent(props) {
 
   useEffect(() => {
     /**
-     * Obtiene la noticia del local storage. También obtiene el autor de
-     * la noticia si no está guardado en el local storage, o si el autor
-     * guardado no coincide con el de la noticia.
+     * Obtiene el evento del local storage.
      */
     const getEvent = async () => {
       const evento = JSON.parse(localStorage.getItem("evento"));
-      //   let dataUser;
-
-      //   if (localStorage.getItem("autor") == undefined || JSON.parse(localStorage.getItem("autor")).id != noticia.ID_user) {
-      //     const userRequest = await axios.get(`http://localhost:8000/User/${noticia.ID_user}/`);
-      //     dataUser = userRequest.data;
-      //     localStorage.setItem("autor", JSON.stringify(dataUser));
-      //   } else dataUser = JSON.parse(localStorage.getItem("autor"));
       setTheEvent(evento);
-      //setAutor(dataUser);
       setLoading(false);
     };
 

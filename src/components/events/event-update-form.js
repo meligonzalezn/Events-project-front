@@ -7,6 +7,7 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
 import { EventsDropdown } from './events-dropdown';
+import { useRouter } from 'next/router';
 
 /** 
  * @param {} props  
@@ -15,6 +16,7 @@ import { EventsDropdown } from './events-dropdown';
 export const EventsUpdateForm = ({setSuccessfulRegister}) => {
     const [loadingSearch, setLoadingSearch] = useState(false);
     const [eventName, setEventName] = useState('');
+    const router = useRouter();
 
     /**
      * This function executes petition to get the data of the event that user wants to update
@@ -22,12 +24,11 @@ export const EventsUpdateForm = ({setSuccessfulRegister}) => {
      */
      const executeFunction = async () => {
         try {
+          setLoadingSearch(true)
           await getEventData(eventName)
-          setDisplayForm(true)
-          //If display form state is true is because information was found successfully and loading has to stop
-          if(displayForm === true){
-            setLoadingSearch(false)
-          }
+          localStorage.setItem('DatosEvento', JSON.stringify(eventData));
+          setLoadingSearch(false)
+          router.push("Eventos/Update");
         }
         catch(error){
           console.log(error)

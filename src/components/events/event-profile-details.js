@@ -7,21 +7,25 @@ import { createEvent } from 'src/utils/eventAxios';
 import { useEffect, useState } from 'react';
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import {states} from "../../utils/states"
+import { eventData, getEventData } from 'src/utils/eventAxios';
 
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
  * 
- * @param {{}} props 
+ * @param {{}} updateEvent Can be true or false depending if an event is going to be created or updated
+ * @param {{}} eventValues values of the event if is one that is being updated
+ * @param {{}} eventPlace the place for the event, selected in the map
  * @returns React component.
  */
 //export default function EventDetails(props) {
-export const EventDetails = ({eventPlace}) => {
+export const EventDetails = ({updateEvent,eventValues,eventPlace}) => {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
-  const formik = useFormik({
-    initialValues: {
+  const initialValues = () => {
+    if(updateEvent){
+      return eventValues;
+    }
+    return {
       title: '',
       start_date: new Date(),
       finish_date: new Date(),
@@ -30,7 +34,11 @@ export const EventDetails = ({eventPlace}) => {
       state: 'Activo',
       image_file: '',
       place: '',
-    },
+    }
+  }
+  const router = useRouter();
+  const formik = useFormik({
+    initialValues: initialValues(),
     validationSchema: Yup.object().shape({
       title: Yup
         .string().required('Es necesario digitar un título').max(100),
