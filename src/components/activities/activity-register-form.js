@@ -27,6 +27,8 @@ export const ActivityRegisterForm = (props) => {
       date: props.dateselected.dateSelectedState,
       init_hour: '', 
       final_hour:'', 
+      //default capacity 100 people
+      capacity: '',
       space: '',
       //When user creates an activity default state is active
       state: 'Activo',
@@ -38,6 +40,8 @@ export const ActivityRegisterForm = (props) => {
         .string().required('Porfavor ingrese un título').max(500),
       details: Yup
         .string().required('Requerido'),
+      capacity: Yup
+        .number().integer().required('Capacidad mayor a 0'),  
       space: Yup
         .string().required('Espacio requerido'),
       init_hour: Yup
@@ -56,7 +60,8 @@ export const ActivityRegisterForm = (props) => {
       try {
         if(!(formik.values.title == "" || formik.values.date == "" || 
           formik.values.init_hour == "" || formik.values.final_hour == "" ||
-          formik.values.details == "" || formik.values.space== "")){
+          formik.values.capacity == 0  || formik.values.details == "" || 
+          formik.values.space== "")){
             if(formik.isValid){
               await createActivity(formik)
               setModal(true)
@@ -103,15 +108,14 @@ export const ActivityRegisterForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...props}
     >
-      <Card sx={{width:'700px', margin:'auto'}}>
-        <CardHeader
+      <Card sx={{width:'710px', height:'600px', margin:'auto'}}>
+        <CardHeader sx={{height:'96px'}}
           subheader="Registre aquí una actividad"
           title="Actividad"
         />
         <Divider />
         <CardContent>
           <Grid container spacing={3} >
-
             <Grid item md={12} xs={12} >
               <TextField
                 fullWidth
@@ -157,7 +161,8 @@ export const ActivityRegisterForm = (props) => {
                     onBlur={formik.handleBlur}
                 />
             </Grid>
-            <Grid item md={6} xs={12} > 
+            
+            <Grid item md={4} xs={12} > 
                 <TextField
                     id="time"
                     name= "init_hour"
@@ -174,7 +179,7 @@ export const ActivityRegisterForm = (props) => {
                     sx={{ width: '100%' }}
                 />
             </Grid>
-            <Grid item md={6} xs={12} > 
+            <Grid item md={4} xs={12} > 
                 <TextField
                     id="time"
                     name= "final_hour"
@@ -191,19 +196,32 @@ export const ActivityRegisterForm = (props) => {
                     sx={{ width: '100%' }}
                 />
             </Grid>
-
+            <Grid item md={4} xs={12} > 
+                <TextField
+                    name= "capacity"
+                    label="Capacidad"
+                    type= "number"
+                    required
+                    error={Boolean(formik.touched.capacity && formik.errors.capacity)}
+                    helperText={formik.touched.capacity && formik.errors.capacity}
+                    value={formik.values.capacity}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    sx={{ width: '100%' }}
+                />
+            </Grid>
 
             <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>
               <TextareaAutosize
                 id="details"
                 maxRows={10000}
                 style={formik.errors.details && formik.touched.details ? {
-                  height: '10rem',
+                  height: '7rem',
                   padding: '0.75rem',
                   borderRadius: '0.6rem',
                   width: '100%',
                   maxWidth: '100%',
-                  maxHeight: '10rem',
+                  maxHeight: '7rem',
                   fontFamily: 'Inter',
                   fontStyle: 'normal',
                   fontWeight: '400',
@@ -214,13 +232,13 @@ export const ActivityRegisterForm = (props) => {
                   resize:'vertical'
                 } :
                   {
-                    height: '10rem',
+                    height: '7rem',
                     padding: '0.75rem',
                     border: '0.8px solid #E3E3E3',
                     borderRadius: '0.6rem',
                     width: '100%',
                     maxWidth: '100%',
-                    maxHeight:'10rem',
+                    maxHeight:'7rem',
                     fontFamily: 'Inter',
                     fontStyle: 'normal',
                     fontWeight: '400',

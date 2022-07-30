@@ -120,7 +120,7 @@ export const Calendar = () => {
             />
             {modalActivity ?             
             <Modal open={modalActivity} onClose={handleOnClose} >
-                <div className={styles.modal} style={{padding:0}}>
+                <div className={styles.modal} style={{padding:0, alignItems:'center'}}>
                     <ActivityRegisterForm dateselected={{dateSelectedState}}/>
                 </div>
             </Modal> : null}

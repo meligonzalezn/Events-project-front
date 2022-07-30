@@ -14,7 +14,7 @@ const formatDate = (date) => {
 
 
 /**
- * This function insert activity to DB
+ * This function insert an activity to DB
  * @param {} metadata 
  */
  async function createActivity(metadata) {
@@ -23,6 +23,7 @@ const formatDate = (date) => {
         Date: formatDate(data.date),
         Init_hour: data.init_hour, 
         Final_hour: data.final_hour, 
+        Capacity: data.capacity,
         Space: data.space,
         State: data.state, 
         Details: data.details, 
