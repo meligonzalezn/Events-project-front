@@ -9,7 +9,7 @@ import { useState } from 'react';
 const UpdateEvent = () => {
   const [loading, setLoading] = useState(true);
   const eventData = JSON.parse(localStorage.getItem("DatosEvento"));
-  console.log("EventData: ", eventData)
+  console.log("EventData: ", eventData["Space"])
   const {MapRender, getPlace} = MapComponent(eventData["Space"]); 
   const mapsCard = MapRender();
   

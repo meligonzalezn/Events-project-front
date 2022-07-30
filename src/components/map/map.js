@@ -1,7 +1,7 @@
 import { Divider, Grid, TextField, Card, CardHeader, CardContent } from "@mui/material";
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import LinearLoader from '../loaders/LinealLoader';
-import { useRef, useState } from "react";
+import { useRef, useState , useEffect} from "react";
 
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
@@ -13,6 +13,7 @@ const MapComponent =  (initialPlaceValue) => {
   const [place, setPlace] = useState(initialPlaceValue);
 
   const MapRender = () => {
+    console.log("monda: ",initialPlaceValue)
     const [markerValue, setMarkerValue] = useState({ lat: 48.85, lng: 2.2945 });
     const place = useRef();
 
@@ -20,6 +21,34 @@ const MapComponent =  (initialPlaceValue) => {
       googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
       libraries: ["places"],
     });
+
+    useEffect(() => {
+      if(initialPlaceValue=="") return 
+      if(!isLoaded) return 
+
+      /**
+       * Transforma la dirección en un objeto {lat: , lng: } para el marcador de ubicación
+       * en el mapa 
+       */
+       const getMarkerValue = () => {
+          const geocoder = new google.maps.Geocoder();
+          //Geocode takes the address of the selected place and convert it into a location for the maps marker
+          console.log(initialPlaceValue);
+          geocoder.geocode(
+            { address: initialPlaceValue },
+            function (results, status) {
+              if (status == "OK") {
+                setMarkerValue(results[0].geometry.location);
+              } else {
+                alert("Se presentó un error obteniendo la ubicación del evento");
+              }
+            }
+          );
+        };
+    
+  
+      getMarkerValue();
+    }, [isLoaded])
 
     if (!isLoaded) {
       return (<LinearLoader
