@@ -65,6 +65,7 @@ export const Calendar = () => {
                             start: value.Date,
                             initHour: value.Init_hour,
                             finalHour: value.Final_hour, 
+                            capacity: value.Capacity,
                             space:value.Space, 
                             state: value.State,
                             color: "hsl(" + 360 * Math.random() + ',' +
@@ -126,12 +127,13 @@ export const Calendar = () => {
             </Modal> : null}
             {activityClick && activityData ?  
             <Modal open={activityClick} onClose={handleOnCloseInfo}>
-                <div className={styles.modal}>
+                <div className={styles.modal} style={{padding:0}}>
                     <ActivityInfoAndUpdate 
                         titleactivity={activityData.event.title} 
                         dateactivity={activityData.event.start}
                         inithouractivity={activityData.event.extendedProps.initHour}
                         finalhouractivity={activityData.event.extendedProps.finalHour}
+                        capacityactivity = {activityData.event.extendedProps.capacity}
                         spaceactivity={activityData.event.extendedProps.space}
                         stateactivity={activityData.event.extendedProps.state}
                         detailsactivity={activityData.event.extendedProps.details}

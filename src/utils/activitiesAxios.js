@@ -40,4 +40,13 @@ const formatDate = (date) => {
       return [null, err]
     }
   }
+
+  /**
+   * With this function we can update information of an activity
+   * @param {*} metadata 
+   */
+  async function updateActivity(metadata){
+    const data = metadata.values;
+    
+  }
 export {createActivity}

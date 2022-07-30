@@ -20,6 +20,7 @@ export const ActivityInfoAndUpdate = (props) =>{
     const [modal, setModal] = useState(false);
     const [modalError, setModalError] = useState(false);
     const [titleData, setTitleData] = useState(false);
+    const [capacityData, setCapacityData] = useState(false);
     const [spaceData, setSpaceData] = useState(false);
     const [initHourData, setInitHourData] = useState(false);
     const [finalHourData, setFinalHourData] = useState(false);
@@ -31,6 +32,7 @@ export const ActivityInfoAndUpdate = (props) =>{
         date: props.dateactivity,
         init_hour: props.inithouractivity, 
         final_hour:props.finalhouractivity, 
+        capacity: props.capacityactivity,
         space: props.spaceactivity,
         state: props.stateactivity,
         details: props.detailsactivity,
@@ -41,6 +43,8 @@ export const ActivityInfoAndUpdate = (props) =>{
           .string().required('Porfavor ingrese un título').max(500),
         details: Yup
           .string().required('Requerido'),
+        capacity: Yup
+          .number().integer().required('Capacidad mayor a 0'),   
         space: Yup
           .string().required('Espacio requerido'),
         init_hour: Yup
@@ -109,13 +113,13 @@ export const ActivityInfoAndUpdate = (props) =>{
         {...props}
       > 
       <fieldset disabled={(props.isclient == 0) ? null: "undefined"}>
-          <Card sx={{width:'700px', margin:'auto'}}>
+          <Card sx={{width:'710px', height:'600px',margin:'auto'}}>
             {(props.isclient !== 0) ?
-              <CardHeader 
+              <CardHeader sx={{height:'96px'}}
                 subheader="Consulta la información de la actividad"
                 title="Actividad"
               />:
-              <CardHeader
+              <CardHeader sx={{height:'96px'}}
               subheader="Actualiza una actividad aquí"
               title="Actividad"
             />
@@ -132,7 +136,7 @@ export const ActivityInfoAndUpdate = (props) =>{
                     variant="outlined"
                     error={Boolean(formik.touched.title && formik.errors.title)}
                     helperText={formik.touched.title && formik.errors.title}
-                    value={!titleData ? props.titleActivity : formik.values.title}
+                    value={!titleData ? props.titleactivity : formik.values.title}
                     onChange={(event) => {formik.setFieldValue("title", event.target.value) && setTitleData(true)}}
                     onBlur={formik.handleBlur}
                   />
@@ -153,12 +157,12 @@ export const ActivityInfoAndUpdate = (props) =>{
                         variant="outlined"
                         error={Boolean(formik.touched.space && formik.errors.space)}
                         helperText={formik.touched.space && formik.errors.space}
-                        value={!spaceData ? props.spaceActivity : formik.values.space}
+                        value={!spaceData ? props.spaceactivity : formik.values.space}
                         onChange={(event) => {formik.setFieldValue("space", event.target.value) && setSpaceData(true)}}
                         onBlur={formik.handleBlur}
                     />
                 </Grid>
-                <Grid item md={6} xs={12} > 
+                <Grid item md={4} xs={12} > 
                     <TextField
                         id="time"
                         name= "init_hour"
@@ -167,7 +171,7 @@ export const ActivityInfoAndUpdate = (props) =>{
                         required
                         error={Boolean(formik.touched.init_hour && formik.errors.init_hour)}
                         helperText={formik.touched.init_hour && formik.errors.init_hour}
-                        value={!initHourData ? props.initHourActivity : formik.values.init_hour}
+                        value={!initHourData ? props.inithouractivity : formik.values.init_hour}
                         onChange={(event) => {formik.setFieldValue("init_hour", event.target.value) && setInitHourData(true)}}
                         onBlur={formik.handleBlur}
                         InputLabelProps={{shrink: true}}
@@ -175,7 +179,7 @@ export const ActivityInfoAndUpdate = (props) =>{
                         sx={{ width: '100%' }}
                     />
                 </Grid>
-                <Grid item md={6} xs={12} > 
+                <Grid item md={4} xs={12} > 
                     <TextField
                         id="time"
                         name= "final_hour"
@@ -184,7 +188,7 @@ export const ActivityInfoAndUpdate = (props) =>{
                         required
                         error={Boolean(formik.touched.final_hour && formik.errors.final_hour)}
                         helperText={formik.touched.final_hour && formik.errors.final_hour}
-                        value={!finalHourData ? props.finalHourActivity : formik.values.final_hour}
+                        value={!finalHourData ? props.finalhouractivity : formik.values.final_hour}
                         onChange={(event) => {formik.setFieldValue("final_hour", event.target.value) && setFinalHourData(true)}}
                         onBlur={formik.handleBlur}
                         InputLabelProps={{shrink: true}}
@@ -192,19 +196,31 @@ export const ActivityInfoAndUpdate = (props) =>{
                         sx={{ width: '100%' }}
                     />
                 </Grid>
-    
-    
+                <Grid item md={4} xs={12} > 
+                  <TextField
+                      name= "capacity"
+                      label="Capacidad"
+                      type= "number"
+                      required
+                      error={Boolean(formik.touched.capacity && formik.errors.capacity)}
+                      helperText={formik.touched.capacity && formik.errors.capacity}
+                      value={!capacityData ? props.capacityactivity : formik.values.capacity}
+                      onChange={(event) => {formik.setFieldValue("capacity", event.target.value) && setCapacityData(true)}}
+                      onBlur={formik.handleBlur}
+                      sx={{ width: '100%' }}
+                  />
+                </Grid>    
                 <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>
                   <TextareaAutosize
                     id="details"
                     maxRows={10000}
                     style={formik.errors.details && formik.touched.details ? {
-                      height: '10rem',
+                      height: '7rem',
                       padding: '0.75rem',
                       borderRadius: '0.6rem',
                       width: '100%',
                       maxWidth: '100%',
-                      maxHeight: '10rem',
+                      maxHeight: '7rem',
                       fontFamily: 'Inter',
                       fontStyle: 'normal',
                       fontWeight: '400',
@@ -215,13 +231,13 @@ export const ActivityInfoAndUpdate = (props) =>{
                       resize:'vertical'
                     } :
                       {
-                        height: '10rem',
+                        height: '7rem',
                         padding: '0.75rem',
                         border: '0.8px solid #E3E3E3',
                         borderRadius: '0.6rem',
                         width: '100%',
                         maxWidth: '100%',
-                        maxHeight:'10rem',
+                        maxHeight:'7rem',
                         fontFamily: 'Inter',
                         fontStyle: 'normal',
                         fontWeight: '400',
@@ -237,7 +253,7 @@ export const ActivityInfoAndUpdate = (props) =>{
                     onChange={(event) => {formik.setFieldValue("details", event.target.value) && setDetailsData(true)}}
                     onBlur={formik.handleBlur}
                     required
-                    value={!detailsData ? props.detailsActivity : formik.values.details}
+                    value={!detailsData ? props.detailsactivity : formik.values.details}
                   />
                     {formik.errors.details && formik.touched.details ?
                         <div style={{ color: '#e76063', fontSize: '0.75rem' }}>{formik.errors.details}</div>: null}
