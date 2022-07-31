@@ -337,7 +337,7 @@ export const NewsUpdateForm = (props) => {
               setModalState={setModal} /> : null
             }
             {(modalError == true) ?
-              <ModalAlert
+              <ModalAlert 
                 title={"Noticia NO actualizada"}
                 message={"La noticia NO se pudo actualizar!"} modalState={modalError}
                 modalSuccess={false}

@@ -200,11 +200,20 @@ export const ActivityRegisterForm = (props) => {
                     name= "capacity"
                     label="Capacidad"
                     type= "number"
+                    inputProps={{min:0}}
                     required
                     error={Boolean(formik.touched.capacity && formik.errors.capacity)}
                     helperText={formik.touched.capacity && formik.errors.capacity}
-                    value={formik.values.capacity}
-                    onChange={formik.handleChange}
+                    value={formik.values.capacity} 
+                    onChange={(event) => {
+                      let input = event.target.value
+                      if(parseInt(input) >= 0){
+                        formik.setFieldValue("capacity", event.target.value)
+                      }
+                      else {
+                        formik.setFieldValue("capacity", "")
+                      }
+                    }}
                     onBlur={formik.handleBlur}
                     sx={{ width: '100%' }}
                 />
@@ -274,7 +283,7 @@ export const ActivityRegisterForm = (props) => {
       {(modal == true) ? 
           <Modal open={modal}
           onClose={() => {router.push('/CrearActividad') && window.location.reload()}}>
-          <div className={styles.modal} style={{ width: '25rem' }}>
+          <div className={styles.modal} style={{ width: '27rem' }}>
             <Grid sx={{ textAlign: 'center' }}>
               <Grid sx={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', color: '#5048E5' }}>
                 <StickyNote2Icon></StickyNote2Icon>
@@ -284,12 +293,13 @@ export const ActivityRegisterForm = (props) => {
               <Typography variant='subtitle1' sx={{ marginTop: '0.6rem' }}>La actividad se pudo registrar con éxito!!! </Typography>
             </Grid>
           </div>
-        </Modal> : null
+        </Modal> : null 
       }
       {(modalError == true) ?
         <ModalAlert
+          style={{width:'29rem !important'}}
           title={"Actividad NO registrada"}
-          message={"La actividad NO se pudo registrar, complete todos los campos"} modalState={modalError} 
+          message={"La actividad NO se pudo registrar, porfavor complete todos los campos"} modalState={modalError} 
           modalSuccess={false}
           setModalState={setModalError} /> : null
       }

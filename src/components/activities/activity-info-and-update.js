@@ -225,6 +225,7 @@ export const ActivityInfoAndUpdate = (props) => {
                       name= "capacity"
                       label="Capacidad"
                       type= "number"
+                      inputProps={{min:0}}
                       required
                       error={Boolean(formik.touched.capacity && formik.errors.capacity)}
                       helperText={formik.touched.capacity && formik.errors.capacity}
@@ -312,8 +313,9 @@ export const ActivityInfoAndUpdate = (props) => {
           }
           {(modalError == true) ?
             <ModalAlert
+              style={{width:'29rem !important'}}
               title={"Actividad NO actualizada"}
-              message={"La actividad NO se pudo actualizar, complete todos los campos"} modalState={modalError} 
+              message={"La actividad NO se pudo actualizar, porfavor complete todos los campos"} modalState={modalError} 
               modalSuccess={false}
               setModalState={setModalError} /> : null
           }

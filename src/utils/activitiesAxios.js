@@ -60,11 +60,7 @@ const formatDate = (date) => {
       ID_Event: localStorage.getItem('idEvent') 
     }
     try {
-      /**
-       * With this request we find the id of activity to update
-       */
       const request = await axios.put("http://localhost:8000/Activity/" + data.id + "/", activity).then((res) => {
-        console.log("holisss", res)
         return [request, null];
       });
     }
