@@ -56,7 +56,7 @@ export const Calendar = () => {
         const activitiesRequest = async () => {
             try {
                 await axios.get("http://localhost:8000/Activity/").then((res) => {
-                    activitiesEvent = res.data.filter((value) => value.ID_Event == localStorage.getItem('idEvent'))
+                    activitiesEvent = res.data.filter((value) => value.ID_Event == localStorage.getItem('idEvent') && value.State == 'Activo')
                     activitiesArray = activitiesEvent.map((value) => {
                         return {
                             id: value.id,
