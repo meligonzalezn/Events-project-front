@@ -30,7 +30,6 @@ const formatDate = (date) => {
         Title: data.title, 
         ID_Event: localStorage.getItem('idEvent') 
     }
-    console.log("los  datos que se envian a  la BD son ", activity)
     try {
       const request = await axios.post("http://localhost:8000/Activity/", activity);
       return [request, null];
@@ -45,8 +44,34 @@ const formatDate = (date) => {
    * With this function we can update information of an activity
    * @param {*} metadata 
    */
+  let finalDateToDB; 
   async function updateActivity(metadata){
     const data = metadata.values;
+    finalDateToDB = data.date.getFullYear() + '-' + parseInt(data.date.getMonth() + 1) + "-" + data.date.getDate()    
+    const activity = {
+      Date: finalDateToDB,
+      Init_hour: data.init_hour, 
+      Final_hour: data.final_hour, 
+      Capacity: data.capacity,
+      Space: data.space,
+      State: data.state, 
+      Details: data.details, 
+      Title: data.title, 
+      ID_Event: localStorage.getItem('idEvent') 
+    }
+    try {
+      /**
+       * With this request we find the id of activity to update
+       */
+      const request = await axios.put("http://localhost:8000/Activity/" + data.id + "/", activity).then((res) => {
+        console.log("holisss", res)
+        return [request, null];
+      });
+    }
+    catch (err) {
+      console.log(err);
+      return [null, err]
+    }
     
   }
-export {createActivity}
+export {createActivity, updateActivity}

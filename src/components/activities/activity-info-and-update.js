@@ -1,20 +1,21 @@
 import * as Yup from 'yup';
-import axios from 'axios';
-import { newsDataAll, newsDataComplete, eventSelected, updateNewsData} from 'src/utils/newsAxios';
+import {Modal} from '@mui/material';
 import { useFormik } from 'formik';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
-import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, Link } from '@mui/material';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaAutosize, MenuItem, Link, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { useRouter } from 'next/router';
+import { updateActivity } from 'src/utils/activitiesAxios';
 
 /**
  * Component to read information about an activity and to update if rol is Employee or Admin
  * @param {{isclient: boolean}} props
  * @returns 
  */
-export const ActivityInfoAndUpdate = (props) =>{
+export const ActivityInfoAndUpdate = (props) => {
     const [data, setData] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
@@ -22,13 +23,17 @@ export const ActivityInfoAndUpdate = (props) =>{
     const [titleData, setTitleData] = useState(false);
     const [capacityData, setCapacityData] = useState(false);
     const [spaceData, setSpaceData] = useState(false);
+    const [stateData, setStateData] = useState(false);
     const [initHourData, setInitHourData] = useState(false);
     const [finalHourData, setFinalHourData] = useState(false);
+    const [dateData, setDateData] = useState(false);
     const [detailsData, setDetailsData] = useState(false);
+    const states = ['Activo', 'Inactivo' ]
     const styles = useStyles();
     const router = useRouter();
     const formik = useFormik({
       initialValues: {
+        id: props.idactivity,
         date: props.dateactivity,
         init_hour: props.inithouractivity, 
         final_hour:props.finalhouractivity, 
@@ -56,38 +61,38 @@ export const ActivityInfoAndUpdate = (props) =>{
       })
     });
     useEffect(() => {
-      /**
-       * This function verifies all validations and insert a news to database
-       * @returns 
-       */
-      const onSubmit = async () => {
-        if (!data) return;
-        try {
-          if(!(formik.values.title == "" || formik.values.date == "" || 
-            formik.values.init_hour == "" || formik.values.final_hour == "" ||
-            formik.values.details == "" || formik.values.space== "")){
-              if(formik.isValid){
-                await createActivity(formik)
-                setModal(true)
-                formik.resetForm()
-              }
-              setLoading(false)
-              setData(false) 
+    /**
+     * This function verifies all validations and insert a news to database
+     * @returns 
+     */
+     const onSubmit = async () => {
+      if (!data) return;
+      try {
+        if(!(formik.values.title == "" || formik.values.date == "" || 
+          formik.values.init_hour == "" || formik.values.final_hour == "" ||
+          formik.values.capacity == ""  || formik.values.details == "" || 
+          formik.values.space== "")){
+            if(formik.isValid){
+              await updateActivity(formik)
+              setModal(true)
+              formik.resetForm()
             }
-          else {
-            setModalError(true);
-            }
-          setLoading(false)
-          setData(false)
+            setLoading(false)
+            setData(false) 
           }
-        catch(error){
-          console.log(error)
-          setModalError(true)
-          setLoading(false)
-          setData(false)
+        else {
+          setModalError(true);
+          }
+        setLoading(false)
+        setData(false)
         }
-        
+      catch(error){
+        console.log(error)
+        setModalError(true)
+        setLoading(false)
+        setData(false)
       }
+    }
       onSubmit();
     }, [data])
   
@@ -111,19 +116,20 @@ export const ActivityInfoAndUpdate = (props) =>{
         autoComplete="off"
         onSubmit={formik.handleSubmit}
         {...props}
+        style={{borderRadius: '0.6rem'}}
       > 
-      <fieldset disabled={(props.isclient == 0) ? null: "undefined"}>
-          <Card sx={{width:'710px', height:'600px',margin:'auto'}}>
+      <fieldset style={{borderRadius: '0.6rem', border:0}} disabled={(props.isclient == 0) ? null: "undefined"}>
+          <Card sx={{width:'710px', height:'580px',height:'fit-contain', margin:'auto'}}>
             {(props.isclient !== 0) ?
-              <CardHeader sx={{height:'96px'}}
+              <CardHeader sx={{height:'75px'}}
                 subheader="Consulta la información de la actividad"
                 title="Actividad"
               />:
-              <CardHeader sx={{height:'96px'}}
+              <CardHeader sx={{height:'75px'}}
               subheader="Actualiza una actividad aquí"
               title="Actividad"
             />
-          }
+            }
             <Divider />
             <CardContent>
               <Grid container spacing={3} >
@@ -141,14 +147,14 @@ export const ActivityInfoAndUpdate = (props) =>{
                     onBlur={formik.handleBlur}
                   />
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid item md={4} xs={12}>
                   <ResponsiveDatePicker 
                     name="date" 
                     title="Fecha"  
-                    onChange={(event) => formik.setFieldValue("date", event)}
-                    value={formik.values.date}/>
+                    onChange={(event) => formik.setFieldValue("date", event) && setDateData(true)}
+                    value={!dateData ? props.dateactivity : formik.values.date}/>
                 </Grid>    
-                <Grid item md={6} xs={12} >
+                <Grid item md={4} xs={12} >
                     <TextField sx={{width:'100%'}}
                         fullWidth
                         label="Espacio/lugar"
@@ -162,6 +168,24 @@ export const ActivityInfoAndUpdate = (props) =>{
                         onBlur={formik.handleBlur}
                     />
                 </Grid>
+                <Grid item md={4} xs={12} >
+                  <TextField
+                    fullWidth
+                    id="state"
+                    name="state"
+                    label="Seleccione el estado *"
+                    select
+                    error={Boolean(formik.touched.state && formik.errors.state)}
+                    helperText={formik.touched.state && formik.errors.state}
+                    value={!stateData ? props.stateactivity : formik.values.state}
+                    onChange={(event) => formik.setFieldValue("state", event.target.value) && setStateData(true)}
+                    variant="outlined"
+                  >
+                    {states.map((option, key) => (
+                        <MenuItem value={option} key={key}>{option}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>                
                 <Grid item md={4} xs={12} > 
                     <TextField
                         id="time"
@@ -274,22 +298,22 @@ export const ActivityInfoAndUpdate = (props) =>{
           {(modal == true) ? 
               <Modal open={modal}
               onClose={() => {router.push('/CrearActividad') && window.location.reload()}}>
-              <div className={styles.modal} style={{ width: '25rem' }}>
+              <div className={styles.modal} style={{ width: '27rem' }}>
                 <Grid sx={{ textAlign: 'center' }}>
                   <Grid sx={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', color: '#5048E5' }}>
                     <StickyNote2Icon></StickyNote2Icon>
-                    <Typography variant='h2' sx={{ color: '#5048E5', fontSize: '1.87rem', marginBottom: '0.6rem' }}>Actividad registrada</Typography>
+                    <Typography variant='h2' sx={{ color: '#5048E5', fontSize: '1.87rem', marginBottom: '0.6rem' }}>Actividad actualizada</Typography>
                   </Grid>
                   <Divider />
-                  <Typography variant='subtitle1' sx={{ marginTop: '0.6rem' }}>La actividad se pudo registrar con éxito!!! </Typography>
+                  <Typography variant='subtitle1' sx={{ marginTop: '0.6rem' }}>La actividad se pudo actualizar con éxito!!! </Typography>
                 </Grid>
               </div>
             </Modal> : null
           }
           {(modalError == true) ?
             <ModalAlert
-              title={"Actividad NO registrada"}
-              message={"La actividad NO se pudo registrar, complete todos los campos"} modalState={modalError} 
+              title={"Actividad NO actualizada"}
+              message={"La actividad NO se pudo actualizar, complete todos los campos"} modalState={modalError} 
               modalSuccess={false}
               setModalState={setModalError} /> : null
           }

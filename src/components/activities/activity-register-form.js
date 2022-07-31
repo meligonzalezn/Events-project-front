@@ -82,7 +82,6 @@ export const ActivityRegisterForm = (props) => {
         setLoading(false)
         setData(false)
       }
-      
     }
     onSubmit();
   }, [data])
@@ -108,13 +107,13 @@ export const ActivityRegisterForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...props}
     >
-      <Card sx={{width:'710px', height:'600px', margin:'auto'}}>
-        <CardHeader sx={{height:'96px'}}
+      <Card sx={{width:'710px', height:'580px',height:'fit-contain',  margin:'auto'}}>
+        <CardHeader sx={{height:'75px'}}
           subheader="Registre aquí una actividad"
           title="Actividad"
         />
-        <Divider />
-        <CardContent>
+        <Divider /> 
+        <CardContent >
           <Grid container spacing={3} >
             <Grid item md={12} xs={12} >
               <TextField

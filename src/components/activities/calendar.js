@@ -127,8 +127,9 @@ export const Calendar = () => {
             </Modal> : null}
             {activityClick && activityData ?  
             <Modal open={activityClick} onClose={handleOnCloseInfo}>
-                <div className={styles.modal} style={{padding:0}}>
+                <div className={styles.modal} style={{padding:0, borderRadius: '0.6rem'}}>
                     <ActivityInfoAndUpdate 
+                        idactivity={activityData.event.id}
                         titleactivity={activityData.event.title} 
                         dateactivity={activityData.event.start}
                         inithouractivity={activityData.event.extendedProps.initHour}

@@ -37,7 +37,7 @@ export const ModalAlert = ({ title, message, modalState, setModalState, modalSuc
   return (
     <Modal open={modalState}
       onClose={onClose}>
-      <div className={styles.modal} style={{ width: '25rem' }}>
+      <div className={styles.modal} style={{ width: '28rem' }}>
         <Grid sx={{ textAlign: 'center' }}>
           <Grid sx={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', color: '#5048E5' }}>
             <StickyNote2Icon></StickyNote2Icon>
