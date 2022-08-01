@@ -13,6 +13,9 @@ import Login from './login';
 import NotFound from './404';
 import '../components/news/styles.css';
 import SignUp from './SignUp';
+import "@fullcalendar/common/main.css";
+import "@fullcalendar/daygrid/main.css";
+import "@fullcalendar/timegrid/main.css";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -49,7 +52,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-          Material Kit Pro
+          ABC App
         </title>
         <meta
           name="viewport"
