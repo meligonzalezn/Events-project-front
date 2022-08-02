@@ -28,6 +28,7 @@ export const ActivityInfoAndUpdate = (props) => {
     const [finalHourData, setFinalHourData] = useState(false);
     const [dateData, setDateData] = useState(false);
     const [detailsData, setDetailsData] = useState(false);
+    const [costData, setCostData] = useState(false);
     const states = ['Activo', 'Inactivo' ]
     const styles = useStyles();
     const router = useRouter();
@@ -38,6 +39,7 @@ export const ActivityInfoAndUpdate = (props) => {
         init_hour: props.inithouractivity, 
         final_hour:props.finalhouractivity, 
         capacity: props.capacityactivity,
+        cost: props.costactivity,
         space: props.spaceactivity,
         state: props.stateactivity,
         details: props.detailsactivity,
@@ -50,6 +52,8 @@ export const ActivityInfoAndUpdate = (props) => {
           .string().required('Requerido'),
         capacity: Yup
           .number().integer().required('Capacidad mayor a 0'),   
+        cost: Yup
+          .number().required('Costo mayor a 0'),
         space: Yup
           .string().required('Espacio requerido'),
         init_hour: Yup
@@ -70,8 +74,8 @@ export const ActivityInfoAndUpdate = (props) => {
       try {
         if(!(formik.values.title == "" || formik.values.date == "" || 
           formik.values.init_hour == "" || formik.values.final_hour == "" ||
-          formik.values.capacity == ""  || formik.values.details == "" || 
-          formik.values.space== "")){
+          formik.values.capacity == ""  || formik.values.cost == "" ||
+          formik.values.details == "" || formik.values.space== "")){
             if(formik.isValid){
               await updateActivity(formik)
               setModal(true)
@@ -147,14 +151,29 @@ export const ActivityInfoAndUpdate = (props) => {
                     onBlur={formik.handleBlur}
                   />
                 </Grid>
-                <Grid item md={4} xs={12}>
+                <Grid item md={(props.isclient == 0) ? 4 : 6} xs={12}>
+                  {(props.isclient == 0) ?                   
                   <ResponsiveDatePicker 
                     name="date" 
                     title="Fecha"  
                     onChange={(event) => formik.setFieldValue("date", event) && setDateData(true)}
-                    value={!dateData ? props.dateactivity : formik.values.date}/>
+                    value={!dateData ? props.dateactivity : formik.values.date}/> : 
+                  <TextField
+                    fullWidth
+                    label="Fecha"
+                    name="date"
+                    required
+                    disabled
+                    variant="outlined"
+                    error={Boolean(formik.touched.date && formik.errors.date)}
+                    helperText={formik.touched.date && formik.errors.date}
+                    value={formik.values.date.getDate() + '/' + parseInt(formik.values.date.getMonth() + 1)+ "/" + formik.values.date.getFullYear()}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                }
                 </Grid>    
-                <Grid item md={4} xs={12} >
+                <Grid item md={(props.isclient == 0) ? 4 : 6} xs={12} >
                     <TextField sx={{width:'100%'}}
                         fullWidth
                         label="Espacio/lugar"
@@ -168,25 +187,27 @@ export const ActivityInfoAndUpdate = (props) => {
                         onBlur={formik.handleBlur}
                     />
                 </Grid>
-                <Grid item md={4} xs={12} >
-                  <TextField
-                    fullWidth
-                    id="state"
-                    name="state"
-                    label="Seleccione el estado *"
-                    select
-                    error={Boolean(formik.touched.state && formik.errors.state)}
-                    helperText={formik.touched.state && formik.errors.state}
-                    value={!stateData ? props.stateactivity : formik.values.state}
-                    onChange={(event) => formik.setFieldValue("state", event.target.value) && setStateData(true)}
-                    variant="outlined"
-                  >
-                    {states.map((option, key) => (
-                        <MenuItem value={option} key={key}>{option}</MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>                
-                <Grid item md={4} xs={12} > 
+                {(props.isclient == 0) ? 
+                  <Grid item md={4} xs={12} >
+                    <TextField
+                      fullWidth
+                      id="state"
+                      name="state"
+                      label="Seleccione el estado *"
+                      select
+                      error={Boolean(formik.touched.state && formik.errors.state)}
+                      helperText={formik.touched.state && formik.errors.state}
+                      value={!stateData ? props.stateactivity : formik.values.state}
+                      onChange={(event) => formik.setFieldValue("state", event.target.value) && setStateData(true)}
+                      variant="outlined"
+                    >
+                      {states.map((option, key) => (
+                          <MenuItem value={option} key={key}>{option}</MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>: null
+                }
+                <Grid item md={3} xs={12} > 
                     <TextField
                         id="time"
                         name= "init_hour"
@@ -203,7 +224,7 @@ export const ActivityInfoAndUpdate = (props) => {
                         sx={{ width: '100%' }}
                     />
                 </Grid>
-                <Grid item md={4} xs={12} > 
+                <Grid item md={3} xs={12} > 
                     <TextField
                         id="time"
                         name= "final_hour"
@@ -220,7 +241,7 @@ export const ActivityInfoAndUpdate = (props) => {
                         sx={{ width: '100%' }}
                     />
                 </Grid>
-                <Grid item md={4} xs={12} > 
+                <Grid item md={3} xs={12} > 
                   <TextField
                       name= "capacity"
                       label="Capacidad"
@@ -230,11 +251,42 @@ export const ActivityInfoAndUpdate = (props) => {
                       error={Boolean(formik.touched.capacity && formik.errors.capacity)}
                       helperText={formik.touched.capacity && formik.errors.capacity}
                       value={!capacityData ? props.capacityactivity : formik.values.capacity}
-                      onChange={(event) => {formik.setFieldValue("capacity", event.target.value) && setCapacityData(true)}}
+                      onChange={(event) => {
+                        let input = event.target.value
+                        if(parseInt(input) >=0){
+                          formik.setFieldValue("capacity", event.target.value) && setCapacityData(true)
+                        }
+                        else{
+                          formik.setFieldValue("capacity", "") && setCapacityData(true) 
+                        }
+                      }}
                       onBlur={formik.handleBlur}
                       sx={{ width: '100%' }}
                   />
-                </Grid>    
+                </Grid> 
+                <Grid item md={3} xs={12} > 
+                  <TextField
+                      name= "cost"
+                      label="Precio"
+                      type= "number"
+                      inputProps={{min:0}}
+                      required
+                      error={Boolean(formik.touched.cost && formik.errors.cost)}
+                      helperText={formik.touched.cost && formik.errors.cost}
+                      value={!costData ? props.costactivity : formik.values.cost}
+                      onChange={(event) => {
+                        let input = event.target.value
+                        if(parseInt(input) >=0){
+                          formik.setFieldValue("cost", event.target.value) && setCostData(true)
+                        }
+                        else{
+                          formik.setFieldValue("cost", "") && setCostData(true) 
+                        }
+                      }}              
+                      onBlur={formik.handleBlur}
+                      sx={{ width: '100%' }}
+                  />
+                </Grid>   
                 <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>
                   <TextareaAutosize
                     id="details"
@@ -287,13 +339,23 @@ export const ActivityInfoAndUpdate = (props) => {
             </CardContent>
             <Divider />
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
-              <LoadingButton
-                loading={loading}
-                color="primary"
-                variant="contained"
-                onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
-                Actualizar Actividad
-              </LoadingButton>
+              {(props.isclient == 0) ?              
+                <LoadingButton
+                  loading={loading}
+                  color="primary"
+                  variant="contained"
+                  onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
+                  Actualizar Actividad
+                </LoadingButton> :
+                 <LoadingButton
+                 loading={loading}
+                 color="primary"
+                 variant="contained"
+                 onClick={(e) => {console.log("aqui va lo de inscribirse")}}
+                 >
+                 Inscribirse
+               </LoadingButton> 
+            }
             </Box>
           </Card>
           {(modal == true) ? 

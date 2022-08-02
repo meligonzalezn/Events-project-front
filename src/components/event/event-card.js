@@ -6,6 +6,7 @@ import CreateActivity from "src/pages/CrearActividad";
 
 export const EventCard = ({ event, ...rest }) => {
   const router = useRouter();
+  console.log("aqui ya puedo tener el local", localStorage.getItem("autor")) 
 
   const image_url = () => {
     if (event.Media_file === null) {

@@ -33,19 +33,22 @@ import {
         </Typography>
         <Box sx={{ m: 1 }}>
         <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
-        <Button
+        {(localStorage.getItem('userRole') == 'Cliente') ? 
+         null :
+         <>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={ () => router.push('/Crear_evento')}>
+            Añadir evento
+          </Button>
+          <Button
           color="primary"
-          variant="contained"
-          onClick={ () => router.push('/Crear_evento')}
-        >
-          Añadir evento
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
-        >
+          variant="contained">
           Actualizar evento
-        </Button>
+          </Button>
+         </> 
+        }  
         </Box>
       </Box>
       </Box>

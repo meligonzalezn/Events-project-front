@@ -21,7 +21,7 @@ export const StyleWrapper = styled.div`
   }
   .fc-event-title{
     color: black;
-    font-size: 0.8vw;
+    font-size: 1vw;
     text-align: center;
     margin: auto;
     display: flex;
@@ -30,7 +30,7 @@ export const StyleWrapper = styled.div`
   }
   @media(max-width:1400px){
     .fc-event-title{
-        font-size: 1vw;
+        font-size: 0.81vw;
     }
     @media(max-width:768px){
         .fc-event-title{
@@ -47,7 +47,7 @@ export const Calendar = () => {
     const [activityData, setActivityData] = useState()
     const styles = useStyles();
     var activitiesArray;
-    var activitiesEvent = {}; 
+    var activitiesEvent = {};
     useEffect(() => {
         /**
          * With this function we get all activities we have register on DB 
@@ -66,6 +66,7 @@ export const Calendar = () => {
                             initHour: value.Init_hour,
                             finalHour: value.Final_hour, 
                             capacity: value.Capacity,
+                            cost: value.Cost,
                             space:value.Space, 
                             state: value.State,
                             color: "hsl(" + 360 * Math.random() + ',' +
@@ -115,7 +116,7 @@ export const Calendar = () => {
             <FullCalendar  
                 events={dataCalendar}
                 plugins={[dayGridPlugin, interactionPlugin]}
-                dateClick={handleDateClick}
+                dateClick={localStorage.getItem('userRole') == 'Cliente' ? null : handleDateClick }
                 selectable="true"
                 eventClick={handleEventClick}
             />
@@ -135,11 +136,12 @@ export const Calendar = () => {
                         inithouractivity={activityData.event.extendedProps.initHour}
                         finalhouractivity={activityData.event.extendedProps.finalHour}
                         capacityactivity = {activityData.event.extendedProps.capacity}
+                        costactivity={activityData.event.extendedProps.cost}
                         spaceactivity={activityData.event.extendedProps.space}
                         stateactivity={activityData.event.extendedProps.state}
                         detailsactivity={activityData.event.extendedProps.details}
                         //0 is to indicate that is not a client 
-                        isclient={0}
+                        isclient={localStorage.getItem('userRole') == 'Cliente' ? null : 0}
                     /> 
                 </div>
             </Modal> : null}         
