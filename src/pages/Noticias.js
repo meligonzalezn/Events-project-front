@@ -13,7 +13,6 @@ export default function Noticias(props) {
           Noticias
         </title>
       </Head>
-
       <ShowNews isEmployee={true} />
     </>
   )
