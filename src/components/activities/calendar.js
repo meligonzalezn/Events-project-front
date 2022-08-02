@@ -21,7 +21,7 @@ export const StyleWrapper = styled.div`
   }
   .fc-event-title{
     color: black;
-    font-size: 0.8vw;
+    font-size: 1vw;
     text-align: center;
     margin: auto;
     display: flex;
@@ -30,7 +30,7 @@ export const StyleWrapper = styled.div`
   }
   @media(max-width:1400px){
     .fc-event-title{
-        font-size: 1vw;
+        font-size: 0.81vw;
     }
     @media(max-width:768px){
         .fc-event-title{
