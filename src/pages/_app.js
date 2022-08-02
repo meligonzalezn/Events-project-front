@@ -29,25 +29,22 @@ const App = (props) => {
 
   useEffect(async () => {
     //User is logged?
-    setLoading(false);
-    setLogged(true);
-    setHasAccess(true);
 
-    // is_logged().then(([_, error]) => {
+    is_logged().then(([_, error]) => {
 
-    //   setLogged(error == null)
+      setLogged(error == null)
 
-    //   if (error == null) {
-    //     //User has permissions ?
-    //     has_perms(router.asPath).then(([_, error]) => {
-    //       // console.log("actualizado ? ", _, error)
-    //       setHasAccess(error == null)
-    //       setLoading(false)
-    //     })
-    //   } else {
-    //     setLoading(false)
-    //   }
-    // })
+      if (error == null) {
+        //User has permissions ?
+        has_perms(router.asPath).then(([_, error]) => {
+          // console.log("actualizado ? ", _, error)
+          setHasAccess(error == null)
+          setLoading(false)
+        })
+      } else {
+        setLoading(false)
+      }
+    })
   }, [router.asPath])
 
   const getLayout = Component.getLayout ?? ((page) => page);
