@@ -19,7 +19,8 @@ export default function ShowBadge(props) {
      * Obtiene las escarapela desde el back.
      */
     const getBadge = async () => {
-      const user = 1; // Este dato debe obtenerse desde la session.
+      const user = localStorage.getItem('idUser');
+      console.log(user)
       const request = await axios.get(`http://localhost:8000/User/${user}/get_badge/`);
       const data = request.data.url;
       setBadgeURL(data)
