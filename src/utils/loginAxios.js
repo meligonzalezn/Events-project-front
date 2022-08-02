@@ -17,12 +17,14 @@ const config = {
  */
 async function login(Email, Password) {
   try {
+
     const response = await axios.post('http://localhost:8000/login/', {
       Email: Email,
-      Password: Password
+      Password: Password    
     }, config)
     return [response, null]
   }
+  
   catch (err) {
     return [null, err.response]
   }

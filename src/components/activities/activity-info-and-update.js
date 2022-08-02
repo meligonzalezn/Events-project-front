@@ -151,14 +151,29 @@ export const ActivityInfoAndUpdate = (props) => {
                     onBlur={formik.handleBlur}
                   />
                 </Grid>
-                <Grid item md={4} xs={12}>
+                <Grid item md={(props.isclient == 0) ? 4 : 6} xs={12}>
+                  {(props.isclient == 0) ?                   
                   <ResponsiveDatePicker 
                     name="date" 
                     title="Fecha"  
                     onChange={(event) => formik.setFieldValue("date", event) && setDateData(true)}
-                    value={!dateData ? props.dateactivity : formik.values.date}/>
+                    value={!dateData ? props.dateactivity : formik.values.date}/> : 
+                  <TextField
+                    fullWidth
+                    label="Fecha"
+                    name="date"
+                    required
+                    disabled
+                    variant="outlined"
+                    error={Boolean(formik.touched.date && formik.errors.date)}
+                    helperText={formik.touched.date && formik.errors.date}
+                    value={formik.values.date.getDate() + '/' + parseInt(formik.values.date.getMonth() + 1)+ "/" + formik.values.date.getFullYear()}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                }
                 </Grid>    
-                <Grid item md={4} xs={12} >
+                <Grid item md={(props.isclient == 0) ? 4 : 6} xs={12} >
                     <TextField sx={{width:'100%'}}
                         fullWidth
                         label="Espacio/lugar"
@@ -172,24 +187,26 @@ export const ActivityInfoAndUpdate = (props) => {
                         onBlur={formik.handleBlur}
                     />
                 </Grid>
-                <Grid item md={4} xs={12} >
-                  <TextField
-                    fullWidth
-                    id="state"
-                    name="state"
-                    label="Seleccione el estado *"
-                    select
-                    error={Boolean(formik.touched.state && formik.errors.state)}
-                    helperText={formik.touched.state && formik.errors.state}
-                    value={!stateData ? props.stateactivity : formik.values.state}
-                    onChange={(event) => formik.setFieldValue("state", event.target.value) && setStateData(true)}
-                    variant="outlined"
-                  >
-                    {states.map((option, key) => (
-                        <MenuItem value={option} key={key}>{option}</MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>                
+                {(props.isclient == 0) ? 
+                  <Grid item md={4} xs={12} >
+                    <TextField
+                      fullWidth
+                      id="state"
+                      name="state"
+                      label="Seleccione el estado *"
+                      select
+                      error={Boolean(formik.touched.state && formik.errors.state)}
+                      helperText={formik.touched.state && formik.errors.state}
+                      value={!stateData ? props.stateactivity : formik.values.state}
+                      onChange={(event) => formik.setFieldValue("state", event.target.value) && setStateData(true)}
+                      variant="outlined"
+                    >
+                      {states.map((option, key) => (
+                          <MenuItem value={option} key={key}>{option}</MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>: null
+                }
                 <Grid item md={3} xs={12} > 
                     <TextField
                         id="time"
@@ -322,13 +339,23 @@ export const ActivityInfoAndUpdate = (props) => {
             </CardContent>
             <Divider />
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
-              <LoadingButton
-                loading={loading}
-                color="primary"
-                variant="contained"
-                onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
-                Actualizar Actividad
-              </LoadingButton>
+              {(props.isclient == 0) ?              
+                <LoadingButton
+                  loading={loading}
+                  color="primary"
+                  variant="contained"
+                  onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
+                  Actualizar Actividad
+                </LoadingButton> :
+                 <LoadingButton
+                 loading={loading}
+                 color="primary"
+                 variant="contained"
+                 onClick={(e) => {console.log("aqui va lo de inscribirse")}}
+                 >
+                 Inscribirse
+               </LoadingButton> 
+            }
             </Box>
           </Card>
           {(modal == true) ? 

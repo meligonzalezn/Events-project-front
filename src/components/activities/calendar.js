@@ -116,7 +116,7 @@ export const Calendar = () => {
             <FullCalendar  
                 events={dataCalendar}
                 plugins={[dayGridPlugin, interactionPlugin]}
-                dateClick={handleDateClick}
+                dateClick={localStorage.getItem('userRole') == 'Cliente' ? null : handleDateClick }
                 selectable="true"
                 eventClick={handleEventClick}
             />
@@ -141,7 +141,7 @@ export const Calendar = () => {
                         stateactivity={activityData.event.extendedProps.state}
                         detailsactivity={activityData.event.extendedProps.details}
                         //0 is to indicate that is not a client 
-                        isclient={0}
+                        isclient={localStorage.getItem('userRole') == 'Cliente' ? null : 0}
                     /> 
                 </div>
             </Modal> : null}         
