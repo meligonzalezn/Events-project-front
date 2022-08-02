@@ -136,7 +136,7 @@ export const Calendar = () => {
                         inithouractivity={activityData.event.extendedProps.initHour}
                         finalhouractivity={activityData.event.extendedProps.finalHour}
                         capacityactivity = {activityData.event.extendedProps.capacity}
-                        costoactivity={activityData.event.extendedProps.cost}
+                        costactivity={activityData.event.extendedProps.cost}
                         spaceactivity={activityData.event.extendedProps.space}
                         stateactivity={activityData.event.extendedProps.state}
                         detailsactivity={activityData.event.extendedProps.details}

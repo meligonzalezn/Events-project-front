@@ -55,6 +55,7 @@ const formatDate = (date) => {
       Init_hour: data.init_hour, 
       Final_hour: data.final_hour, 
       Capacity: data.capacity,
+      Cost: data.cost,
       Space: data.space,
       State: data.state, 
       Details: data.details, 

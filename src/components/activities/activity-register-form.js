@@ -42,9 +42,9 @@ export const ActivityRegisterForm = (props) => {
       details: Yup
         .string().required('Requerido'),
       capacity: Yup
-        .number().integer().required('Capacidad mayor a 0'),  
+        .number().integer().required('Capacidad mayor a 0'), 
       cost: Yup
-        .number().required('Costo mayor a 0'),
+        .number().required('Costo mayor a 0'), 
       space: Yup
         .string().required('Espacio requerido'),
       init_hour: Yup
@@ -167,8 +167,8 @@ export const ActivityRegisterForm = (props) => {
                 <TextField sx={{width:'100%'}}
                     fullWidth
                     label="Precio"
+                    placeholder='3000'
                     name="cost"
-                    type="number"
                     inputProps={{min:0}}
                     required
                     variant="outlined"
