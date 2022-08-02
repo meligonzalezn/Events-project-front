@@ -14,6 +14,8 @@ const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad']
  */
 export default function PayStepper(props) {
 
+  const router = useRouter();
+
   React.useEffect(() => {
     if (!props.validStep) return;
 
@@ -32,7 +34,7 @@ export default function PayStepper(props) {
 
   const handleBackToOrigin = () => {
     props.setActiveStep(0);
-    // ! Volver a la página de evento en la que se estaba.
+    router.push("/", "/")
   };
 
   return (

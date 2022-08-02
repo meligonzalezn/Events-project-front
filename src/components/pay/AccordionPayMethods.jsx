@@ -16,7 +16,7 @@ import PayTransfer from '../forms/PayTransfer';
 /**
  * 
  * @param {{setValidStep: function, validateData: boolean,
- *          setValidateData: function}} props 
+ *          setValidateData: function, setPayMethodSelected: function}} props 
  * @returns 
  */
 export default function AccordionPayMethods(props) {
@@ -33,6 +33,7 @@ export default function AccordionPayMethods(props) {
 
     if (expanded === 'efectivo' || expanded === 'transferencia') {
       props.setValidStep(true);
+      props.setPayMethodSelected(expanded);
       return;
     }
 
@@ -63,7 +64,7 @@ export default function AccordionPayMethods(props) {
         </AccordionSummary>
 
         <AccordionDetails>
-          <PayCard setValidStep={props.setValidStep} validateCard={validateCard} setValidateCard={setValidateCard} cardType={'credito'} cardTypeSelected={expanded} />
+          <PayCard setValidStep={props.setValidStep} validateCard={validateCard} setValidateCard={setValidateCard} cardType={'credito'} cardTypeSelected={expanded} setPayMethodSelected={props.setPayMethodSelected} />
         </AccordionDetails>
       </Accordion>
 
@@ -79,7 +80,7 @@ export default function AccordionPayMethods(props) {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <PayCard setValidStep={props.setValidStep} validateCard={validateCard} setValidateCard={setValidateCard} cardType={'debito'} cardTypeSelected={expanded} />
+          <PayCard setValidStep={props.setValidStep} validateCard={validateCard} setValidateCard={setValidateCard} cardType={'debito'} cardTypeSelected={expanded} setPayMethodSelected={props.setPayMethodSelected} />
         </AccordionDetails>
       </Accordion>
 

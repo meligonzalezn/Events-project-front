@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Card, Grid } from '@mui/material';
+import { Card } from '@mui/material';
 import { Container } from '@mui/system';
+import { registerPayment } from 'src/utils/paymentAxios';
 
 function LinearProgressWithLabel(props) {
   return (
@@ -32,7 +33,8 @@ LinearProgressWithLabel.propTypes = {
 /**
  * 
  * @param {{upperMessage: string, lowerMessage: string,
- *          setValidStep: function, setSuccessfulPay: function}} props 
+ *          setValidStep: function, setSuccessfulPay: function
+ *          payMethodSelected: string}} props 
  * @returns 
  */
 export default function SecuentialLoader(props) {
@@ -47,9 +49,10 @@ export default function SecuentialLoader(props) {
     /**
      * Inserta los datos del pago a la BD.
      */
-    const processPay = () => {
-      // TODO hacer exitoso el pago en la BD.
-
+    const processPay = async () => {
+      const resp = await registerPayment(props.payMethodSelected);
+      // Los datos de la actividad se borran.
+      localStorage.setItem("actividad", '');
       props.setSuccessfulPay(true);
     }
 

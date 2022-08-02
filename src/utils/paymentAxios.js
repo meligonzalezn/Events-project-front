@@ -1,26 +1,31 @@
 import axios from 'axios';
+import moment from 'moment';
 
-async function registerPayment(metadata) {
-  const data = metadata.values;
+/**
+ * Registra un pago en la BD.
+ * @param {*} pay_method 
+ * @returns 
+ */
+async function registerPayment(pay_method) {
+  const data = JSON.parse(localStorage.getItem("actividad"));
 
-  let form_data = new FormData()
-  form_data.append('ID_Event', data.ID_Event)
-  form_data.append('ID_User', data.ID_User)
-  form_data.append('ID_Activity', data.ID_Activity)
-  form_data.append('Date', data.Date)
-  form_data.append('Value', data.Value)
-  form_data.append('pay_method', data.pay_method);
-  const config = {
-    'content-type': 'multipart/form-data'
+  const payment = {
+    ID_User: localStorage.getItem('idUser'),
+    ID_Event: localStorage.getItem('idEvent'),
+    ID_Activity: data.id,
+    Date: moment().format("YYYY-MM-DD"),
+    Value: data.cost,
+    pay_method: pay_method
   }
+
   try {
-    const request = await axios.post("http://localhost:8000/Payment/", form_data, config).then((res) => {
-      return res;
-    });
-    return { request, eventsDataAll }
+    const request = await axios.post("http://localhost:8000/Payment/", payment);
+    return [request, null];
   }
-  catch (error) {
-    console.log(error)
-    return [null, error]
+  catch (err) {
+    console.log(err);
+    return [null, err]
   }
 }
+
+export { registerPayment }

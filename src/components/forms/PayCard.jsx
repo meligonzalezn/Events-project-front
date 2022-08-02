@@ -22,7 +22,7 @@ const IDType = [{
  * 
  * @param {{setValidStep: function, validateCard: boolean,
  *          setValidateCard: function, cardType: string,
- *          cardTypeSelected: string}} props 
+ *          cardTypeSelected: string, setPayMethodSelected: function}} props 
  * @returns React component.
  */
 export default function PayCard(props) {
@@ -80,6 +80,7 @@ export default function PayCard(props) {
 
       if (formik.isValid) {
         props.setValidStep(true);
+        props.setPayMethodSelected("Tarjeta de " + props.cardType);
       }
 
       setUpload(false);
