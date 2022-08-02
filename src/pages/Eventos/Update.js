@@ -5,6 +5,7 @@ import { EventDetails } from 'src/components/events/event-profile-details';
 import { DashboardLayout } from 'src/components/dashboard-layout';
 import LinearLoader from 'src/components/loaders/LinealLoader';
 import { useState } from 'react';
+import { updateEvent } from "src/utils/eventAxios";
 
 const UpdateEvent = () => {
   const [loading, setLoading] = useState(true);
@@ -48,7 +49,7 @@ const UpdateEvent = () => {
             md={6}
             xs={12}
           >
-            <EventDetails  updateEvent={true} eventValues={eventData} eventPlace={getPlace} />
+            <EventDetails  updateEvent={true} eventValues={eventData} eventPlace={getPlace} submitFunc ={updateEvent}/>
           </Grid>
         </Grid>
       </Container>

@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import { states } from "../../utils/states";
 import { eventData, getEventData } from "src/utils/eventAxios";
+import { ModalAlert } from '../modals/modalAlert';
 
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
@@ -27,9 +28,12 @@ import { eventData, getEventData } from "src/utils/eventAxios";
  * @returns React component.
  */
 //export default function EventDetails(props) {
-export const EventDetails = ({ updateEvent, eventValues, eventPlace }) => {
+export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc }) => {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [modalError, setModalError] = useState(false);
+  
   const initialValues = () => {
     if (updateEvent) {
       return {
@@ -76,16 +80,21 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace }) => {
     const onSubmit = async () => {
       if (!upload) return;
       setLoading(true);
+      try{
+        if (formik.isValid) {
+          await submitFunc(formik).then((res) => console.log("res: ", res));
+          setLoading(!loading);
+          //router.push("/Eventos");
+        }
+        setModal(!modal)
+        setUpload(false);
+        setLoading(false);
 
-      if (formik.isValid) {
-        await createEvent(formik).then((res) => console.log("res: ", res));
-        setLoading(!loading);
-        router.push("/Eventos");
-        //router.push('/'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+      }catch(error){
+        setModalError(true)
+        setUpload(false);
+        setLoading(false);
       }
-
-      setUpload(false);
-      setLoading(false);
     };
 
     onSubmit();
@@ -288,6 +297,18 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace }) => {
           </Box>
         </Box>
       </Card>
+      {(modal == true) ? <ModalAlert
+              title={"Registro de evento"}
+              message={"Los cambios se guardaron exitosamente!"} modalState={modal}
+              setModalState={setModal}
+              redirectTo={"/Eventos"} /> : null
+            }
+      {(modalError == true) ?
+              <ModalAlert
+                title={"Registro de evento"}
+                message={"Los cambios NO fueron registrados"} modalState={modalError}
+                setModalState={setModalError} /> : null
+      }
     </form>
   );
 };

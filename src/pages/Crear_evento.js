@@ -3,7 +3,7 @@ import { Box, Divider ,Container, Grid, Typography } from '@mui/material';
 import MapComponent from '../components/map/map';
 import { EventDetails } from '../components/events/event-profile-details';
 import { DashboardLayout } from '../components/dashboard-layout';
-
+import { createEvent } from "src/utils/eventAxios";
 
 const CreateEvent = () => {
   const {MapRender, getPlace} = MapComponent(""); 
@@ -42,7 +42,7 @@ const CreateEvent = () => {
             md={6}
             xs={12}
           >
-            <EventDetails  updateEvent={false} eventPlace={getPlace}  />
+            <EventDetails  updateEvent={false} eventPlace={getPlace} submitFunc ={createEvent}  />
           </Grid>
         </Grid>
       </Container>

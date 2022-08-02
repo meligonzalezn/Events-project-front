@@ -124,23 +124,6 @@ async function createEvent(metadata) {
  }
 
 
-async function update(metadata) {
-  const data = metadata.values;
-  const event = {
-    Title: data.title,
-  }
-
-  try {
-    const request = await axios.put("http://localhost:8000/Events/" + "1" + "/update/", event)
-    return [request, null];
-
-  } catch (err) {
-    return null, err
-  }
-
-
-}
-
 async function enable(pk) {
 
   try {
@@ -154,4 +137,58 @@ async function enable(pk) {
 
 }
 
-export { createEvent, update , eventsTitle, eventData, getEventData }
+
+/**
+ * Updates data from an event in the events model
+ * @param {*} metadata 
+ */
+ async function updateEvent(metadata){
+  const data = metadata.values;
+  let eventUpdateSelected = {}
+  let idEventSelectedUpdate;
+  const eventsDataAllUpdate = await axios.get("http://localhost:8000/Events/").then((res) => {
+    eventUpdateSelected = res.data.find((element) => element.Title === data.title)  
+    idEventSelectedUpdate = eventUpdateSelected.id 
+    return idEventSelectedUpdate;
+  })
+  getEventData(data.title)
+  console.log("Data:" ,data)
+  let form_data = new FormData()
+  form_data.append('Title', data.title)
+  form_data.append('Details',data.details)
+  form_data.append('State', data.state)
+  if(data.place !== ''){
+    form_data.append('Space', data.place)
+  }
+  form_data.append('Cost', data.enrollment_price)
+  form_data.append('Start_date', formatDate(data.start_date))
+  form_data.append('Finish_date', formatDate(data.finish_date))
+  if(data.image_file !== '')
+    console.log("Imagen: ", data.image_file, eventData.Media_file)
+    if (data.image_file === eventData.Media_file){
+    }
+    else{
+      form_data.append('Media_file', data.image_file, data.image_file.name)
+    }
+  
+  const config = {
+    'content-type': 'multipart/form-data'
+
+  }
+
+  console.log(form_data)
+
+  try {
+    const request = await axios.put("http://localhost:8000/Events/" + idEventSelectedUpdate + "/", form_data, config).then((res) => {
+      return res;
+    });
+    return {request, eventsDataAllUpdate}
+  }
+  catch(error){
+    console.log(error)
+    return [null, error]
+  }
+}
+
+
+export { createEvent, eventsTitle, eventData, getEventData , updateEvent}
