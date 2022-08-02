@@ -47,7 +47,7 @@ export const Calendar = () => {
     const [activityData, setActivityData] = useState()
     const styles = useStyles();
     var activitiesArray;
-    var activitiesEvent = {}; 
+    var activitiesEvent = {};
     useEffect(() => {
         /**
          * With this function we get all activities we have register on DB 
@@ -66,6 +66,7 @@ export const Calendar = () => {
                             initHour: value.Init_hour,
                             finalHour: value.Final_hour, 
                             capacity: value.Capacity,
+                            cost: value.Cost,
                             space:value.Space, 
                             state: value.State,
                             color: "hsl(" + 360 * Math.random() + ',' +
@@ -135,6 +136,7 @@ export const Calendar = () => {
                         inithouractivity={activityData.event.extendedProps.initHour}
                         finalhouractivity={activityData.event.extendedProps.finalHour}
                         capacityactivity = {activityData.event.extendedProps.capacity}
+                        costoactivity={activityData.event.extendedProps.cost}
                         spaceactivity={activityData.event.extendedProps.space}
                         stateactivity={activityData.event.extendedProps.state}
                         detailsactivity={activityData.event.extendedProps.details}

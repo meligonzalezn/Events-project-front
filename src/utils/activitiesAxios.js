@@ -24,12 +24,14 @@ const formatDate = (date) => {
         Init_hour: data.init_hour, 
         Final_hour: data.final_hour, 
         Capacity: data.capacity,
+        Cost: data.cost,
         Space: data.space,
         State: data.state, 
         Details: data.details, 
         Title: data.title, 
         ID_Event: localStorage.getItem('idEvent') 
     }
+    console.log("que necesito enviar ", activity)
     try {
       const request = await axios.post("http://localhost:8000/Activity/", activity);
       return [request, null];
