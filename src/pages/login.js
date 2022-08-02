@@ -9,13 +9,11 @@ import { Facebook as FacebookIcon } from '../icons/facebook';
 import { Google as GoogleIcon } from '../icons/google';
 import { login, loggout, is_logged } from 'src/utils/loginAxios';
 import { useEffect, useState } from 'react';
-import { getUserByEmailPassword } from 'src/utils/userAxios';
 
 const Login = () => {
   const [Upload, setUpload] = useState(false)
   const [UploadFailed, setUploadFailed] = useState(null)
   const [IsLogged, setIsLogged] = useState(null)
-  const [dataUserLogin, setDataUserLogin] = useState(null)
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -48,10 +46,6 @@ const Login = () => {
       else {
         setIsLogged(true)
         console.log(router.pathname)
-        if(IsLogged = true){
-          getUserByEmailPassword(formik.values.email, formik.values.password)
-        }
-
         if(router.pathname === '/')
           router.reload()
         else
