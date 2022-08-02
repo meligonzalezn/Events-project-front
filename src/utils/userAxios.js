@@ -90,20 +90,5 @@ async function enable(pk) {
 
 }
 
-/**
- * This function search in database information about user that just logged in
- * @param {email, password} 
- */
-let userLogged; 
-async function getUserByEmailPassword(email, password) {
-  await axios.get("http://localhost:8000/User/").then((res) => {
-    userLogged = res.data.find((element) => element.Email === email && element.Password === password)
-    localStorage.setItem('idUser', userLogged.id)
-    localStorage.setItem('userName', userLogged.Name)
-    localStorage.setItem('userRole', userLogged.Role)
-    localStorage.setItem('userState', userLogged.State)
-    localStorage.setItem('urlUserImage', userLogged.Media_file)
-  })
-}
 
-export { createUser, update, enable, getUsers, getUserByEmailPassword}
+export { createUser, update, enable, getUsers}

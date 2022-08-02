@@ -22,6 +22,19 @@ async function login(Email, Password) {
       Email: Email,
       Password: Password    
     }, config)
+    /**
+     * This function search in database information about user that just logged in
+     * @param {email, password} 
+    */
+    let userLogged; 
+    await axios.get("http://localhost:8000/User/").then((res) => {
+      userLogged = res.data.find((element) => element.Email === Email && element.Password === Password)
+      localStorage.setItem('idUser', userLogged.id)
+      localStorage.setItem('userName', userLogged.Name)
+      localStorage.setItem('userRole', userLogged.Role)
+      localStorage.setItem('userState', userLogged.State)
+      localStorage.setItem('urlUserImage', userLogged.Media_file)
+    })
     return [response, null]
   }
   
