@@ -1,19 +1,19 @@
 import Head from "next/head";
+import axios from 'axios'
 import { Box, Container, Grid, Pagination,  CircularProgress } from "@mui/material";
 import { usePagination } from '@mui/material/Pagination';
-import LinearLoader from '../components/loaders/LinealLoader';
 import { EventListToolbar } from "../components/event/event-list-toolbar";
 import { EventCard } from "../components/event/event-card";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { useState, useEffect } from "react";
-import axios from 'axios'
+import LinearLoader from '../components/loaders/LinealLoader';
+
 
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [eventsPerPage, setEventsPerPage] = useState(6);
-  
   const handleChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -25,10 +25,10 @@ const Events = () => {
         setEvents(res.data)
         setLoading(false)
     }
-
     fetchEvents();
     
   }, []);
+
 
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
