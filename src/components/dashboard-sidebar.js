@@ -16,6 +16,8 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
+import CloseIcon from '@mui/icons-material/Close';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 const items = [
   {
@@ -24,9 +26,9 @@ const items = [
     title: 'Dashboard'
   },
   {
-    href: '/customers',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Customers'
+    href: '/Usuarios',
+    icon: (<UserIcon fontSize="small" />),
+    title: 'Usuarios'
   },
   {
     href: '/products',
@@ -45,28 +47,13 @@ const items = [
   },
   {
     href: '/Escarapela',
-    icon: (<UserIcon fontSize="small" />),
+    icon: (<BadgeIcon fontSize="small" />),
     title: 'Escarapela'
   },
   {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
-  },
-  {
-    href: '/Usuarios',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'consultar'
-  },
-  {
     href: '/loggout',
-    icon: (<UserAddIcon fontSize="small" />),
+    icon: (<CloseIcon fontSize="small" />),
     title: 'Loggout'
-  },
-  {
-    href: '/404',
-    icon: (<XCircleIcon fontSize="small" />),
-    title: 'Error'
   }
 ];
 
