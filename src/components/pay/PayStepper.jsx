@@ -35,7 +35,7 @@ export default function PayStepper(props) {
 
   const handleBackToOrigin = () => {
     props.setActiveStep(0);
-    router.push("/", "/")
+    router.push("/CrearActividad")
   };
 
   return (
@@ -47,7 +47,7 @@ export default function PayStepper(props) {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleBackToOrigin}>Volver al inicio</Button>
+            <Button onClick={handleBackToOrigin}>Volver</Button>
           </Box>
         </React.Fragment>
       ) : (
