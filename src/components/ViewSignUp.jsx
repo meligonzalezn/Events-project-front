@@ -68,7 +68,7 @@ export default function ViewSignUp(props) {
       if (confirmPass.isValid && formik.isValid) {
         await createUser(formik);
         setLoading(!loading);
-        router.push('/'); // TODO Display notification showing that the operation was succesful.
+        router.push('/');
       }
 
       setUpload(false);
