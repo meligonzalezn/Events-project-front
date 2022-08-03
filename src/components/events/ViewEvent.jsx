@@ -7,7 +7,7 @@ import { Clock as ClockIcon } from "../../icons/clock";
 import axios from "axios";
 import AttachMoney from "@mui/icons-material/AttachMoney";
 import Link from "next/link";
-import { enroll_user2event } from "src/utils/eventAxios";
+import { enroll_user2event, is_enrolled2Event, uneroll_user2event } from "src/utils/eventAxios";
 import { XCircle } from "src/icons/x-circle";
 import { Download } from "src/icons/download";
 import { SeverityPill } from "../severity-pill";
@@ -25,7 +25,8 @@ export default function ViewEvent(props) {
   const [autor, setAutor] = useState({});
   const [EnrollmentEnable, setEnrollmentEnable] = useState(true);
   const [ShowMessageError, setShowMessageError] = useState("");
-  const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState(false)
+  const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState("")
+  const [IsEnrolled, setIsEnrolled] = useState(false)
 
   const image_url = (media_file) => {
     if (media_file === null) {
@@ -35,38 +36,66 @@ export default function ViewEvent(props) {
   };
 
   useEffect(() => {
+
+    const evento = JSON.parse(localStorage.getItem("evento"));
     /**
      * Obtiene el evento del local storage.
      */
     const getEvent = async () => {
-      const evento = JSON.parse(localStorage.getItem("evento"));
       setTheEvent(evento);
       setLoading(false);
     };
 
+    const getIfUserIsEnrolled = () => {
+      is_enrolled2Event(evento.id).then(([res, err]) => {
+        console.log("err", err)
+        if (err) return;
+
+        setIsEnrolled(res);
+      });
+    }
+
     getEvent();
+    getIfUserIsEnrolled(); 
   }, []);
+
 
   //Wait 5 seconds and should hide MessageError And SuccessEnrollmentMessage.
   useEffect(async () => {
     await new Promise(res => setTimeout(res, 5000));
 
     setShowMessageError("")
-    setShowSuccessEnrollment(false)
+    setShowSuccessEnrollment("")
 
   }, [ShowMessageError, ShowSuccessEnrollment])
 
+  const onUnerollUser2event = (e) => {
+    if (!EnrollmentEnable) return;
+
+    uneroll_user2event(theEvent.id).then(([res, err]) => {
+      setEnrollmentEnable(true)
+      if (err) {
+        setShowMessageError("Error on UnEnrollment process")
+        return
+      }
+      setShowSuccessEnrollment("UnEnrollment completed successfully")
+      setIsEnrolled(false);
+
+    })
+    setEnrollmentEnable(false)
+  }
+
   const onEnrollUser2Event = (e) => {
-    if(!EnrollmentEnable) return;
+    if (!EnrollmentEnable) return;
+
     enroll_user2event(theEvent.id).then(([res, err]) => {
       setEnrollmentEnable(true)
       if (err) {
-        console.log(err)
         setShowMessageError("Error on Enrollment process")
         return
       }
-      setShowSuccessEnrollment(true)
-
+      setShowSuccessEnrollment("Enrollment completed successfully")
+      setIsEnrolled(true);
     })
     setEnrollmentEnable(false)
   }
@@ -118,7 +147,7 @@ export default function ViewEvent(props) {
                   : null
               }
               {ShowSuccessEnrollment ?
-                <Alert severity="success">Enrollment completed successfully</Alert>
+                <Alert severity="success">{ShowSuccessEnrollment}</Alert>
                 : null
               }
               <Grid container spacing={2}>
@@ -207,7 +236,9 @@ export default function ViewEvent(props) {
             <Button color="primary" variant="contained">
               Actividades
             </Button>
-            <Button onClick={onEnrollUser2Event}>Enroll</Button>
+            <Button onClick={IsEnrolled ? onUnerollUser2event : onEnrollUser2Event}>{
+              IsEnrolled ? "No participar" : "Participar"
+            }</Button>
           </Box>
 
           {/* <div className="wrapper">

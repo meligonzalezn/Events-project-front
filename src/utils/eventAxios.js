@@ -213,7 +213,10 @@ async function getIdEventByIdNew(id_New){
 
 async function enroll_user2event(event_id){
   try{
-    const response = await axios.get(`http://localhost:8000/Payment/${event_id}/enroll_user2event/`)
+    const response = await axios.post(`http://localhost:8000/Enroll/enroll_user2event/`,
+    {
+      event_id: event_id
+    })
     return [response, null];
   }
   catch(err){
@@ -221,4 +224,27 @@ async function enroll_user2event(event_id){
   }
 }
 
-export { createEvent, update , eventsTitle, eventData, getEventData, getIdEventByIdNew, enroll_user2event, updateEvent }
+async function is_enrolled2Event(event_id){
+  try{
+    const response = await axios.get(`http://localhost:8000/Enroll/${event_id}/is_user_enrolled2event/`,
+    {
+      event_id: event_id
+    })
+    return [response, null];
+  }
+  catch(err){
+    return [null, err]
+  }
+}
+
+async function uneroll_user2event(event_id){
+  try{
+    const response = await axios.delete(`http://localhost:8000/Enroll/${event_id}/unenrollment/`)
+
+    return [response.enrolled, null];
+  }catch(err){
+    return [null, err]
+  }
+}
+
+export { createEvent , getEventsTitle, getEventData, getIdEventByIdNew, enroll_user2event, updateEvent, uneroll_user2event, is_enrolled2Event }

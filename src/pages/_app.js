@@ -16,6 +16,7 @@ import SignUp from './SignUp';
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
+import LinearLoader from 'src/components/loaders/LinealLoader';
 
 const clientSideEmotionCache = createEmotionCache();
 
