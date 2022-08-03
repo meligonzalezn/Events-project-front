@@ -37,21 +37,23 @@ export const EventListToolbar = ({searchHandleChange, setSuccessfulRegister }) =
           Eventos
         </Typography>
         {(localStorage.getItem('userRole') == 'Cliente') ? 
-      null :
-      <>
-       <Button
-         color="primary"
-         variant="contained"
-         onClick={ () => router.push('/Crear_evento')}>
-         Añadir evento
-       </Button>
-       <Button
-       color="primary"
-       variant="contained">
-       Actualizar evento
-       </Button>
-      </> 
-     }
+         null :
+         <Box sx={{ m: 1 }}>
+         <Box sx={{ m: 1, gap: "12px", display: "flex" }}>
+           <Button
+             color="primary"
+             variant="contained"
+             onClick={() => router.push("/Crear_evento")}
+           >
+             Añadir evento
+           </Button>
+           <Button color="primary" variant="contained"
+             onClick = {() => setUpdateEvent(!updateEvent)}>
+             Actualizar evento
+           </Button>
+         </Box>
+       </Box>
+        } 
       </Box>
       <Box sx={{ mt: 3 }}>
         <Card>

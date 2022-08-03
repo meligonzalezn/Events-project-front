@@ -4,8 +4,8 @@ import { Box, Card, CardContent, Container, Grid, InputAdornment, Pagination, Sv
 //import { Search as SearchIcon } from '../../icons/search';
 import { useRouter } from 'next/router';
 import LinearLoader from '../components/loaders/LinealLoader';
-import { EventListToolbar } from "../components/event/event-list-toolbar";
-import { EventCard } from "../components/event/event-card";
+import { EventListToolbar } from "../components/events/event-list-toolbar";
+import { EventCard } from "../components/events/event-card";
 import { DashboardLayout } from "../components/dashboard-layout";
 import axios from 'axios';
 import { findAllWithWord } from 'src/utils/searchInStrings';
