@@ -121,8 +121,31 @@ export const ActivityInfoAndUpdate = (props) => {
    * @param {*} e 
    */
   const handleSignUp = (e) => {
-    localStorage.setItem("actividad", JSON.stringify(formik.initialValues));
+    localStorage.setItem("actividad", JSON.stringify(formik.values));
     router.push("Pago/[id]/Pagar", `Pago/${formik.initialValues.title}/Pagar`);
+  }
+
+  const displayRespectiveButton = () => {
+    if (props.isclient == 0) return (
+      <LoadingButton
+        loading={loading}
+        color="primary"
+        variant="contained"
+        onClick={(e) => { markErrors(e) && setLoading(!loading) }}>
+        Actualizar Actividad
+      </LoadingButton>
+    )
+
+    return (
+      <>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={(e) => { handleSignUp(e) }}>
+          Inscribirse
+        </Button>
+      </>
+    )
   }
 
   return (
@@ -349,22 +372,7 @@ export const ActivityInfoAndUpdate = (props) => {
           </CardContent>
           <Divider />
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
-            {(props.isclient == 0) ?
-              <LoadingButton
-                loading={loading}
-                color="primary"
-                variant="contained"
-                onClick={(e) => { markErrors(e) && setLoading(!loading) }}>
-                Actualizar Actividad
-              </LoadingButton> :
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={handleSignUp}
-              >
-                Inscribirse
-              </Button>
-            }
+            {displayRespectiveButton()}
           </Box>
         </Card>
         {(modal == true) ?

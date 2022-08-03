@@ -94,7 +94,7 @@ export default function SecuentialLoader(props) {
             </Box>
 
             <Typography sx={{ pt: 14 }} align="center" color="textPrimary" gutterBottom variant="h5">
-              {!endLoading ? props.lowerMessage : "Has quedado inscrito al evento exitosamente"}
+              {!endLoading ? props.lowerMessage : "Has quedado inscrito a la actividad exitosamente"}
             </Typography>
 
           </Container>

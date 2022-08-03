@@ -6,7 +6,6 @@ import CreateActivity from "src/pages/CrearActividad";
 
 export const EventCard = ({ event, ...rest }) => {
   const router = useRouter();
-  console.log("aqui ya puedo tener el local", localStorage.getItem("autor")) 
 
   const image_url = () => {
     if (event.Media_file === null) {
@@ -16,8 +15,8 @@ export const EventCard = ({ event, ...rest }) => {
   };
   return (
     <>
-      {(router.pathname === '/Eventos') ? 
-      
+      {(router.pathname === '/Eventos') ?
+
         <Card
           sx={{
             display: "flex",
@@ -57,12 +56,12 @@ export const EventCard = ({ event, ...rest }) => {
             >
               {event.Details}
             </Typography>
-            
+
           </CardContent>
           <Box sx={{ flexGrow: 1 }} />
           <Divider />
           <Box sx={{ p: 2 }}>
-          <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
+            <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
               <Grid item sx={{ alignItems: "center", display: "flex" }}>
                 <ClockIcon color="action" />
 
@@ -79,20 +78,20 @@ export const EventCard = ({ event, ...rest }) => {
                   {event.Finish_date}
                 </Typography>
               </Grid>
-            
-            <Grid item sx={{ alignItems: 'center', display: 'flex' }}> 
-              <Button variant="outlined" >
-                Participantes
-              </Button>
-            </Grid>
-              <Grid item sx={{ alignItems: 'center', display: 'flex' }}> 
-                <Button onClick={() => {localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad')}} color="primary" variant="contained">
+
+              <Grid item sx={{ alignItems: 'center', display: 'flex' }}>
+                <Button variant="outlined" >
+                  Participantes
+                </Button>
+              </Grid>
+              <Grid item sx={{ alignItems: 'center', display: 'flex' }}>
+                <Button onClick={() => { localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad') }} color="primary" variant="contained">
                   Actividades
                 </Button>
               </Grid>
             </Grid>
           </Box>
-        </Card>: null
+        </Card> : null
       }
     </>
   );

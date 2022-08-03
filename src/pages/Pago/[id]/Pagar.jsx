@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -37,13 +37,14 @@ export default function Pagar(props) {
     /**
      * Deshace la reserva de cupos para las actividades seleccionadas.
      */
-    const asyncTest = async () => {
-      const data = JSON.parse(localStorage.getItem("actividad"));
-      const idUser = localStorage.getItem('idUser');
+    const transactionalProcess = async () => {
+      let data = JSON.parse(localStorage.getItem("actividad"));
+      data.date = new Date(data.date);
       const idEvento = localStorage.getItem('idEvent');
 
       data.capacity -= 1;
-      const updatedActivity = await updateActivity(data);
+      const metadata1 = { values: data };
+      const updatedActivity = updateActivity(metadata1); // we dont wait for this to happen.
 
       setTimeout(async () => {
         if (successfulPay) return;
@@ -51,12 +52,13 @@ export default function Pagar(props) {
         const newerEvent = localStorage.getItem('idEvent');
         localStorage.setItem('idevent', idEvento);
         data.capacity += 1;
-        const updatedActivity = await updateActivity(data);
+        const metadata2 = { values: data };
+        const updatedActivity = await updateActivity(metadata2);
         localStorage.setItem('idEvent', newerEvent);
       }, 120000);
     }
 
-    asyncTest();
+    transactionalProcess();
   }, [])
 
   /**
