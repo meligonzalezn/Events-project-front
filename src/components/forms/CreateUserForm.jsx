@@ -23,12 +23,10 @@ export default function UserForm(props) {
   Yup.addMethod(Yup.string, "unusedEmail", function (validate) {
     return this.test(`unusedEmail`, "El correo digitado ya se encuentra en uso, utilice uno diferente", async function () {
       if (!validate) return true;
-      console.log("VALIDANDO");
       setValidateEmail(false);
 
       const email = formik.values.Email;
       const resp = await checkEmail(email);
-      console.log(resp);
 
       if (resp[0] == "Email already in use") return false;
       return true;
