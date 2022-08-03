@@ -164,4 +164,25 @@ async function get_event_participants(){
   }
 }
 
-export { createEvent, update , eventsTitle, eventData, getEventData }
+async function getIdEventByIdNew(id_New){
+  const petition = {id_new: id_New}
+  try{
+    const id_event = await axios.post("http://localhost:8000/News/get_event_id_by_new/", petition)
+    return [id_event, null];
+  }
+  catch(err){
+    return [null, err]
+  }
+}
+
+async function enroll_user2event(event_id){
+  try{
+    const response = await axios.get(`http://localhost:8000/Payment/${event_id}/enroll_user2event/`)
+    return [response, null];
+  }
+  catch(err){
+    return [null, err]
+  }
+}
+
+export { createEvent, update , eventsTitle, eventData, getEventData, getIdEventByIdNew, enroll_user2event }

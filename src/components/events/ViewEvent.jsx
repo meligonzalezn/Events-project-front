@@ -1,4 +1,4 @@
-import { Card, CardContent, Container, Divider, Grid, Typography, Button } from "@mui/material";
+import { Card, CardContent, Container, Divider, Grid, Typography, Button, Alert } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import LinearLoader from "../loaders/LinealLoader";
@@ -6,6 +6,12 @@ import MapComponentView from "./ViewEventMap";
 import { Clock as ClockIcon } from "../../icons/clock";
 import axios from "axios";
 import AttachMoney from "@mui/icons-material/AttachMoney";
+import Link from "next/link";
+import { enroll_user2event } from "src/utils/eventAxios";
+import { XCircle } from "src/icons/x-circle";
+import { Download } from "src/icons/download";
+import { SeverityPill } from "../severity-pill";
+import { TasksProgress } from "../dashboard/tasks-progress";
 
 /**
  * Proporciona la vista completa de un evento, con su descripción
@@ -17,6 +23,9 @@ export default function ViewEvent(props) {
   const [loading, setLoading] = useState(true);
   const [theEvent, setTheEvent] = useState({});
   const [autor, setAutor] = useState({});
+  const [EnrollmentEnable, setEnrollmentEnable] = useState(true);
+  const [ShowMessageError, setShowMessageError] = useState("");
+  const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState(false)
 
   const image_url = (media_file) => {
     if (media_file === null) {
@@ -47,6 +56,30 @@ export default function ViewEvent(props) {
 
     getEvent();
   }, []);
+
+  //Wait 5 seconds and should hide MessageError And SuccessEnrollmentMessage.
+  useEffect(async () => {
+    await new Promise(res => setTimeout(res, 5000));
+
+    setShowMessageError("")
+    setShowSuccessEnrollment(false)
+
+  }, [ShowMessageError, ShowSuccessEnrollment])
+
+  const onEnrollUser2Event = (e) => {
+    if(!EnrollmentEnable) return;
+    enroll_user2event(theEvent.id).then(([res, err]) => {
+      setEnrollmentEnable(true)
+      if (err) {
+        console.log(err)
+        setShowMessageError("Error on Enrollment process")
+        return
+      }
+      setShowSuccessEnrollment(true)
+
+    })
+    setEnrollmentEnable(false)
+  }
 
   if (loading) {
     return (
@@ -89,6 +122,15 @@ export default function ViewEvent(props) {
             }}
           >
             <Container maxWidth="lg">
+              {
+                ShowMessageError ?
+                  <Alert severity="error">{ShowMessageError}</Alert>
+                  : null
+              }
+              {ShowSuccessEnrollment ?
+                <Alert severity="success">Enrollment completed successfully</Alert>
+                : null
+              }
               <Grid container spacing={2}>
                 <Grid item lg={4} md={6} xs={12}>
                   <MapComponentView place={theEvent.Space} />
@@ -98,12 +140,12 @@ export default function ViewEvent(props) {
                   <Card>
                     <CardContent>
                       <div className="ownOverflow">
-                      <Grid container spacing={0.5} sx={{ m: 1, gap: "1px", display: "flex" }}>
+                        <Grid container spacing={0.5} sx={{ m: 1, gap: "1px", display: "flex" }}>
                           <Grid item xs={5} sx={{ alignItems: "center", display: "flex" }}>
                             <ClockIcon color="action" />
 
                             <Typography
-                              
+
                               display="inline"
                               sx={{ pl: 1 }}
                               variant="body2"
@@ -117,7 +159,7 @@ export default function ViewEvent(props) {
                             <ClockIcon color="action" />
 
                             <Typography
-                             
+
                               display="inline"
                               sx={{ pl: 1 }}
                               variant="body2"
@@ -130,7 +172,7 @@ export default function ViewEvent(props) {
                             <AttachMoney color="action" />
 
                             <Typography
-                            
+
                               display="inline"
                               sx={{ pl: 1 }}
                               variant="body2"
@@ -175,6 +217,7 @@ export default function ViewEvent(props) {
             <Button color="primary" variant="contained">
               Actividades
             </Button>
+            <Button onClick={onEnrollUser2Event}>Enroll</Button>
           </Box>
 
           {/* <div className="wrapper">

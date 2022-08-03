@@ -5,6 +5,7 @@ import LinearLoader from '../loaders/LinealLoader';
 import AuthorCard from './AuthorCard';
 import axios from 'axios';
 import EventRegisterCard from '../events/RegisterCard';
+import { getIdEventByIdNew } from 'src/utils/eventAxios';
 
 /**
  * Proporciona la vista completa de una noticia, con datos del autor
@@ -16,6 +17,8 @@ export default function ViewNew(props) {
   const [loading, setLoading] = useState(true);
   const [theNew, setTheNew] = useState({});
   const [autor, setAutor] = useState({});
+  const [IdEvent, setIdEvent] = useState(null);
+
 
   useEffect(() => {
     /**
@@ -25,6 +28,7 @@ export default function ViewNew(props) {
      */
     const getNoticia = async () => {
       const noticia = JSON.parse(localStorage.getItem("noticia"));
+      setIdEvent(noticia.ID_event)
       let dataUser;
 
       if (localStorage.getItem("autor") == undefined || JSON.parse(localStorage.getItem("autor")).id != noticia.ID_user) {
@@ -68,7 +72,7 @@ export default function ViewNew(props) {
 
           <div>
             <AuthorCard autor={autor} editionTime={theNew.Edition_date} />
-            <EventRegisterCard />
+            <EventRegisterCard is_ready={IdEvent !== null}/>
           </div>
 
           <div className='wrapperCenter'>

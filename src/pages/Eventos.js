@@ -7,7 +7,6 @@ import LinearLoader from '../components/loaders/LinealLoader';
 import { EventListToolbar } from "../components/events/event-list-toolbar";
 import { EventCard } from "../components/events/event-card";
 import { DashboardLayout } from "../components/dashboard-layout";
-import { useState, useEffect } from "react";
 import axios from 'axios';
 import { findAllWithWord } from 'src/utils/searchInStrings';
 
