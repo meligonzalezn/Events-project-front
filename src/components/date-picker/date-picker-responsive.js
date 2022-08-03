@@ -4,10 +4,22 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
 
-export default function ResponsiveDatePicker({title, onChange, value}) {
-
+export default function ResponsiveDatePicker({title, onChange, value, view}) {
   //const [value, setValue] = useState(new Date());
   return (
+    <>
+    {(view !== '')?
+    <LocalizationProvider dateAdapter={AdapterDateFns}>      
+        <DatePicker
+          label = {title}
+          openTo={"year"}
+          views={['year']}
+          value={value}
+          onChange = {onChange}
+          renderInput={(params) => <TextField {...params} />}
+        />
+    </LocalizationProvider>
+    :
     <LocalizationProvider dateAdapter={AdapterDateFns}>      
         <DatePicker
           minDate={new Date()}
@@ -18,8 +30,8 @@ export default function ResponsiveDatePicker({title, onChange, value}) {
           onChange = {onChange}
           renderInput={(params) => <TextField {...params} />}
         />
-
-
     </LocalizationProvider>
+    }
+    </>
   );
 }
