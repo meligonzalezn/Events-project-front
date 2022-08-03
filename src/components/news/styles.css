@@ -43,8 +43,20 @@
   align-self: end;
 }
 
+.totallyLeftItem{
+  grid-area: left;
+  justify-self: start;
+  align-self: center;
+}
+
 .rightItem{
   grid-area: right;
   justify-self: start;
   align-self: end;
+}
+
+.totallyRightItem{
+  grid-area: right;
+  justify-self: end;
+  align-self: center;
 }
