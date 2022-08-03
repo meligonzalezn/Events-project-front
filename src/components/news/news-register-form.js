@@ -171,7 +171,7 @@ export const NewsRegisterForm = (props) => {
               <ResponsiveDatePicker 
                 name="finish_date" 
                 title="Fecha límite"  
-                onChange={(e) => {formik.setFieldValue('finish_date', e) && console.log("el formato", e)}}
+                onChange={(e) => {formik.setFieldValue('finish_date', e)}}
                 value={formik.values.finish_date}/>
             </Grid>
 

@@ -16,7 +16,6 @@ const Login = () => {
   const [UploadFailed, setUploadFailed] = useState(null)
   const [CaptchaSuccess, SetCaptchaSuccess] = useState(null)
   const [IsLogged, setIsLogged] = useState(null)
-
   const router = useRouter();
   const formik = useFormik({
     initialValues: {

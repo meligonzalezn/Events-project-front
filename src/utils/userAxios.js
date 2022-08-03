@@ -94,4 +94,5 @@ async function enable(pk) {
 
 }
 
-export { createUser, update, enable, getUsers }
+
+export { createUser, update, enable, getUsers}

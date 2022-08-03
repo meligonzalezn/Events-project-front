@@ -18,7 +18,7 @@ export const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const ModalAlert = ({ title, message, modalState, setModalState, modalSuccess, routeURL}) => {
+export const ModalAlert = ({ title, message, modalState, setModalState, modalSuccess, routeURL, redirectTo}) => {
   const styles = useStyles();
   const router = useRouter();
 
@@ -32,12 +32,15 @@ export const ModalAlert = ({ title, message, modalState, setModalState, modalSuc
     if(modalSuccess) {
       router.push(routeURL)
     }
+    if(redirectTo!==''){
+      router.push(redirectTo);
+    }
   }
 
   return (
     <Modal open={modalState}
       onClose={onClose}>
-      <div className={styles.modal} style={{ width: '25rem' }}>
+      <div className={styles.modal} style={{ width: '29rem' }}>
         <Grid sx={{ textAlign: 'center' }}>
           <Grid sx={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', alignItems: 'center', color: '#5048E5' }}>
             <StickyNote2Icon></StickyNote2Icon>

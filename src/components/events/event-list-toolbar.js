@@ -17,32 +17,11 @@ import { useState } from "react";
 import {useStyles} from "../modals/modalAlert"
 import {EventsUpdateForm} from "../events/event-update-form"
 
-export const EventListToolbar = ({isEmployee, searchHandleChange, setSuccessfulRegister }) => {
+export const EventListToolbar = ({searchHandleChange, setSuccessfulRegister }) => {
   const [updateEvent, setUpdateEvent] = useState(false);
   const styles = useStyles(); 
   const router = useRouter();
 
-  const showButtons = () => {
-    isEmployee = true;
-    if(!isEmployee) return (<> </>);
-    return(
-      <Box sx={{ m: 1 }}>
-          <Box sx={{ m: 1, gap: "12px", display: "flex" }}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => router.push("/Crear_evento")}
-            >
-              Añadir evento
-            </Button>
-            <Button color="primary" variant="contained"
-              onClick = {() => setUpdateEvent(!updateEvent)}>
-              Actualizar evento
-            </Button>
-          </Box>
-        </Box>
-    );
-  }
   return (
     <Box>
       <Box
@@ -57,7 +36,24 @@ export const EventListToolbar = ({isEmployee, searchHandleChange, setSuccessfulR
         <Typography sx={{ m: 1 }} variant="h4">
           Eventos
         </Typography>
-        {showButtons()}
+        {(localStorage.getItem('userRole') == 'Cliente') ? 
+         null :
+         <Box sx={{ m: 1 }}>
+         <Box sx={{ m: 1, gap: "12px", display: "flex" }}>
+           <Button
+             color="primary"
+             variant="contained"
+             onClick={() => router.push("/Crear_evento")}
+           >
+             Añadir evento
+           </Button>
+           <Button color="primary" variant="contained"
+             onClick = {() => setUpdateEvent(!updateEvent)}>
+             Actualizar evento
+           </Button>
+         </Box>
+       </Box>
+        } 
       </Box>
       <Box sx={{ mt: 3 }}>
         <Card>
