@@ -83,11 +83,11 @@ export const EventCard = ({ event, ...rest }) => {
             </Typography>
           </Grid>
           <Grid item sx={{ alignItems: "center", display: "flex" }}>
-            <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
+          <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
               <Button variant="outlined" onClick={onClick} id={id}>
                 Ver más
               </Button>
-                <Button onClick={() => {localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad')}} color="primary" variant="contained">
+              <Button onClick={() => {localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad')}} color="primary" variant="contained">
                 Actividades
               </Button>
             </Box>
