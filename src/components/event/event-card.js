@@ -36,34 +36,42 @@ export const EventCard = ({ event, ...rest }) => {
           }}
           {...rest}
         >
-          <img
-            style={{ height: "290px", width: "100%", objectFit: "cover" }}
-            alt="Event-image"
-            src={image_url()}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src =
-                "https://res.cloudinary.com/dxx9kwg6t/image/upload/v1655159261/media/images_videos_news/il-news-and-press-default-card-img_kcsr9g.jpg";
-            }}
-            variant="square"
-          />
-        </Box>
-        <Typography align="center" color="textPrimary" gutterBottom variant="h5">
-          {event.Title}
-        </Typography>
-
-        <Typography
-          align="center"
-          color="textPrimary"
-          variant="body1"
-          sx={{ marginBottom: "8.4px" }}
-        >
-          {event.Details}
-        </Typography>
-      </CardContent>
-      <Box sx={{ flexGrow: 1 }} />
-      <Divider />
-      <Box sx={{ p: 2 }}>
+          <CardContent sx={{ padding: 0 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                pb: 3,
+              }}
+            >
+              <img
+                style={{ height: "290px", width: "100%", objectFit: "cover" }}
+                alt="Event-image"
+                src={image_url()}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://res.cloudinary.com/dxx9kwg6t/image/upload/v1655159261/media/images_videos_news/il-news-and-press-default-card-img_kcsr9g.jpg";
+                }}
+                variant="square"
+              />
+            </Box>
+            <Typography align="center" color="textPrimary" gutterBottom variant="h5">
+              {event.Title}
+            </Typography>
+            <Typography
+              align="center"
+              color="textPrimary"
+              variant="body1"
+              sx={{ marginBottom: "8.4px" }}
+            >
+              {event.Details}
+            </Typography>
+            
+          </CardContent>
+          <Box sx={{ flexGrow: 1 }} />
+          <Divider />
+          <Box sx={{ p: 2 }}>
         <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
           <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
             <ClockIcon color="action" />
@@ -83,7 +91,7 @@ export const EventCard = ({ event, ...rest }) => {
             </Typography>
           </Grid>
           <Grid item sx={{ alignItems: "center", display: "flex" }}>
-          <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
+            <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
               <Button variant="outlined" onClick={onClick} id={id}>
                 Ver más
               </Button>
@@ -94,7 +102,9 @@ export const EventCard = ({ event, ...rest }) => {
           </Grid>
         </Grid>
       </Box>
-    </Card>
+        </Card>: null
+      }
+    </>
   );
 };
 
