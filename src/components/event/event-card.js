@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import CreateActivity from "src/pages/CrearActividad";
 import AddIcon from "@mui/icons-material/Add";
 
-export const EventCard = ({ event, ...rest }) => {
+export const EventCard = ({ onClick,id ,event, ...rest }) => {
   const router = useRouter();
   console.log("aqui ya puedo tener el local", localStorage.getItem("autor")) 
 
