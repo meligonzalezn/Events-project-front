@@ -32,6 +32,9 @@ export const ModalAlert = ({ title, message, modalState, setModalState, modalSuc
     if(modalSuccess) {
       router.push(routeURL)
     }
+    if(redirectTo!==''){
+      router.push(redirectTo);
+    }
   }
 
   return (
