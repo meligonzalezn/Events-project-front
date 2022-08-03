@@ -370,10 +370,6 @@ export const ActivityInfoAndUpdate = (props) => {
               </Grid>
             </Grid>
           </CardContent>
-          <Divider />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
-            {displayRespectiveButton()}
-          </Box>
         </Card>
         {(modal == true) ?
           <Modal open={modal}
@@ -399,6 +395,10 @@ export const ActivityInfoAndUpdate = (props) => {
             setModalState={setModalError} /> : null
         }
       </fieldset>
+      <Divider />
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
+            {displayRespectiveButton()}
+        </Box>
     </form>
   );
 }
