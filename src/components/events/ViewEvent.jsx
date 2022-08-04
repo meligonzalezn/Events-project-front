@@ -4,14 +4,9 @@ import { useEffect, useState } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import MapComponentView from "./ViewEventMap";
 import { Clock as ClockIcon } from "../../icons/clock";
-import axios from "axios";
 import AttachMoney from "@mui/icons-material/AttachMoney";
-import Link from "next/link";
 import { enroll_user2event, is_enrolled2Event, uneroll_user2event } from "src/utils/eventAxios";
-import { XCircle } from "src/icons/x-circle";
-import { Download } from "src/icons/download";
-import { SeverityPill } from "../severity-pill";
-import { TasksProgress } from "../dashboard/tasks-progress";
+import BackButton from "../BackButton";
 
 /**
  * Proporciona la vista completa de un evento, con su descripción
@@ -22,7 +17,6 @@ import { TasksProgress } from "../dashboard/tasks-progress";
 export default function ViewEvent(props) {
   const [loading, setLoading] = useState(true);
   const [theEvent, setTheEvent] = useState({});
-  const [autor, setAutor] = useState({});
   const [EnrollmentEnable, setEnrollmentEnable] = useState(true);
   const [ShowMessageError, setShowMessageError] = useState("");
   const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState("")
@@ -56,7 +50,7 @@ export default function ViewEvent(props) {
     }
 
     getEvent();
-    getIfUserIsEnrolled(); 
+    getIfUserIsEnrolled();
   }, []);
 
 
@@ -114,7 +108,7 @@ export default function ViewEvent(props) {
       <Card>
         {" "}
         <CardContent>
-          <Box sx={{ mt: 0.2, py: 1.5 }}>
+          <Box sx={{ mt: 0.2, pb: 4 }}>
             {/* <CardContent> */}
             <Box
               sx={{
@@ -127,6 +121,8 @@ export default function ViewEvent(props) {
               <Typography sx={{ m: 0.2 }} variant="h4">
                 {theEvent.Title}
               </Typography>
+
+              <BackButton route="/Eventos" />
             </Box>
             {/* </CardContent> */}
           </Box>
