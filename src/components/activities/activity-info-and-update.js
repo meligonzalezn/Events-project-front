@@ -8,7 +8,6 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import { useEffect, useState } from 'react';
 import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { useRouter } from 'next/router';
-import { updateActivity } from 'src/utils/activitiesAxios';
 import { checkEnrolledStatus, unenroll, updateActivity } from 'src/utils/activitiesAxios';
 import axios from 'axios';
 
@@ -166,7 +165,7 @@ export const ActivityInfoAndUpdate = (props) => {
           color="primary"
           variant="contained"
           onClick={(e) => router.push('/ParticipantesActividad') && localStorage.setItem('idActivity', props.idactivity)}>
-          Participantes 
+          Participantes
         </LoadingButton>
         <LoadingButton
           loading={loading}
@@ -439,9 +438,9 @@ export const ActivityInfoAndUpdate = (props) => {
         }
       </fieldset>
       <Divider />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
-            {displayRespectiveButton()}
-        </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: '0.75rem', alignItems: 'center' }} >
+        {displayRespectiveButton()}
+      </Box>
     </form>
   );
 }
