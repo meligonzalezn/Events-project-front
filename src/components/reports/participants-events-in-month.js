@@ -174,7 +174,16 @@ export const EventsInMonth = ({events, payments}) => {
       
     } 
     else{
-      return (<Doughnut data={data} options={options}/>);
+      return (
+        <Box
+        sx={{
+          height: 300,
+          position: "relative",
+        }}
+      > 
+        <Doughnut data={data} options={options}/>
+      </Box>
+      );
     }
   };
 //{{ height: '100%' }}
@@ -235,14 +244,8 @@ export const EventsInMonth = ({events, payments}) => {
     title="Participantes por evento" />
     <Divider />
     <CardContent>
-      <Box
-        sx={{
-          height: 300,
-          position: "relative",
-        }}
-      > 
         {nullParticipants()}
-      </Box>
+ 
     </CardContent>
   </Card>
     }

@@ -155,7 +155,15 @@ export const ActivitiesPerEvent = ({ events , payments}) => {
       
     } else {
       return(
-        <Doughnut data={data} options={options} />
+        <Box
+              sx={{
+                height: 300,
+                position: "relative",
+              }}
+            >
+              <Doughnut data={data} options={options} />
+            </Box>
+        
       );
     }
   };
@@ -217,14 +225,9 @@ export const ActivitiesPerEvent = ({ events , payments}) => {
           />
           <Divider />
           <CardContent>
-            <Box
-              sx={{
-                height: 300,
-                position: "relative",
-              }}
-            >
+ 
               {nullParticipants()}
-            </Box>
+           
           </CardContent>
         </Card>
         }</>
