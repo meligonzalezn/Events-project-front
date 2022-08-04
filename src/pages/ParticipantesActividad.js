@@ -55,8 +55,7 @@ export default function ParticipantesActividad(props) {
        }
        activityParticipants(localStorage.getItem('idActivity'), localStorage.getItem('idEvent'))
     },[alreadyFetch])
-
-   console.log(alreadyFetch, alreadyInfo, isEmpty)     
+  
   return (
     <>
         {(isEmpty == false) ? 
