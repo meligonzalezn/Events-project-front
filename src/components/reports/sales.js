@@ -7,31 +7,18 @@ import LinearLoader from "../loaders/LinealLoader";
 import { getEvents } from 'src/utils/eventAxios';
 import ResponsiveDatePicker from '../date-picker/date-picker-responsive';
 
-export const Sales = (props) => {
+export const Sales = ({events}) => {
   const theme = useTheme();
   const [firstLoading, setFirstLoading] = useState(true)
   const [data, setData] = useState()
-  const [events, setEvents] = useState()
   const [options, setOptions] = useState()
   const [date , setDate] = useState(new Date())
   const eventsPerMonth = [0,0,0,0,0,0,0,0,0,0,0,0]
 
   useEffect(() => {
-    if(firstLoading) {
-        /**
-     * Obtiene los eventos de la BD.
-     */
-      const getData = async () => {
-        await getEvents().then((res)=>{
-          getEventsPerMonth(res);
-          setEvents(res);
-        })      
-      }
-      getData(); 
-    }
-    else{
+
       getEventsPerMonth(events);
-    }
+
     
   }, [date])
 
@@ -138,7 +125,7 @@ export const Sales = (props) => {
     {firstLoading? 
      <LinearLoader upperMessage="Cargando reporte..."></LinearLoader>
     :
-    <Card {...props}>
+    <Card>
       <CardHeader
         action={(
           <ResponsiveDatePicker
@@ -146,7 +133,7 @@ export const Sales = (props) => {
                 title="Año"
                 onChange={(e)=>{setDate(e)}}
                 value={date}
-                view ="year"
+                view = "year"
               />
         )}
         title="Eventos por mes"

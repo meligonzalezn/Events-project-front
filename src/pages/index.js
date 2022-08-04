@@ -7,17 +7,43 @@ import { Sales } from '../components/reports/sales';
 import { TasksProgress } from '../components/dashboard/tasks-progress';
 import { TotalCustomers } from '../components/dashboard/total-customers';
 import { TotalProfit } from '../components/dashboard/total-profit';
-import { TrafficByDevice } from '../components/dashboard/traffic-by-device';
+import { EventsInMonth } from 'src/components/reports/traffic-by-device';
 import { DashboardLayout } from '../components/dashboard-layout';
+import { getEvents } from 'src/utils/eventAxios';
+import { useEffect, useState } from 'react';
+import LinearLoader from 'src/components/loaders/LinealLoader';
 
-const Dashboard = () => (
+const Dashboard = () => { 
+  const [loading, setLoading] = useState(true)
+  const [events, setEvents] = useState()
+
+  useEffect(() => {
+    if(loading) {
+        /**
+     * Obtiene los eventos de la BD.
+     */
+      const getData = async () => {
+        await getEvents().then((res)=>{
+          setEvents(res);
+          setLoading(false);
+        })      
+      }
+      getData(); 
+    }
+    
+  }, [])
+
+  return(
   <>
     <Head>
       <title>
         Reportes 
       </title>
     </Head>
-    <Box
+    {loading? 
+      <LinearLoader upperMessage="Cargando reportes..."></LinearLoader>
+    :
+      <Box
       component="main"
       sx={{
         flexGrow: 1,
@@ -72,7 +98,7 @@ const Dashboard = () => (
             xl={9}
             xs={12}
           >
-            <Sales />
+            <Sales events= {events} />
           </Grid>
           <Grid
             item
@@ -81,7 +107,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TrafficByDevice sx={{ height: '100%' }} />
+            <EventsInMonth events={events} />
           </Grid>
           <Grid
             item
@@ -104,8 +130,10 @@ const Dashboard = () => (
         </Grid>
       </Container>
     </Box>
+    }
   </>
 );
+};
 
 Dashboard.getLayout = (page) => (
   <DashboardLayout>

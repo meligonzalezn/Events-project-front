@@ -6,10 +6,10 @@ import { useState } from "react";
 
 export default function ResponsiveDatePicker({title, onChange, value, view}) {
   //const [value, setValue] = useState(new Date());
-  return (
-    <>
-    {(view !== '')?
-    <LocalizationProvider dateAdapter={AdapterDateFns}>      
+  const pickerView = () => {
+    if(view === "year"){
+      return(
+        <LocalizationProvider dateAdapter={AdapterDateFns}>      
         <DatePicker
           label = {title}
           openTo={"year"}
@@ -19,6 +19,30 @@ export default function ResponsiveDatePicker({title, onChange, value, view}) {
           renderInput={(params) => <TextField {...params} />}
         />
     </LocalizationProvider>
+      );
+    }
+    if(view === "year-month"){
+      return(
+        <LocalizationProvider dateAdapter={AdapterDateFns}>      
+        <DatePicker
+          minDate={new Date()}
+          label = {title}
+          openTo="year"
+          views={['year', 'month']}
+          value={value}
+          onChange = {onChange}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        </LocalizationProvider>
+      )
+    }
+  }
+  return (
+    <>
+    {(view !== undefined)?
+    <> 
+    {pickerView()}
+    </>
     :
     <LocalizationProvider dateAdapter={AdapterDateFns}>      
         <DatePicker
