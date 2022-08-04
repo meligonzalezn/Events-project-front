@@ -21,7 +21,6 @@ export const ParticipantsListResults = ({ participants, ...rest }) => {
   const [selectedParticipantIds, setSelectedParticipantIds] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -30,7 +29,6 @@ export const ParticipantsListResults = ({ participants, ...rest }) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, participants.length - page * rowsPerPage);
   return (
     <Card {...rest}>
       <PerfectScrollbar>
@@ -56,8 +54,8 @@ export const ParticipantsListResults = ({ participants, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {participants.map((dataParticipant) => (
-                dataParticipant.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            {participants.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((dataParticipant) => (
+                dataParticipant
                 .map((participant) => (
                     <TableRow
                     hover
@@ -103,24 +101,19 @@ export const ParticipantsListResults = ({ participants, ...rest }) => {
                 ))
                 
             ))}
-            {emptyRows > 0 && (
-           
-           <TableRow style={{ height: 53 * emptyRows }}>
-             <TableCell colSpan={6} />
-           </TableRow>
-         )}
+
             </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
       <TablePagination
+        rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}
         component="div"
         count={participants.length}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[4, 10, 25]}
       />
 
     </Card>

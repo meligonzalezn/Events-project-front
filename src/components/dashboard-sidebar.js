@@ -31,16 +31,6 @@ const items = [
     title: 'Usuarios'
   },
   {
-    href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Products'
-  },  
-  {
-    href: '/customers',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Customers'
-  },
-  {
     href: '/Noticias',
     icon: (<NewspaperIcon fontSize="small" />),
     title: 'Noticias'
