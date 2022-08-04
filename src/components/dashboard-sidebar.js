@@ -52,7 +52,7 @@ const items = () => {
   else{
     return [
       {
-        href: '/',
+        href: '/Reportes',
         icon: (<ChartBarIcon fontSize="small" />),
         title: 'Reportes'
       },
