@@ -33,7 +33,7 @@ const items = () => {
         title: 'Noticias'
       },
       {
-        href: '/Eventos',
+        href: '/',
         icon: (<CalendarMonthIcon fontSize="small" />),
         title: 'Eventos'
       },
@@ -67,7 +67,7 @@ const items = () => {
         title: 'Noticias'
       },
       {
-        href: '/Eventos',
+        href: '/',
         icon: (<CalendarMonthIcon fontSize="small" />),
         title: 'Eventos'
       },
