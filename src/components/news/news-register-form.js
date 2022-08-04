@@ -4,9 +4,10 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import LoadingButton from '@mui/lab/LoadingButton';
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import { useFormik } from 'formik';
-import { createNews} from 'src/utils/newsAxios';
+import { createNews } from 'src/utils/newsAxios';
 import { useEffect, useState } from 'react';
 import { ModalAlert } from '../modals/modalAlert';
+import BackButton from '../BackButton';
 
 /** 
  * @param {{}} props  
@@ -58,10 +59,10 @@ export const NewsRegisterForm = (props) => {
     */
     const eventsData = async () => {
       try {
-        const eventsRequest =  await axios.get("http://localhost:8000/Events/")
+        const eventsRequest = await axios.get("http://localhost:8000/Events/")
         setEventsDataState(eventsRequest.data)
       }
-      catch(error){
+      catch (error) {
         console.log(error)
         return [null, error]
       }
@@ -73,25 +74,25 @@ export const NewsRegisterForm = (props) => {
     const onSubmit = async () => {
       if (!data) return;
       try {
-        if(!(formik.values.title == "" || formik.values.media_file == null || 
+        if (!(formik.values.title == "" || formik.values.media_file == null ||
           formik.values.description == "" || formik.values.summary == "" ||
-          formik.values.state == "" || formik.values.event_name == "" || 
-          formik.values.finish_date == "")){
-            if(formik.isValid){
-              await createNews(formik)
-              setModal(true)
-              formik.resetForm()
-            }
-            setLoading(false)
-            setData(false) 
+          formik.values.state == "" || formik.values.event_name == "" ||
+          formik.values.finish_date == "")) {
+          if (formik.isValid) {
+            await createNews(formik)
+            setModal(true)
+            formik.resetForm()
           }
+          setLoading(false)
+          setData(false)
+        }
         else {
           setModalError(true);
-          }
+        }
         setLoading(false)
         setData(false)
-        }
-      catch(error){
+      }
+      catch (error) {
         console.log(error)
         setModalError(true)
         setLoading(false)
@@ -124,11 +125,20 @@ export const NewsRegisterForm = (props) => {
       onSubmit={formik.handleSubmit}
       {...props}
     >
-      <Card sx={{width:'700px', margin:'auto'}}>
-        <CardHeader
-          subheader="Registre aquí una noticia"
-          title="Noticia"
-        />
+      <Card sx={{ width: '700px', margin: 'auto' }}>
+        <Box
+          sx={{
+            alignItems: 'center', display: 'flex', justifyContent: 'space-between',
+            flexWrap: 'wrap', m: -1,
+          }}>
+          <CardHeader
+            subheader="Registre aquí una noticia"
+            title="Noticia"
+          />
+          <Box sx={{ pr: 2 }}>
+            <BackButton route='/Noticias' />
+          </Box>
+        </Box>
         <Divider />
 
         <CardContent>
@@ -160,19 +170,19 @@ export const NewsRegisterForm = (props) => {
                 value={formik.values.event_name}
                 onChange={formik.handleChange}
                 variant="outlined"
-              > 
+              >
                 {eventsDataState ?
-                eventsDataState.map((option, key) => (<MenuItem value={option.Title} key={key}>{option.Title}</MenuItem>)) : 
-                <MenuItem disabled value="default" key="default"><CircularProgress sx={{margin:'auto'}}></CircularProgress> </MenuItem>
+                  eventsDataState.map((option, key) => (<MenuItem value={option.Title} key={key}>{option.Title}</MenuItem>)) :
+                  <MenuItem disabled value="default" key="default"><CircularProgress sx={{ margin: 'auto' }}></CircularProgress> </MenuItem>
                 }
               </TextField>
             </Grid>
             <Grid item md={6} xs={12}>
-              <ResponsiveDatePicker 
-                name="finish_date" 
-                title="Fecha límite"  
-                onChange={(e) => {formik.setFieldValue('finish_date', e)}}
-                value={formik.values.finish_date}/>
+              <ResponsiveDatePicker
+                name="finish_date"
+                title="Fecha límite"
+                onChange={(e) => { formik.setFieldValue('finish_date', e) }}
+                value={formik.values.finish_date} />
             </Grid>
 
             <Grid item md={12} xs={12} >
@@ -211,6 +221,9 @@ export const NewsRegisterForm = (props) => {
                   overflow:'auto',
                   resize:'vertical',
                   background:'transparent'
+                  border: '0.8px solid #e76063',
+                  overflow: 'auto',
+                  resize: 'vertical'
                 } :
                   {
                     height: '17rem',
@@ -219,7 +232,7 @@ export const NewsRegisterForm = (props) => {
                     borderRadius: '0.6rem',
                     width: '100%',
                     maxWidth: '100%',
-                    maxHeight:'17rem',
+                    maxHeight: '17rem',
                     fontFamily: 'Inter',
                     fontStyle: 'normal',
                     fontWeight: '400',
@@ -228,6 +241,8 @@ export const NewsRegisterForm = (props) => {
                     resize:'vertical', 
                     overflow:'auto',
                     background:'transparent',
+                    resize: 'vertical',
+                    overflow: 'auto'
                   }}
                 aria-label="Descripcion"
                 name="description"
@@ -266,30 +281,30 @@ export const NewsRegisterForm = (props) => {
               Subir archivo
             </label>
             {formik.errors.media_file && formik.touched.media_file ?
-                <div style={{ color: '#e76063', fontSize: '0.75rem' }}>{formik.errors.media_file}</div>
-                : null}
+              <div style={{ color: '#e76063', fontSize: '0.75rem' }}>{formik.errors.media_file}</div>
+              : null}
           </div>
           <LoadingButton
             loading={loading}
             color="primary"
             variant="contained"
-            onClick={(e) => { markErrors(e) && setLoading(!loading)}}>
+            onClick={(e) => { markErrors(e) && setLoading(!loading) }}>
             Registrar Noticia
           </LoadingButton>
         </Box>
       </Card>
-      {(modal == true) ? 
-      <ModalAlert
-        title={"Noticia registrada"}
-        message={"La noticia fue registrada exitosamente!"} modalState={modal}
-        modalSuccess={true} 
-        routeURL={"/Noticias"}
-        setModalState={setModal} /> : null
+      {(modal == true) ?
+        <ModalAlert
+          title={"Noticia registrada"}
+          message={"La noticia fue registrada exitosamente!"} modalState={modal}
+          modalSuccess={true}
+          routeURL={"/Noticias"}
+          setModalState={setModal} /> : null
       }
       {(modalError == true) ?
         <ModalAlert
           title={"Noticia NO registrada"}
-          message={"La noticia NO se pudo registrar, complete todos los campos"} modalState={modalError} 
+          message={"La noticia NO se pudo registrar, complete todos los campos"} modalState={modalError}
           modalSuccess={false}
           setModalState={setModalError} /> : null
       }

@@ -3,10 +3,11 @@ import { DashboardLayout } from '../../../components/dashboard-layout';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { AccountProfile } from 'src/components/account/account-profile';
 import UserForm from 'src/components/forms/CreateUserForm';
-import { createUser, update } from 'src/utils/userAxios';
+import { update } from 'src/utils/userAxios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import NotFund from "./../../404.js"
+import BackButton from 'src/components/BackButton';
 
 /**
  * 
@@ -20,20 +21,20 @@ const EditarUsuario = () => {
   const [usuario, setUsuario] = useState({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() =>{
+  useEffect(() => {
     let user = {}
     console.log("id", id)
-    try{
+    try {
       const users = JSON.parse(localStorage.getItem("usuarios"));
       console.log("users", users)
       user = users.find((user, index) => {
-        if(user.id == id){
+        if (user.id == id) {
           console.log("user", index, user)
           return user
         }
-        })
+      })
       console.log("user", user)
-    }catch(err){
+    } catch (err) {
       return <NotFund></NotFund>
       user = {}
     }
@@ -41,7 +42,7 @@ const EditarUsuario = () => {
     setLoading(false);
   }, [])
 
-  if(loading){
+  if (loading) {
     return (<></>)
   }
 
@@ -58,18 +59,27 @@ const EditarUsuario = () => {
           flexGrow: 1,
           py: 8
         }}
-        >
+      >
         <Container maxWidth="lg">
-          <Typography sx={{ mb: 3 }} variant="h4" >
-            Editar Usuario
-          </Typography>
+          <Box
+            sx={{
+              alignItems: 'center', display: 'flex', justifyContent: 'space-between',
+              flexWrap: 'wrap', m: -1,
+            }}
+          >
+            <Typography sx={{ m: 1 }} variant="h4" >
+              Editar Usuario
+            </Typography>
+
+            <BackButton route='/Usuarios' />
+          </Box>
 
           <Grid container spacing={3} >
             <Grid item lg={4} md={6} xs={12} >
               <AccountProfile />
             </Grid>
             <Grid item lg={8} md={6} xs={12} >
-              <UserForm finalFunction={update} type={"Actualizar"} {...usuario}/>
+              <UserForm finalFunction={update} type={"Actualizar"} {...usuario} />
             </Grid>
           </Grid>
         </Container>

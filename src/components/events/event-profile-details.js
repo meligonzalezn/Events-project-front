@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -11,13 +10,11 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useFormik } from "formik";
-import { useRouter } from "next/router";
-import { createEvent } from "src/utils/eventAxios";
 import { useEffect, useState } from "react";
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import { states } from "../../utils/states";
-import { eventData, getEventData } from "src/utils/eventAxios";
 import { ModalAlert } from '../modals/modalAlert';
+import BackButton from "../BackButton";
 
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
@@ -33,7 +30,7 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalError, setModalError] = useState(false);
-  
+
   const initialValues = () => {
     if (updateEvent) {
       return {
@@ -58,7 +55,7 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
       place: "",
     };
   };
-  const router = useRouter();
+
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: Yup.object().shape({
@@ -80,17 +77,16 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
     const onSubmit = async () => {
       if (!upload) return;
       setLoading(true);
-      try{
+      try {
         if (formik.isValid) {
           await submitFunc(formik).then((res) => console.log("res: ", res));
           setLoading(!loading);
-          //router.push("/Eventos");
         }
         setModal(!modal)
         setUpload(false);
         setLoading(false);
 
-      }catch(error){
+      } catch (error) {
         setModalError(true)
         setUpload(false);
         setLoading(false);
@@ -120,7 +116,17 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
   return (
     <form autoComplete="off" onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader title="Evento" />
+        <Box
+          sx={{
+            alignItems: 'center', display: 'flex', justifyContent: 'space-between',
+            flexWrap: 'wrap', m: -1,
+          }}>
+          <CardHeader title="Evento" />
+          <Box sx={{ pr: 2 }}>
+            <BackButton route='/' />
+          </Box>
+        </Box>
+
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
@@ -238,9 +244,9 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
                   lineHeight: "1.5rem",
                   cursor: "pointer",
                 }
-              }
+                }
               >
-                <a href={eventValues["Media_file"]} style={{textDecoration: "none"}} target="_blank"> Visualizar imagen </a>
+                <a href={eventValues["Media_file"]} style={{ textDecoration: "none" }} target="_blank"> Visualizar imagen </a>
               </label>
             </Box>
           )}
@@ -298,16 +304,16 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
         </Box>
       </Card>
       {(modal == true) ? <ModalAlert
-              title={"Registro de evento"}
-              message={"Los cambios se guardaron exitosamente!"} modalState={modal}
-              setModalState={setModal}
-              redirectTo={"/Eventos"} /> : null
-            }
+        title={"Registro de evento"}
+        message={"Los cambios se guardaron exitosamente!"} modalState={modal}
+        setModalState={setModal}
+        redirectTo={"/"} /> : null
+      }
       {(modalError == true) ?
-              <ModalAlert
-                title={"Registro de evento"}
-                message={"Los cambios NO fueron registrados"} modalState={modalError}
-                setModalState={setModalError} /> : null
+        <ModalAlert
+          title={"Registro de evento"}
+          message={"Los cambios NO fueron registrados"} modalState={modalError}
+          setModalState={setModalError} /> : null
       }
     </form>
   );

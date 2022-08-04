@@ -19,38 +19,72 @@ import { NavItem } from './nav-item';
 import CloseIcon from '@mui/icons-material/Close';
 import BadgeIcon from '@mui/icons-material/Badge';
 
-const items = [
-  {
-    href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
-  },
-  {
-    href: '/Usuarios',
-    icon: (<UserIcon fontSize="small" />),
-    title: 'Usuarios'
-  },
-  {
-    href: '/Noticias',
-    icon: (<NewspaperIcon fontSize="small" />),
-    title: 'Noticias'
-  },
-  {
-    href: '/Eventos',
-    icon: (<CalendarMonthIcon fontSize="small" />),
-    title: 'Events'
-  },
-  {
-    href: '/Escarapela',
-    icon: (<BadgeIcon fontSize="small" />),
-    title: 'Escarapela'
-  },
-  {
-    href: '/loggout',
-    icon: (<CloseIcon fontSize="small" />),
-    title: 'Loggout'
+const items = () => {
+  if(localStorage.getItem('userRole') == 'Cliente'){
+    return [
+      {
+        href: '/Usuarios',
+        icon: (<UserIcon fontSize="small" />),
+        title: 'Usuarios'
+      },
+      {
+        href: '/Noticias',
+        icon: (<NewspaperIcon fontSize="small" />),
+        title: 'Noticias'
+      },
+      {
+        href: '/',
+        icon: (<CalendarMonthIcon fontSize="small" />),
+        title: 'Eventos'
+      },
+      {
+        href: '/Escarapela',
+        icon: (<BadgeIcon fontSize="small" />),
+        title: 'Escarapela'
+      },
+      {
+        href: '/loggout',
+        icon: (<CloseIcon fontSize="small" />),
+        title: 'Loggout'
+      }
+    ]; 
   }
-];
+  else{
+    return [
+      {
+        href: '/Reportes',
+        icon: (<ChartBarIcon fontSize="small" />),
+        title: 'Reportes'
+      },
+      {
+        href: '/Usuarios',
+        icon: (<UserIcon fontSize="small" />),
+        title: 'Usuarios'
+      },
+      {
+        href: '/Noticias',
+        icon: (<NewspaperIcon fontSize="small" />),
+        title: 'Noticias'
+      },
+      {
+        href: '/',
+        icon: (<CalendarMonthIcon fontSize="small" />),
+        title: 'Eventos'
+      },
+      {
+        href: '/Escarapela',
+        icon: (<BadgeIcon fontSize="small" />),
+        title: 'Escarapela'
+      },
+      {
+        href: '/loggout',
+        icon: (<CloseIcon fontSize="small" />),
+        title: 'Loggout'
+      }
+    ];
+  }
+}
+
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
@@ -107,7 +141,7 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {items.map((item) => (
+          {items().map((item) => (
             <NavItem
               key={item.title}
               icon={item.icon}
