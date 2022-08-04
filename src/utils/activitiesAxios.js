@@ -128,4 +128,26 @@ async function unenroll(ID_Activity) {
   }
 }
 
+
+
+  /**
+ * We get the event data completed to display in form
+ * @param {eventId}
+ */
+ 
+ let  activitiesFromEvent = []
+ async function getActivitiesFromEvent(eventId){
+   try{
+     await axios.get("http://localhost:8000/Activity/").then((res) => {
+       activitiesFromEvent = res.data.filter((element) => element.ID_Event === eventId)
+       return activitiesFromEvent;
+     })
+   }
+   catch(error){
+     console.log(error)
+     return [null, error]
+   }
+ }
+
+
 export { createActivity, updateActivity, checkEnrolledStatus, unenroll }

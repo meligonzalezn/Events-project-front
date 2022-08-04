@@ -29,7 +29,7 @@ async function getEvents() {
 
     console.log("request", request.data)
 
-    return [request.data, null]
+    return request.data
   } catch (err) {
     console.log(err)
     return [null, err]
@@ -191,4 +191,4 @@ async function enable(pk) {
 }
 
 
-export { createEvent, eventsTitle, eventData, getEventData , updateEvent}
+export { createEvent, eventsTitle, eventData, getEventData , updateEvent, getEvents}
