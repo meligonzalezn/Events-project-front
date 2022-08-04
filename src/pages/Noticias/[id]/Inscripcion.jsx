@@ -1,26 +1,25 @@
 import { Box } from "@mui/system";
 import Head from "next/head";
 import { DashboardLayout } from "src/components/dashboard-layout";
-import ViewNew from "src/components/news/ViewNew";
+import ViewEvent from "src/components/events/ViewEvent";
 
-export default function VerNoticias(props) {
-
+export default function VerEventos() {
 
   return (
     <>
       <Head>
         <title>
-          Ver Noticia
+          Ver Evento
         </title>
       </Head>
       <Box component="main" sx={{ flexGrow: 1, py: 4 }}>
-        <ViewNew></ViewNew>
+        <ViewEvent></ViewEvent>
       </Box>
     </>
   )
 }
 
-VerNoticias.getLayout = (page) => (
+VerEventos.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
