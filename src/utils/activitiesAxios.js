@@ -1,4 +1,6 @@
+import { PaymentRounded } from '@mui/icons-material'
 import axios from 'axios'
+import { element } from 'prop-types'
 
 /**
  * This function parse the date to "YYYY-MM-DD"
@@ -31,7 +33,6 @@ const formatDate = (date) => {
         Title: data.title, 
         ID_Event: localStorage.getItem('idEvent') 
     }
-    console.log("que necesito enviar ", activity)
     try {
       const request = await axios.post("http://localhost:8000/Activity/", activity);
       return [request, null];
@@ -71,6 +72,6 @@ const formatDate = (date) => {
       console.log(err);
       return [null, err]
     }
-    
   }
+
 export {createActivity, updateActivity}

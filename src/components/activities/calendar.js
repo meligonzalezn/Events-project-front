@@ -46,7 +46,7 @@ export const Calendar = () => {
     const [activityClick, setActivityClick] = useState(false)
     const [activityData, setActivityData] = useState()
     const styles = useStyles();
-    var activitiesArray;
+    var activitiesArray = {};
     var activitiesEvent = {};
     useEffect(() => {
         /**
