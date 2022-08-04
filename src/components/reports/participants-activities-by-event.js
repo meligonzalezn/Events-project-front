@@ -147,7 +147,7 @@ export const ActivitiesPerEvent = ({ events , payments}) => {
             >
               <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
           <Typography color="textPrimary" variant="body1">
-            No hay participantes registrados para esta actividad!
+            No hay participantes registrados!
           </Typography>
             </Box>
         </>
