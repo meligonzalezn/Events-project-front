@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useRouter } from 'next/router';
 
 const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
 
@@ -34,7 +35,7 @@ export default function PayStepper(props) {
 
   const handleBackToOrigin = () => {
     props.setActiveStep(0);
-    router.push("/", "/")
+    router.push("/CrearActividad")
   };
 
   return (
@@ -46,7 +47,7 @@ export default function PayStepper(props) {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleBackToOrigin}>Volver al inicio</Button>
+            <Button onClick={handleBackToOrigin}>Volver</Button>
           </Box>
         </React.Fragment>
       ) : (

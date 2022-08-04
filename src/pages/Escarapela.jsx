@@ -4,8 +4,6 @@ import ShowBadge from 'src/components/badge/ShowBadge';
 
 export default function Escarapela(props) {
 
-  // TODO obtener el rol del usuario de la sesión.
-
   return (
     <>
       <Head>
