@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import axios from "axios";
+import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
 
 const EVENTS_IN_DOUGHNUT = 5;
 
@@ -91,14 +92,14 @@ export const EventsInMonth = ({events}) => {
       {
         datasets: [
           {
-            data: [63, 15, 22],
-            backgroundColor: ["#3F51B5", "#e53935", "#FB8C00"],
+            data: totalParticipantsPerEvent,
+            backgroundColor: ["#3F51B5", "#e53935", "#FB8C00", "#00cc66", "#66ccff"],
             borderWidth: 8,
             borderColor: "#FFFFFF",
             hoverBorderColor: "#FFFFFF",
           },
         ],
-        labels: ["Desktop", "Tablet", "Mobile"],
+        labels: eventsInMonth,
       }
     )
     setOptions(
@@ -128,26 +129,46 @@ export const EventsInMonth = ({events}) => {
     setFirstLoading(false);
   };
 
-  const devices = [
-    {
-      title: "Desktop",
-      value: 63,
-      icon: LaptopMacIcon,
-      color: "#3F51B5",
-    },
-    {
-      title: "Tablet",
-      value: 15,
-      icon: TabletIcon,
-      color: "#E53935",
-    },
-    {
-      title: "Mobile",
-      value: 23,
-      icon: PhoneIcon,
-      color: "#FB8C00",
-    },
-  ];
+  const nullParticipants = () => {
+    if(data === undefined){
+      return (<> </>);
+    }
+    if(data.datasets[0].data.length===0){
+      return (
+        <> 
+         <DoNotDisturbAltIcon style={{ color: '#cc0000' }}/>
+        <Typography
+                color="textPrimary"
+                variant="body1"
+              >
+              
+              No hay eventos registrados para este mes!
+            </Typography>
+           
+          </> 
+      );
+    }
+    if(data.datasets[0].data.length===1){
+      if(data.datasets[0].data[0] === 0){
+        return(
+          <> 
+          <DoNotDisturbAltIcon style={{ color: '#cc0000' }}/>
+          <Typography
+                color="textPrimary"
+                variant="body1"
+              >
+              
+              No hay participantes registrados en el evento!
+            </Typography>
+            
+            </>
+        );
+      }
+    }
+    else{
+      return(<> </>);
+    }
+  }
 //{{ height: '100%' }}
   return (
     <> 
@@ -165,7 +186,7 @@ export const EventsInMonth = ({events}) => {
               view ="year-month"
             />
     )}
-    title="Traffic by Device" />
+    title="Participantes por evento" />
     <Divider />
     <CardContent>
       <Box
@@ -183,23 +204,7 @@ export const EventsInMonth = ({events}) => {
           pt: 2,
         }}
       >
-        {devices.map(({ color, icon: Icon, title, value }) => (
-          <Box
-            key={title}
-            sx={{
-              p: 1,
-              textAlign: "center",
-            }}
-          >
-            <Icon color="action" />
-            <Typography color="textPrimary" variant="body1">
-              {title}
-            </Typography>
-            <Typography style={{ color }} variant="h4">
-              {value}%
-            </Typography>
-          </Box>
-        ))}
+          <>{nullParticipants()} </>
       </Box>
     </CardContent>
   </Card>

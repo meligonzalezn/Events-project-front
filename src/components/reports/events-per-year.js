@@ -7,7 +7,7 @@ import LinearLoader from "../loaders/LinealLoader";
 import { getEvents } from 'src/utils/eventAxios';
 import ResponsiveDatePicker from '../date-picker/date-picker-responsive';
 
-export const Sales = ({events}) => {
+export const EventsPerYear = ({events}) => {
   const theme = useTheme();
   const [firstLoading, setFirstLoading] = useState(true)
   const [data, setData] = useState()

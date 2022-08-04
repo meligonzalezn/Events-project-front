@@ -3,11 +3,11 @@ import { Box, Container, Grid } from '@mui/material';
 import { Budget } from '../components/dashboard/budget';
 import { LatestOrders } from '../components/dashboard/latest-orders';
 import { LatestProducts } from '../components/dashboard/latest-products';
-import { Sales } from '../components/reports/sales';
+import { EventsPerYear } from '../components/reports/events-per-year';
 import { TasksProgress } from '../components/dashboard/tasks-progress';
 import { TotalCustomers } from '../components/dashboard/total-customers';
 import { TotalProfit } from '../components/dashboard/total-profit';
-import { EventsInMonth } from 'src/components/reports/traffic-by-device';
+import { EventsInMonth } from 'src/components/reports/participants-events-in-month';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { getEvents } from 'src/utils/eventAxios';
 import { useEffect, useState } from 'react';
@@ -98,7 +98,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <Sales events= {events} />
+            <EventsPerYear events= {events} />
           </Grid>
           <Grid
             item
