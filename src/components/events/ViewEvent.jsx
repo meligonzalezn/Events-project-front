@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import MapComponentView from "./ViewEventMap";
 import { Clock as ClockIcon } from "../../icons/clock";
+import { useRouter } from 'next/router';
 import AttachMoney from "@mui/icons-material/AttachMoney";
 import { enroll_user2event, is_enrolled2Event, uneroll_user2event } from "src/utils/eventAxios";
 import BackButton from "../BackButton";
@@ -17,6 +18,7 @@ import BackButton from "../BackButton";
 export default function ViewEvent(props) {
   const [loading, setLoading] = useState(true);
   const [theEvent, setTheEvent] = useState({});
+  const router = useRouter();
   const [EnrollmentEnable, setEnrollmentEnable] = useState(true);
   const [ShowMessageError, setShowMessageError] = useState("");
   const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState("")
@@ -123,11 +125,15 @@ export default function ViewEvent(props) {
               </Typography>
 
               {(localStorage.getItem('userRole') == 'Cliente') ? null :
-                <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
-                  <Button color="primary" variant="contained">Participantes</Button>
-                </Box>
+               
+                <Button color="primary" 
+                variant="contained"
+                onClick={(e) => router.push('/ParticipantesEvento') && localStorage.setItem('idEvent', theEvent.id)}>
+                  Participantes
+                </Button>
+                
               }
-              <BackButton route="/Eventos" />
+              <BackButton route="/" />
             </Box>
             {/* </CardContent> */}
           </Box>

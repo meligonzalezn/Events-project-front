@@ -127,7 +127,7 @@ export const Calendar = () => {
         <Typography sx={{ m: 1 }} variant="h4">
           Calendario
         </Typography>
-        <BackButton route='/Eventos' />
+        <BackButton route='/' />
       </Box>
       <StyleWrapper>
         <FullCalendar

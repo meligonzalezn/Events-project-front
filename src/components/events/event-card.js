@@ -25,7 +25,7 @@ export const EventCard = ({ onClick, id, event, ...rest }) => {
   };
   return (
     <>
-      {(router.pathname === '/Eventos') ?
+      {(router.pathname === '/') ?
 
         <Card
           sx={{
