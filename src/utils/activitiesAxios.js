@@ -131,8 +131,8 @@ async function unenroll(ID_Activity) {
 
 
   /**
- * We get the event data completed to display in form
- * @param {eventId}
+ * We get the activities from an event
+ * @param {eventId} // id of event 
  */
  
  let  activitiesFromEvent = []
@@ -150,4 +150,4 @@ async function unenroll(ID_Activity) {
  }
 
 
-export { createActivity, updateActivity, checkEnrolledStatus, unenroll }
+export { createActivity, updateActivity, checkEnrolledStatus, unenroll , getActivitiesFromEvent, activitiesFromEvent}
