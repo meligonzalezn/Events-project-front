@@ -14,9 +14,8 @@ import { useRouter } from "next/router";
 import CreateActivity from "src/pages/CrearActividad";
 import AddIcon from "@mui/icons-material/Add";
 
-export const EventCard = ({ onClick,id ,event, ...rest }) => {
+export const EventCard = ({ onClick, id, event, ...rest }) => {
   const router = useRouter();
-  console.log("aqui ya puedo tener el local", localStorage.getItem("autor")) 
 
   const image_url = () => {
     if (event.Media_file === null) {
@@ -26,8 +25,8 @@ export const EventCard = ({ onClick,id ,event, ...rest }) => {
   };
   return (
     <>
-      {(router.pathname === '/Eventos') ? 
-      
+      {(router.pathname === '/Eventos') ?
+
         <Card
           sx={{
             display: "flex",
@@ -67,42 +66,42 @@ export const EventCard = ({ onClick,id ,event, ...rest }) => {
             >
               {event.Details}
             </Typography>
-            
+
           </CardContent>
           <Box sx={{ flexGrow: 1 }} />
           <Divider />
           <Box sx={{ p: 2 }}>
-        <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
-          <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
-            <ClockIcon color="action" />
+            <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
+              <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
+                <ClockIcon color="action" />
 
-            <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
-              Inicio: <b></b>
-              {event.Start_date}
-            </Typography>
-          </Grid>
+                <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
+                  Inicio: <b></b>
+                  {event.Start_date}
+                </Typography>
+              </Grid>
 
-          <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
-            <ClockIcon color="action" />
+              <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
+                <ClockIcon color="action" />
 
-            <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
-              Finalización: <b></b>
-              {event.Finish_date}
-            </Typography>
-          </Grid>
-          <Grid item sx={{ alignItems: "center", display: "flex" }}>
-            <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
-              <Button variant="outlined" onClick={onClick} id={id}>
-                Ver más
-              </Button>
-              <Button onClick={() => {localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad')}} color="primary" variant="contained">
-                Actividades
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-        </Card>: null
+                <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
+                  Finalización: <b></b>
+                  {event.Finish_date}
+                </Typography>
+              </Grid>
+              <Grid item sx={{ alignItems: "center", display: "flex" }}>
+                <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
+                  <Button variant="outlined" onClick={onClick} id={id}>
+                    Ver más
+                  </Button>
+                  <Button onClick={() => { localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad') }} color="primary" variant="contained">
+                    Actividades
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Card> : null
       }
     </>
   );

@@ -12,6 +12,7 @@ import { has_perms, is_logged } from 'src/utils/loginAxios';
 import Login from './login';
 import NotFound from './404';
 import '../components/news/styles.css';
+import SignUp from './SignUp';
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
@@ -26,12 +27,17 @@ const App = (props) => {
 
   const router = useRouter()
 
+  useEffect(() => {
+    localStorage.setItem("actividad", '');
+  }, [])
+
   useEffect(async () => {
     //User is logged?
+
     is_logged().then(([_, error]) => {
-      
+
       setLogged(error == null)
-      
+
       if (error == null) {
         //User has permissions ?
         has_perms(router.asPath).then(([_, error]) => {
