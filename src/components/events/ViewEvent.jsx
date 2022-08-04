@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import MapComponentView from "./ViewEventMap";
 import { Clock as ClockIcon } from "../../icons/clock";
-import axios from "axios";
+import { useRouter } from 'next/router';
 import AttachMoney from "@mui/icons-material/AttachMoney";
 
 /**
@@ -16,7 +16,7 @@ import AttachMoney from "@mui/icons-material/AttachMoney";
 export default function ViewEvent(props) {
   const [loading, setLoading] = useState(true);
   const [theEvent, setTheEvent] = useState({});
-  const [autor, setAutor] = useState({});
+  const router = useRouter();
 
   const image_url = (media_file) => {
     if (media_file === null) {
@@ -67,7 +67,11 @@ export default function ViewEvent(props) {
               </Typography>
               {(localStorage.getItem('userRole') == 'Cliente') ? null :
                 <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
-                <Button color="primary" variant="contained">Participantes</Button>
+                <Button color="primary" 
+                variant="contained"
+                onClick={(e) => router.push('/ParticipantesEvento') && localStorage.setItem('idEvent', theEvent.id)}>
+                  Participantes
+                </Button>
                 </Box>
               }
             </Box>
