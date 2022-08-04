@@ -13,28 +13,27 @@ export const EventsPerYear = ({events}) => {
   const [data, setData] = useState()
   const [options, setOptions] = useState()
   const [date , setDate] = useState(new Date())
-  const eventsPerMonth = [0,0,0,0,0,0,0,0,0,0,0,0]
+  const incomesPerMonth = [0,0,0,0,0,0,0,0,0,0,0,0]
 
   useEffect(() => {
 
-      getEventsPerMonth(events);
+      getIncomesPerMonth(events);
 
     
   }, [date])
 
   /**
- * Obtains the number of events per month in the current year, sets the date and the options for the bar chart 
- * Add validation that events are from current year
- * @param {*} data Events from db 
+ * Obtains the incomes per month in the current year, sets the date and the options for the bar chart 
+ * @param {*} data Payment from the db 
  */
-  const getEventsPerMonth = (data) => {
+  const getIncomesPerMonth = (data) => {
       data.map((element) => {
-        const dateEvent = element.Start_date
+        const dateEvent = element.Date
         const year = parseInt(dateEvent.substr(0,4))
         const month = parseInt(dateEvent.substr(6,2)) - 1
         if(year === date.getFullYear()){
           console.log("entré")
-          eventsPerMonth[month] =  eventsPerMonth[month] + 1
+          incomesPerMonth[month] =  incomesPerMonth[month] + parseInt(element.Value)
         }
         
       })

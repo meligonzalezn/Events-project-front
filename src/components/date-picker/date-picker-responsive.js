@@ -25,7 +25,7 @@ export default function ResponsiveDatePicker({title, onChange, value, view}) {
       return(
         <LocalizationProvider dateAdapter={AdapterDateFns}>      
         <DatePicker
-          minDate={new Date()}
+          //minDate={new Date()}
           label = {title}
           openTo="year"
           views={['year', 'month']}

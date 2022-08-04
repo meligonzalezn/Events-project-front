@@ -17,6 +17,7 @@ export const EventsInMonth = ({events}) => {
   const [data, setData] = useState();
   const [options, setOptions] = useState();
   const [date, setDate] = useState(new Date());
+  const [loading, setLoading] = useState(false)
   const eventsInMonth = [];
   const eventsInMonthIds = [];
 
@@ -30,6 +31,7 @@ export const EventsInMonth = ({events}) => {
    * @param {*} data Events from db
    */
   const getParticipantsAmount = async (data) => {
+    setLoading(true)
     //first we sort the events in order by more near to less near date 
     data.sort((a, b) => new Date(a.Start_date).getTime() > new Date(b.Start_date).getTime())
     let numberOfEvents = 0;
@@ -126,55 +128,104 @@ export const EventsInMonth = ({events}) => {
 
     )
     setFirstLoading(false);
+    setLoading(false)
   };
 
+
   const nullParticipants = () => {
-    if(data === undefined){
-      return (<> </>);
-    }
-    if(data.datasets[0].data.length===0){
-      return (
-        <> 
-         <DoNotDisturbAltIcon style={{ color: '#cc0000' }}/>
-        <Typography
-                color="textPrimary"
-                variant="body1"
-              >
-              
-              No hay eventos registrados para este mes!
-            </Typography>
-           
-          </> 
+    if (data === undefined) {
+      return(
+        <LinearLoader upperMessage="Cargando reporte..."></LinearLoader>
       );
     }
-    if(data.datasets[0].data.length===1){
-      if(data.datasets[0].data[0] === 0){
-        return(
+    // Verifies if there are no events
+    if (data.datasets[0].data.length === 0) {
+      return (
+        <> 
+        <Box
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
+          <Typography color="textPrimary" variant="body1">
+            No hay eventos registrados para este mes!
+          </Typography>
+            </Box>
+        </>
+      );
+    }
+    //Verifies if there are no participants enrolled even if there are events
+    const dataVerification = new Set(data.datasets[0].data)
+    if ([...dataVerification][0] === 0 && [...dataVerification].length === 1) {
+      
+        return (
           <> 
-          <DoNotDisturbAltIcon style={{ color: '#cc0000' }}/>
-          <Typography
-                color="textPrimary"
-                variant="body1"
-              >
-              
-              No hay participantes registrados en el evento!
-            </Typography>
-            
-            </>
+        <Box
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
+          <Typography color="textPrimary" variant="body1">
+            No hay participantes registrados!
+          </Typography>
+            </Box>
+        </>
         );
-      }
-    }
+      
+    } 
     else{
-      return(<> </>);
+      return (<Doughnut data={data} options={options}/>);
     }
-  }
+  };
 //{{ height: '100%' }}
   return (
     <> 
     {firstLoading? 
+    <Card>
+    <CardHeader
+      action={
+        <ResponsiveDatePicker
+        name="month"
+        title="Seleccione una fecha"
+        onChange={(e)=>{setDate(e)}}
+        value={date}
+        view ="year-month"
+      />
+      }
+      title="Participantes por evento"
+    />
+    <Divider />
+    <CardContent>
     <LinearLoader upperMessage="Cargando reporte..."></LinearLoader>
+    </CardContent>
+  </Card>
+    
     :
-    <Card >
+    <> {loading? 
+      <Card>
+    <CardHeader
+      action={
+        <ResponsiveDatePicker
+        name="month"
+        title="Seleccione una fecha"
+        onChange={(e)=>{setDate(e)}}
+        value={date}
+        view ="year-month"
+      />
+      }
+      title="Participantes por evento"
+    />
+    <Divider />
+    <CardContent>
+    <LinearLoader upperMessage="Cargando reporte..."></LinearLoader>
+    </CardContent>
+  </Card>
+      :
+      <Card >
     <CardHeader
     action={(
       <ResponsiveDatePicker
@@ -193,20 +244,13 @@ export const EventsInMonth = ({events}) => {
           height: 300,
           position: "relative",
         }}
-      >
-        <Doughnut data={data} options={options} />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          pt: 2,
-        }}
-      >
-          <>{nullParticipants()} </>
+      > 
+        {nullParticipants()}
       </Box>
     </CardContent>
   </Card>
+    }
+    </>
     }
     </>
   );

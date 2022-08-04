@@ -19,7 +19,9 @@ export const ActivitiesPerEvent = ({ events }) => {
   const [data, setData] = useState();
   const [options, setOptions] = useState();
   const [eventName, setEventName] = useState("");
-  const activities = [];
+  const activitiesTitle = [];
+  const numberOfParticipants = [];
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (eventName !== "") {
@@ -34,6 +36,7 @@ export const ActivitiesPerEvent = ({ events }) => {
    * @param {*} data Events from db
    */
   const getParticipantsAmount = async (data) => {
+    setLoading(true)
     //We get the id of the event selected
     await getEventData(eventName);
     console.log("eventData: ", eventData)
@@ -41,11 +44,20 @@ export const ActivitiesPerEvent = ({ events }) => {
     //Gets the activities from the event 
     await getActivitiesFromEvent(idEvent)
     console.log("actividades: ", activitiesFromEvent)
-
+    // gets the payments 
+    const res = await axios.get("http://localhost:8000/Payment/")
+    const payments = res.data
+    // gets the amount of participants per activity
+    activitiesFromEvent.map((activity)=>{
+        activitiesTitle.push(activity.Title)
+        numberOfParticipants.push(payments.filter((element) => element.ID_Activity === activity.id).length)
+    })
+    console.log("participants:", numberOfParticipants)
+   
     setData({
       datasets: [
         {
-          data: [1,2,3],
+          data: numberOfParticipants,
           backgroundColor: [
             "#3F51B5",
             "#e53935",
@@ -63,7 +75,7 @@ export const ActivitiesPerEvent = ({ events }) => {
           hoverBorderColor: "#FFFFFF",
         },
       ],
-      labels: ["hola", "x", "y"],
+      labels: activitiesTitle,
     });
     setOptions({
       animation: false,
@@ -87,35 +99,68 @@ export const ActivitiesPerEvent = ({ events }) => {
       },
     });
     setFirstLoading(false);
+    setLoading(false);
   };
 
   const nullParticipants = () => {
     if (data === undefined) {
-      return <> </>;
+      return(
+        <> 
+        <Box
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <Typography color="textPrimary" variant="body1">
+              Selecciona un evento
+            </Typography>
+            </Box>
+        </>
+        
+      );
     }
+    // Verifies if there are no activities
     if (data.datasets[0].data.length === 0) {
       return (
-        <>
-          <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
+        <> 
+        <Box
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
           <Typography color="textPrimary" variant="body1">
-            No hay eventos registrados para este mes!
+            No hay actividades registradas para este evento!
           </Typography>
+            </Box>
         </>
       );
     }
-    if (data.datasets[0].data.length === 1) {
-      if (data.datasets[0].data[0] === 0) {
+    //Verifies if there are no participants enrolled even if there are activities 
+    const dataVerification = new Set(data.datasets[0].data)
+    if ([...dataVerification][0] === 0 && [...dataVerification].length === 1) {
         return (
-          <>
-            <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
-            <Typography color="textPrimary" variant="body1">
-              No hay participantes registrados en el evento!
-            </Typography>
-          </>
+          <> 
+        <Box
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <DoNotDisturbAltIcon style={{ color: "#cc0000" }} />
+          <Typography color="textPrimary" variant="body1">
+            No hay participantes registrados para esta actividad!
+          </Typography>
+            </Box>
+        </>
         );
-      }
+      
     } else {
-      return <> </>;
+      return(
+        <Doughnut data={data} options={options} />
+      );
     }
   };
   //{{ height: '100%' }}
@@ -130,15 +175,18 @@ export const ActivitiesPerEvent = ({ events }) => {
                 setEventsNameState={setEventName}
               ></EventsDropdown>
             }
-            title="Participantes por evento"
+            title="Participantes por actividad"
           />
           <Divider />
           <CardContent>
-            <LinearLoader upperMessage="Cargando reporte..."></LinearLoader>
+            <Typography color="textPrimary" variant="body1">
+              Selecciona un evento
+            </Typography>
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <> {loading? 
+          <Card>
           <CardHeader
             action={
               <EventsDropdown
@@ -146,7 +194,7 @@ export const ActivitiesPerEvent = ({ events }) => {
                 setEventsNameState={setEventName}
               ></EventsDropdown>
             }
-            title="Participantes por evento"
+            title="Participantes por actividad"
           />
           <Divider />
           <CardContent>
@@ -156,20 +204,36 @@ export const ActivitiesPerEvent = ({ events }) => {
                 position: "relative",
               }}
             >
-              <Doughnut data={data} options={options} />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                pt: 2,
-              }}
-            >
-              <>{nullParticipants()} </>
+              <LinearLoader upperMessage="Cargando reporte..."></LinearLoader>
             </Box>
           </CardContent>
         </Card>
+        :
+        <Card>
+          <CardHeader
+            action={
+              <EventsDropdown
+                eventsNameState={eventName}
+                setEventsNameState={setEventName}
+              ></EventsDropdown>
+            }
+            title="Participantes por actividad"
+          />
+          <Divider />
+          <CardContent>
+            <Box
+              sx={{
+                height: 300,
+                position: "relative",
+              }}
+            >
+              {nullParticipants()}
+            </Box>
+          </CardContent>
+        </Card>
+        }</>
       )}
     </>
   );
+  
 };
