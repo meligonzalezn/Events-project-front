@@ -40,6 +40,7 @@ const App = (props) => {
 
   useEffect(async () => {
     //User is logged?
+    console.log("router.asPath", router.asPath)
 
     is_logged().then(([_, error]) => {
 
@@ -83,7 +84,10 @@ const App = (props) => {
                 getLayout(<Component {...pageProps} />)
                 :
                 <NotFound />
-              : <Login />
+              : router.asPath === "/SignUp" ? 
+              <SignUp/>
+              : 
+              <Login /> 
           }
         </ThemeProvider>
       </LocalizationProvider>

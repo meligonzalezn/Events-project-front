@@ -146,8 +146,17 @@ const Login = () => {
                 type="submit"
                 variant="contained"
               >
-                Sign In Now
+                Acceder ahora
               </Button>
+            </Box>
+            <Box sx={{ py: 2 }}>
+              <Typography>
+                {"No tienes cuenta aún? "}
+                <NextLink href="SignUp">
+                  Registrate
+                </NextLink>
+
+              </Typography>
             </Box>
             {UploadFailed != null ?
               <Box sx={{ my: 3 }}>
