@@ -34,10 +34,14 @@ const Events = () => {
      */
     const getEvents = async () => {
       const request = await axios.get("http://localhost:8000/Events/");
-      const data = request.data;
-      setDataEvents(data);
-      setSearchedEvents(data);
-      setNumPages(Math.ceil(data.length / NEWS_PER_PAGE));
+      const dataN = request.data;
+      const dataNfilter = dataN.filter((value) => {
+        return (value.State == 'Activo')
+        }
+      )
+      setDataEvents( dataNfilter);
+      setSearchedEvents( dataNfilter);
+      setNumPages(Math.ceil( dataNfilter.length / NEWS_PER_PAGE));
       setLoading(false);
     }
 
