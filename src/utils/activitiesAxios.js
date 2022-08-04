@@ -73,4 +73,26 @@ const formatDate = (date) => {
     }
     
   }
-export {createActivity, updateActivity}
+
+
+  /**
+ * We get the event data completed to display in form
+ * @param {eventId}
+ */
+ 
+ let  activitiesFromEvent = []
+ async function getActivitiesFromEvent(eventId){
+   try{
+     await axios.get("http://localhost:8000/Activity/").then((res) => {
+       activitiesFromEvent = res.data.filter((element) => element.ID_Event === eventId)
+       return activitiesFromEvent;
+     })
+   }
+   catch(error){
+     console.log(error)
+     return [null, error]
+   }
+ }
+
+
+export {createActivity, updateActivity, getActivitiesFromEvent, activitiesFromEvent}

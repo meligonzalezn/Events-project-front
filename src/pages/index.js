@@ -11,6 +11,7 @@ import { EventsInMonth } from 'src/components/reports/participants-events-in-mon
 import { DashboardLayout } from '../components/dashboard-layout';
 import { getEvents } from 'src/utils/eventAxios';
 import { useEffect, useState } from 'react';
+import { ActivitiesPerEvent } from 'src/components/reports/participants-activities-by-event';
 import LinearLoader from 'src/components/loaders/LinealLoader';
 
 const Dashboard = () => { 
@@ -116,7 +117,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <LatestProducts sx={{ height: '100%' }} />
+            <ActivitiesPerEvent events = {events}/>
           </Grid>
           <Grid
             item

@@ -9,7 +9,7 @@ import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
 import axios from "axios";
 import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
 
-const EVENTS_IN_DOUGHNUT = 5;
+const EVENTS_IN_DOUGHNUT = 8;
 
 export const EventsInMonth = ({events}) => {
   const theme = useTheme();
@@ -21,16 +21,15 @@ export const EventsInMonth = ({events}) => {
   const eventsInMonthIds = [];
 
   useEffect(() => {
-    getEventsPerMonth(events);
+    getParticipantsAmount(events);
     //setFirstLoading(false);
   }, [date]);
 
   /**
-   * Obtains the number of events per month in the current year, sets the date and the options for the bar chart
-   * Add validation that events are from current year
+   * Obtains the 5 nearest events in a month selected and displays the amount of participants for each one. 
    * @param {*} data Events from db
    */
-  const getEventsPerMonth = async (data) => {
+  const getParticipantsAmount = async (data) => {
     //first we sort the events in order by more near to less near date 
     data.sort((a, b) => new Date(a.Start_date).getTime() > new Date(b.Start_date).getTime())
     let numberOfEvents = 0;
@@ -93,7 +92,7 @@ export const EventsInMonth = ({events}) => {
         datasets: [
           {
             data: totalParticipantsPerEvent,
-            backgroundColor: ["#3F51B5", "#e53935", "#FB8C00", "#00cc66", "#66ccff"],
+            backgroundColor: ["#3F51B5", "#e53935", "#FB8C00", "#00cc66", "#66ccff", "#ff1a66", "#a300cc", "#4d6600", "#ff9999","#cc99ff" ],
             borderWidth: 8,
             borderColor: "#FFFFFF",
             hoverBorderColor: "#FFFFFF",
