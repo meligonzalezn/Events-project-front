@@ -123,17 +123,20 @@ export default function ViewEvent(props) {
               <Typography sx={{ m: 0.2 }} variant="h4">
                 {theEvent.Title}
               </Typography>
-
+              <Box sx={{
+                display: "flex",
+              }} > 
               {(localStorage.getItem('userRole') == 'Cliente') ? null :
-               
+               <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
                 <Button color="primary" 
                 variant="contained"
                 onClick={(e) => router.push('/ParticipantesEvento') && localStorage.setItem('idEvent', theEvent.id)}>
                   Participantes
                 </Button>
-                
+                </Box>
               }
               <BackButton route="/" />
+              </Box>
             </Box>
             {/* </CardContent> */}
           </Box>
