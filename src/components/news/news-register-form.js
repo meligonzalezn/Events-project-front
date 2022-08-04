@@ -202,6 +202,7 @@ export const NewsRegisterForm = (props) => {
             </Grid>
             <Grid item md={12} xs={12} sx={{ float: 'left', width: '50%' }}>
               <TextareaAutosize
+                className='text_area_news'
                 id="description"
                 maxRows={10000}
                 style={formik.errors.description && formik.touched.description ? {
@@ -216,6 +217,10 @@ export const NewsRegisterForm = (props) => {
                   fontWeight: '400',
                   fontSize: '16px',
                   lineHeight: '24px',
+                  border: '0.8px solid #e76063', 
+                  overflow:'auto',
+                  resize:'vertical',
+                  background:'transparent'
                   border: '0.8px solid #e76063',
                   overflow: 'auto',
                   resize: 'vertical'
@@ -233,6 +238,9 @@ export const NewsRegisterForm = (props) => {
                     fontWeight: '400',
                     fontSize: '16px',
                     lineHeight: '24px',
+                    resize:'vertical', 
+                    overflow:'auto',
+                    background:'transparent',
                     resize: 'vertical',
                     overflow: 'auto'
                   }}

@@ -37,7 +37,7 @@ export const EventsUpdateForm = ({setSuccessfulRegister}) => {
     return(
         <Card>
                 <CardHeader
-                    subheader="Actualice el evento que desee aquí"
+                    subheader="to que desee aquí"
                     title="Evento"
                 />
                 <Divider />

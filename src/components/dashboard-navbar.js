@@ -46,8 +46,8 @@ export const DashboardNavbar = (props) => {
           >
             <MenuIcon fontSize="small" />
           </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
-          <Typography variant="h5" component="h5" sx={{color:'black', fontSize:'1rem'}}>
+          <Box  sx={{ flexGrow: 1 }} />
+          <Typography variant="h5" component="h5" sx={{color:'#6f6f6f', fontSize:'1rem'}}>
               {localStorage.getItem('userName')}
           </Typography>
           <Avatar
