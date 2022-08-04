@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import PayUser from 'src/components/forms/PayUser';
 import SecuentialLoader from 'src/components/loaders/SecuentialLoader';
@@ -30,6 +31,8 @@ export default function Pagar(props) {
   const [successfulPay, setSuccessfulPay] = useState(false);
   const [payMethodSelected, setPayMethodSelected] = useState('');
 
+  const router = useRouter();
+
   useEffect(() => {
     setDisplayComponent(<PayUser setValidStep={setValidStep} validateData={validateData}
       setValidateData={setValidateData} />);
@@ -38,7 +41,13 @@ export default function Pagar(props) {
      * Deshace la reserva de cupos para las actividades seleccionadas.
      */
     const transactionalProcess = async () => {
-      let data = JSON.parse(localStorage.getItem("actividad"));
+      const activityString = localStorage.getItem("actividad");
+      if (activityString == '') {
+        router.push("/");
+        return;
+      }
+
+      let data = JSON.parse(activityString);
       data.date = new Date(data.date);
       const idEvento = localStorage.getItem('idEvent');
 

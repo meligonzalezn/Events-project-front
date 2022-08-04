@@ -4,8 +4,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { roles } from 'src/utils/roles';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import { createUser } from 'src/utils/userAxios';
+import { checkEmail, createUser } from 'src/utils/userAxios';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 /**
  * Formulario donde se digitarán los datos del usuario a crear.
@@ -16,7 +17,22 @@ import { useEffect, useState } from 'react';
 export default function UserForm(props) {
   const [upload, setUpload] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [validateEmail, setValidateEmail] = useState(false);
   const router = useRouter();
+
+  Yup.addMethod(Yup.string, "unusedEmail", function (validate) {
+    return this.test(`unusedEmail`, "El correo digitado ya se encuentra en uso, utilice uno diferente", async function () {
+      if (!validate) return true;
+      setValidateEmail(false);
+
+      const email = formik.values.Email;
+      const resp = await checkEmail(email);
+
+      if (resp[0] == "Email already in use") return false;
+      return true;
+    })
+  })
+
   const formik = useFormik({
     initialValues: {
       Name: props.Name ? props.Name : '',
@@ -35,7 +51,7 @@ export default function UserForm(props) {
         .string().required('Es necesario digitar sus apellidos').max(50),
       Email: Yup
         .string().email('Debe ser un correo válido').max(100).min(5)
-        .required('Es necesario digitar un Email'),
+        .required('Es necesario digitar un Email').unusedEmail(validateEmail),
       Phone: Yup
         .number().positive('No puede ser un número negativo'),
       Password: Yup
@@ -68,7 +84,7 @@ export default function UserForm(props) {
       if (confirmPass.isValid && formik.isValid) {
         await props.finalFunction(formik)
         setLoading(!loading);
-        router.push('/Usuarios'); // TODO change to Usuarios and Display notification showing that the operation was succesful.
+        router.push('/Usuarios');
       }
 
       setUpload(false);
@@ -85,6 +101,7 @@ export default function UserForm(props) {
    */
   const markErrors = async (e) => {
     const [resp, respc] = await Promise.all([formik.validateForm(), confirmPass.validateForm()]);
+    setValidateEmail(true);
 
     for (var i in formik.values) {
       var key = i;
@@ -152,7 +169,11 @@ export default function UserForm(props) {
                 fullWidth
                 label="Email"
                 name="Email"
-                onBlur={formik.handleBlur}
+                onBlur={(e) => {
+                  formik.handleBlur(e);
+                  formik.setFieldTouched("Email");
+                  setValidateEmail(true);
+                }}
                 onChange={formik.handleChange}
                 required
                 value={formik.values.Email}

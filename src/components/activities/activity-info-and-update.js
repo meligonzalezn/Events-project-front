@@ -9,6 +9,10 @@ import { useEffect, useState } from 'react';
 import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { useRouter } from 'next/router';
 import { updateActivity } from 'src/utils/activitiesAxios';
+import { checkEnrolledStatus, unenroll, updateActivity } from 'src/utils/activitiesAxios';
+import axios from 'axios';
+
+
 /**
  * Component to read information about an activity and to update if rol is Employee or Admin
  * @param {{isclient: boolean}} props
@@ -28,6 +32,8 @@ export const ActivityInfoAndUpdate = (props) => {
   const [dateData, setDateData] = useState(false);
   const [detailsData, setDetailsData] = useState(false);
   const [costData, setCostData] = useState(false);
+  const [enrolled, setEnrolled] = useState(null);
+
   const states = ['Activo', 'Inactivo']
   const styles = useStyles();
   const router = useRouter();
@@ -64,6 +70,7 @@ export const ActivityInfoAndUpdate = (props) => {
         .string().required("Requerido"),
     })
   });
+
   useEffect(() => {
     /**
      * This function verifies all validations and insert a news to database
@@ -100,6 +107,20 @@ export const ActivityInfoAndUpdate = (props) => {
     onSubmit();
   }, [data])
 
+  useEffect(() => {
+    const validateEnrollStatus = async () => {
+      if (props.isclient == 0) return;
+
+      const resp = await checkEnrolledStatus(formik.values.id);
+      const enrolledStatus = resp[0];
+
+      if (enrolledStatus == 'Not Enrolled') setEnrolled(false);
+      else setEnrolled(true);
+    }
+
+    validateEnrollStatus();
+  }, [])
+
   /**
    * This function validates fields
    * @param {} e
@@ -120,9 +141,20 @@ export const ActivityInfoAndUpdate = (props) => {
    * tab to complete the sign up process.
    * @param {*} e 
    */
-  const handleSignUp = (e) => {
-    localStorage.setItem("actividad", JSON.stringify(formik.values));
-    router.push("Pago/[id]/Pagar", `Pago/${formik.initialValues.title}/Pagar`);
+  const handleSignUp = async (e) => {
+    if (!enrolled) {
+      localStorage.setItem("actividad", JSON.stringify(formik.values));
+      router.push("Pago/[id]/Pagar", `Pago/${formik.values.title}/Pagar`);
+    } else {
+      let data = JSON.parse(JSON.stringify(formik.values));
+      data.date = new Date(data.date);
+      data.capacity++;
+      const metadata = { values: data };
+
+      const resp1 = await unenroll(formik.initialValues.id);
+      const resp2 = await updateActivity(metadata);
+      router.reload();
+    }
   }
 
 
@@ -148,12 +180,13 @@ export const ActivityInfoAndUpdate = (props) => {
     )
     return (
       <>
-        <Button
+        <LoadingButton
+          loading={enrolled == null ? true : false}
           color="primary"
           variant="contained"
           onClick={(e) => { handleSignUp(e) }}>
-          Inscribirse
-        </Button>
+          {enrolled == null ? "Cargando Status" : enrolled ? "Cancelar Inscripción" : "Inscribirse"}
+        </LoadingButton>
       </>
     )
   }
