@@ -1,30 +1,20 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
-import { useStyles } from '../modals/modalAlert';
 /**
  * 
- * @param {{isEmployee: boolean}}
+ * @param {{isEmployee: boolean}} props
  * @returns 
  */
-export const NewsListToolbar = (props) => {
-  const styles = useStyles();
+export const UserNavbar = (props) => {
   const router = useRouter();
   const showButtons = () => {
     if (!props.isEmployee) return (<></>);
     return (
       <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
         <Button color="primary" variant="contained"
-          onClick={() => { router.push('/CrearNoticia') }}
+          onClick={() => { router.push('/Usuarios/Crear') }}
         >
-          Añadir noticia
-        </Button>
-
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => { router.push("/ActualizarNoticia") }}
-        >
-          Actualizar noticia
+          Crear usuario
         </Button>
       </Box>
     )
@@ -35,11 +25,11 @@ export const NewsListToolbar = (props) => {
       <Box
         sx={{
           alignItems: 'center', display: 'flex', justifyContent: 'space-between',
-          flexWrap: 'wrap', m: -1,
+          flexWrap: 'wrap', m: -1, pt: 4
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Noticias
+          Usuarios
         </Typography>
 
         {showButtons()}

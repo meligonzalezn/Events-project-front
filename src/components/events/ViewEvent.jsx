@@ -1,4 +1,4 @@
-import { Card, CardContent, Container, Divider, Grid, Typography, Button } from "@mui/material";
+import { Card, CardContent, Container, Divider, Grid, Typography, Button, Alert } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import LinearLoader from "../loaders/LinealLoader";
@@ -6,6 +6,8 @@ import MapComponentView from "./ViewEventMap";
 import { Clock as ClockIcon } from "../../icons/clock";
 import { useRouter } from 'next/router';
 import AttachMoney from "@mui/icons-material/AttachMoney";
+import { enroll_user2event, is_enrolled2Event, uneroll_user2event } from "src/utils/eventAxios";
+import BackButton from "../BackButton";
 
 /**
  * Proporciona la vista completa de un evento, con su descripción
@@ -17,6 +19,10 @@ export default function ViewEvent(props) {
   const [loading, setLoading] = useState(true);
   const [theEvent, setTheEvent] = useState({});
   const router = useRouter();
+  const [EnrollmentEnable, setEnrollmentEnable] = useState(true);
+  const [ShowMessageError, setShowMessageError] = useState("");
+  const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState("")
+  const [IsEnrolled, setIsEnrolled] = useState(false)
 
   const image_url = (media_file) => {
     if (media_file === null) {
@@ -26,17 +32,69 @@ export default function ViewEvent(props) {
   };
 
   useEffect(() => {
+
+    const evento = JSON.parse(localStorage.getItem("evento"));
     /**
      * Obtiene el evento del local storage.
      */
     const getEvent = async () => {
-      const evento = JSON.parse(localStorage.getItem("evento"));
       setTheEvent(evento);
       setLoading(false);
     };
 
+    const getIfUserIsEnrolled = () => {
+      is_enrolled2Event(evento.id).then(([res, err]) => {
+        console.log("err", err)
+        if (err) return;
+
+        setIsEnrolled(res);
+      });
+    }
+
     getEvent();
+    getIfUserIsEnrolled();
   }, []);
+
+
+  //Wait 5 seconds and should hide MessageError And SuccessEnrollmentMessage.
+  useEffect(async () => {
+    await new Promise(res => setTimeout(res, 5000));
+
+    setShowMessageError("")
+    setShowSuccessEnrollment("")
+
+  }, [ShowMessageError, ShowSuccessEnrollment])
+
+  const onUnerollUser2event = (e) => {
+    if (!EnrollmentEnable) return;
+
+    uneroll_user2event(theEvent.id).then(([res, err]) => {
+      setEnrollmentEnable(true)
+      if (err) {
+        setShowMessageError("Error on UnEnrollment process")
+        return
+      }
+      setShowSuccessEnrollment("UnEnrollment completed successfully")
+      setIsEnrolled(false);
+
+    })
+    setEnrollmentEnable(false)
+  }
+
+  const onEnrollUser2Event = (e) => {
+    if (!EnrollmentEnable) return;
+
+    enroll_user2event(theEvent.id).then(([res, err]) => {
+      setEnrollmentEnable(true)
+      if (err) {
+        setShowMessageError("Error on Enrollment process")
+        return
+      }
+      setShowSuccessEnrollment("Enrollment completed successfully")
+      setIsEnrolled(true);
+    })
+    setEnrollmentEnable(false)
+  }
 
   if (loading) {
     return (
@@ -52,7 +110,7 @@ export default function ViewEvent(props) {
       <Card>
         {" "}
         <CardContent>
-          <Box sx={{ mt: 0.2, py: 1.5 }}>
+          <Box sx={{ mt: 0.2, pb: 4 }}>
             {/* <CardContent> */}
             <Box
               sx={{
@@ -65,6 +123,7 @@ export default function ViewEvent(props) {
               <Typography sx={{ m: 0.2 }} variant="h4">
                 {theEvent.Title}
               </Typography>
+
               {(localStorage.getItem('userRole') == 'Cliente') ? null :
                 <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
                 <Button color="primary" 
@@ -74,6 +133,7 @@ export default function ViewEvent(props) {
                 </Button>
                 </Box>
               }
+              <BackButton route="/Eventos" />
             </Box>
             {/* </CardContent> */}
           </Box>
@@ -88,6 +148,15 @@ export default function ViewEvent(props) {
             }}
           >
             <Container maxWidth="lg">
+              {
+                ShowMessageError ?
+                  <Alert severity="error">{ShowMessageError}</Alert>
+                  : null
+              }
+              {ShowSuccessEnrollment ?
+                <Alert severity="success">{ShowSuccessEnrollment}</Alert>
+                : null
+              }
               <Grid container spacing={2}>
                 <Grid item lg={4} md={6} xs={12}>
                   <MapComponentView place={theEvent.Space} />
@@ -97,12 +166,12 @@ export default function ViewEvent(props) {
                   <Card>
                     <CardContent>
                       <div className="ownOverflow">
-                      <Grid container spacing={0.5} sx={{ m: 1, gap: "1px", display: "flex" }}>
+                        <Grid container spacing={0.5} sx={{ m: 1, gap: "1px", display: "flex" }}>
                           <Grid item xs={5} sx={{ alignItems: "center", display: "flex" }}>
                             <ClockIcon color="action" />
 
                             <Typography
-                              
+
                               display="inline"
                               sx={{ pl: 1 }}
                               variant="body2"
@@ -116,7 +185,7 @@ export default function ViewEvent(props) {
                             <ClockIcon color="action" />
 
                             <Typography
-                             
+
                               display="inline"
                               sx={{ pl: 1 }}
                               variant="body2"
@@ -129,7 +198,7 @@ export default function ViewEvent(props) {
                             <AttachMoney color="action" />
 
                             <Typography
-                            
+
                               display="inline"
                               sx={{ pl: 1 }}
                               variant="body2"
@@ -168,9 +237,9 @@ export default function ViewEvent(props) {
                 </Grid>
               </Grid>
             </Container>
-          </Box>   
-        </CardContent>
-      </Card>
+          </Box>
+        </CardContent >
+      </Card >
     </>
   );
 }

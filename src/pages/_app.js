@@ -16,14 +16,21 @@ import SignUp from './SignUp';
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
+import LinearLoader from 'src/components/loaders/LinealLoader';
 
 const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const [Logged, setLogged] = useState(false)
+  const [Logged, setLogged] = useState(false)  
   const [HasAccess, setHasAccess] = useState(false)
   const [Loading, setLoading] = useState(true)
+
+  //Fast enter
+  // const [Logged, setLogged] = useState(true)
+  // const [HasAccess, setHasAccess] = useState(true)
+  // const [Loading, setLoading] = useState(false)
+
 
   const router = useRouter()
 
@@ -33,6 +40,7 @@ const App = (props) => {
 
   useEffect(async () => {
     //User is logged?
+    console.log("router.asPath", router.asPath)
 
     is_logged().then(([_, error]) => {
 
@@ -69,14 +77,17 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {Loading ?
-            <h1>Cargando :)</h1>
+            <LinearLoader></LinearLoader>
             :
             Logged ?
               HasAccess ?
                 getLayout(<Component {...pageProps} />)
                 :
                 <NotFound />
-              : <Login />
+              : router.asPath === "/SignUp" ? 
+              <SignUp/>
+              : 
+              <Login /> 
           }
         </ThemeProvider>
       </LocalizationProvider>
