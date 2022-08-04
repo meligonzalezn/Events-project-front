@@ -4,6 +4,7 @@ import { AppBar, Avatar, Badge, Box, IconButton, Toolbar, Tooltip,Typography } f
 import MenuIcon from '@mui/icons-material/Menu';
 import { UserCircle as UserCircleIcon } from '../icons/user-circle';
 import { Users as UsersIcon } from '../icons/users';
+import { getInitials } from 'src/utils/get-initials';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -50,18 +51,14 @@ export const DashboardNavbar = (props) => {
               {localStorage.getItem('userName')}
           </Typography>
           <Avatar
-            sx={{
-              height: 40,
-              width: 40,
-              ml: 1
-            }}
-            onError={(e) => {
-              e.target.onerror = null
-              e.target.src =
-                "https://res.cloudinary.com/dxx9kwg6t/image/upload/v1655843826/media/images_users/userDefault_xzdedb.png"
-            }}
             src={"https://res.cloudinary.com/dxx9kwg6t/" + localStorage.getItem('urlUserImage')}
-          >
+                sx={{
+                  height: 40,
+                  width: 40,
+                  ml: 1
+                }}
+            >
+            {getInitials(localStorage.getItem('userName'))}
           </Avatar>
         </Toolbar>
       </DashboardNavbarRoot>

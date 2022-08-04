@@ -1,4 +1,7 @@
+import { PaymentRounded } from '@mui/icons-material'
 import axios from 'axios'
+import { element } from 'prop-types'
+
 
 /**
  * This function parse the date to "YYYY-MM-DD"
@@ -125,4 +128,26 @@ async function unenroll(ID_Activity) {
   }
 }
 
-export { createActivity, updateActivity, checkEnrolledStatus, unenroll }
+
+
+  /**
+ * We get the activities from an event
+ * @param {eventId} // id of event 
+ */
+ 
+ let  activitiesFromEvent = []
+ async function getActivitiesFromEvent(eventId){
+   try{
+     await axios.get("http://localhost:8000/Activity/").then((res) => {
+       activitiesFromEvent = res.data.filter((element) => element.ID_Event === eventId)
+       return activitiesFromEvent;
+     })
+   }
+   catch(error){
+     console.log(error)
+     return [null, error]
+   }
+ }
+
+
+export { createActivity, updateActivity, checkEnrolledStatus, unenroll , getActivitiesFromEvent, activitiesFromEvent}

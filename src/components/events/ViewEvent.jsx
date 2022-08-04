@@ -122,6 +122,11 @@ export default function ViewEvent(props) {
                 {theEvent.Title}
               </Typography>
 
+              {(localStorage.getItem('userRole') == 'Cliente') ? null :
+                <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
+                  <Button color="primary" variant="contained">Participantes</Button>
+                </Box>
+              }
               <BackButton route="/Eventos" />
             </Box>
             {/* </CardContent> */}
@@ -227,59 +232,8 @@ export default function ViewEvent(props) {
               </Grid>
             </Container>
           </Box>
-          <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
-            <Button variant="outlined">Participantes</Button>
-            <Button color="primary" variant="contained">
-              Actividades
-            </Button>
-            <Button onClick={IsEnrolled ? onUnerollUser2event : onEnrollUser2Event}>{
-              IsEnrolled ? "No participar" : "Participar"
-            }</Button>
-          </Box>
-
-          {/* <div className="wrapper">
-          <div />
-
-          <div><MapComponentView place={theEvent.Space}/></div>
-
-          <div className="wrapperCenter">
-            <Divider className="toCenter" orientation="vertical" sx={{ height: "90%" }} />
-          </div>
-
-          <div className="ownOverflow">
-            <Typography
-              align="left"
-              color="textPrimary"
-              variant="body1"
-              sx={{ marginBottom: "8.4px", pt: 3, px: 1 }}
-            >
-              {theEvent.Details}
-            </Typography>
-
-            <Box sx={{ display: "flex", justifyContent: "center", px: 5, pt: 3 }}>
-              <img 
-                style={{ height: "350px", width: "100%", objectFit: "cover" }}
-                alt="Event-image"
-                src={image_url(theEvent.Media_file)}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://res.cloudinary.com/dxx9kwg6t/image/upload/v1655159261/media/images_videos_news/il-news-and-press-default-card-img_kcsr9g.jpg";
-                }}
-                variant="square"
-              />
-            </Box>
-
-             <Typography align="left" color="textPrimary" variant="body1" sx={{ marginBottom: '8.4px', pt: 4, px: 1 }}>
-              {theNew.Description}
-            </Typography> 
-          </div>
-
-          <div />
-        </div> */}
-          {/* </Card> */}
-        </CardContent>
-      </Card>
+        </CardContent >
+      </Card >
     </>
   );
 }

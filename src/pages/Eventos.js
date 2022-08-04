@@ -65,9 +65,9 @@ const Events = () => {
   const displayPageElements = () => {
     let elements = [];
 
-    // Ordena las noticias por mas reciente en fecha de creación.
+    // Ordena los eventos según las fechas mas recientes.
     searchedEvents.sort(function (a, b) {
-      return new Date(b["Finish_date"]) - new Date(a["Finish_date"]);
+      return new Date(b["Start_date"]) - new Date(a["Start_date"]);
     })
 
     for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, searchedEvents.length); i++) {

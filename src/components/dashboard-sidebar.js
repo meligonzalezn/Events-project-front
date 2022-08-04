@@ -23,17 +23,12 @@ const items = [
   {
     href: '/',
     icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
+    title: 'Reportes'
   },
   {
     href: '/Usuarios',
     icon: (<UserIcon fontSize="small" />),
     title: 'Usuarios'
-  },
-  {
-    href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Products'
   },
   {
     href: '/Noticias',
@@ -43,7 +38,7 @@ const items = [
   {
     href: '/Eventos',
     icon: (<CalendarMonthIcon fontSize="small" />),
-    title: 'Events'
+    title: 'Eventos'
   },
   {
     href: '/Escarapela',

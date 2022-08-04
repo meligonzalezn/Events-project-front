@@ -8,8 +8,10 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import { useEffect, useState } from 'react';
 import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { useRouter } from 'next/router';
+import { updateActivity } from 'src/utils/activitiesAxios';
 import { checkEnrolledStatus, unenroll, updateActivity } from 'src/utils/activitiesAxios';
 import axios from 'axios';
+
 
 /**
  * Component to read information about an activity and to update if rol is Employee or Admin
@@ -35,6 +37,7 @@ export const ActivityInfoAndUpdate = (props) => {
   const states = ['Activo', 'Inactivo']
   const styles = useStyles();
   const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
       id: props.idactivity,
@@ -154,17 +157,27 @@ export const ActivityInfoAndUpdate = (props) => {
     }
   }
 
+
   const displayRespectiveButton = () => {
     if (props.isclient == 0) return (
-      <LoadingButton
-        loading={loading}
-        color="primary"
-        variant="contained"
-        onClick={(e) => { markErrors(e) && setLoading(!loading) }}>
-        Actualizar Actividad
-      </LoadingButton>
-    )
+      <>
+        <LoadingButton
+          loading={loading}
+          color="primary"
+          variant="contained"
+          onClick={(e) => router.push('/ParticipantesActividad') && localStorage.setItem('idActivity', props.idactivity)}>
+          Participantes 
+        </LoadingButton>
+        <LoadingButton
+          loading={loading}
+          color="primary"
+          variant="contained"
+          onClick={(e) => { markErrors(e) && setLoading(!loading) }}>
+          Actualizar Actividad
+        </LoadingButton>
 
+      </>
+    )
     return (
       <>
         <LoadingButton
