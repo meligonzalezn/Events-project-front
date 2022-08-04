@@ -10,6 +10,7 @@ import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
 import { EventsDropdown } from "../events/events-dropdown";
 import { eventData, getEventData } from "src/utils/eventAxios";
 import { getActivitiesFromEvent, activitiesFromEvent } from "src/utils/activitiesAxios";
+import DomainVerificationIcon from '@mui/icons-material/DomainVerification';
 
 
 export const ActivitiesPerEvent = ({ events , payments}) => {
@@ -183,9 +184,17 @@ export const ActivitiesPerEvent = ({ events , payments}) => {
           />
           <Divider />
           <CardContent>
+          <Box
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+            <DomainVerificationIcon style={{ color: "#3F51B5" }} />
             <Typography color="textPrimary" variant="body1">
               Selecciona un evento
             </Typography>
+            </Box>
           </CardContent>
         </Card>
       ) : (
