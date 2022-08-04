@@ -8,7 +8,6 @@ import { Box, Card, CardContent, CardHeader, Divider, Grid, TextField, TextareaA
 import { useEffect, useState } from 'react';
 import { ModalAlert, useStyles } from '../modals/modalAlert';
 import { useRouter } from 'next/router';
-import { updateActivity } from 'src/utils/activitiesAxios';
 import { checkEnrolledStatus, unenroll, updateActivity } from 'src/utils/activitiesAxios';
 import axios from 'axios';
 
