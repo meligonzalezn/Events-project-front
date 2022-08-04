@@ -82,7 +82,7 @@ export const EventsInMonth = ({events}) => {
       }
     })
 
-    console.log("Total participants: ", eventsInMonth, eventsInMonthIds)
+    console.log("Total participants: ", eventsInMonth,totalParticipantsPerEvent)
   
 
  
