@@ -80,7 +80,8 @@ const App = (props) => {
               <>
               <FormGroup>
                 <FormControlLabel
-                  control={<MaterialUISwitch sx={{ m: 1 }} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+                  control={<MaterialUISwitch sx={{ m: 1, zIndex:'2000', fontSize:'0.5rem'}} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+                  label="mui toggle"
                 />
               </FormGroup> 
                 {getLayout(

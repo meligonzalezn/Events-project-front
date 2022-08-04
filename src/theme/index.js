@@ -498,14 +498,14 @@ export const darkTheme = createTheme({
 
 
 export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-  zIndex: '3000',
-  width: 62,
-  height: 34,
+  
+  width: 52,
+  height: 24,
   padding: 7,
-  position:'fixed',
-  transform: 'translate(293px, 37px)',
+  //position:'fixed',
+  transform: 'translate(285px, 10px)',
   '@media (max-width: 1199px)' : {
-    transform: 'translate(877px, 31px)'
+    display:'none'
   },
   '& .MuiSwitch-switchBase': {
     margin: 1,
@@ -527,8 +527,8 @@ export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   '& .MuiSwitch-thumb': {
     backgroundColor: theme.palette.mode === 'dark' ? '#003892' : '#001e3c',
-    width: 32,
-    height: 32,
+    width: 22,
+    height: 22,
     '&:before': {
       content: "''",
       position: 'absolute',
