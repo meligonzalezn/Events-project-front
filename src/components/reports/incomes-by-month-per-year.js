@@ -7,7 +7,7 @@ import LinearLoader from "../loaders/LinealLoader";
 import { getEvents } from 'src/utils/eventAxios';
 import ResponsiveDatePicker from '../date-picker/date-picker-responsive';
 
-export const EventsPerYear = ({events}) => {
+export const IncomesPerYear = ({payments}) => {
   const theme = useTheme();
   const [firstLoading, setFirstLoading] = useState(true)
   const [data, setData] = useState()
@@ -17,14 +17,14 @@ export const EventsPerYear = ({events}) => {
 
   useEffect(() => {
 
-      getIncomesPerMonth(events);
-
+      getIncomesPerMonth(payments);
     
+       
   }, [date])
 
   /**
  * Obtains the incomes per month in the current year, sets the date and the options for the bar chart 
- * @param {*} data Payment from the db 
+ * @param {*} data Payments from the db 
  */
   const getIncomesPerMonth = (data) => {
       data.map((element) => {
@@ -37,7 +37,7 @@ export const EventsPerYear = ({events}) => {
         }
         
       })
-      console.log(eventsPerMonth)
+    
       setData(
         {
           datasets: [
@@ -47,7 +47,7 @@ export const EventsPerYear = ({events}) => {
               barThickness: 12,
               borderRadius: 4,
               categoryPercentage: 0.5,
-              data: eventsPerMonth,
+              data: incomesPerMonth,
               label: '# de eventos',
               maxBarThickness: 10
             },
@@ -107,7 +107,7 @@ export const EventsPerYear = ({events}) => {
             y:
               {
                 min: 0,
-                max: Math.max(...eventsPerMonth)+1,
+                max: Math.max(...incomesPerMonth),
               },
             x:
               {
@@ -116,7 +116,8 @@ export const EventsPerYear = ({events}) => {
           },
         }
       )
-      setFirstLoading(false);
+      setFirstLoading(false)
+    
   }
 
   return (
@@ -135,7 +136,7 @@ export const EventsPerYear = ({events}) => {
                 view = "year"
               />
         )}
-        title="Eventos por mes"
+        title="Ingresos por mes"
       />
       <Divider />
       <CardContent>

@@ -6,12 +6,11 @@ import TabletIcon from "@mui/icons-material/Tablet";
 import { useState, useEffect } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
-import axios from "axios";
 import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
 
 const EVENTS_IN_DOUGHNUT = 8;
 
-export const EventsInMonth = ({events}) => {
+export const EventsInMonth = ({events, payments}) => {
   const theme = useTheme();
   const [firstLoading, setFirstLoading] = useState(true);
   const [data, setData] = useState();
@@ -30,7 +29,7 @@ export const EventsInMonth = ({events}) => {
    * Obtains the 5 nearest events in a month selected and displays the amount of participants for each one. 
    * @param {*} data Events from db
    */
-  const getParticipantsAmount = async (data) => {
+  const getParticipantsAmount =  (data) => {
     setLoading(true)
     //first we sort the events in order by more near to less near date 
     data.sort((a, b) => new Date(a.Start_date).getTime() > new Date(b.Start_date).getTime())
@@ -50,9 +49,6 @@ export const EventsInMonth = ({events}) => {
     })
     // Get the number of participants for each event that is going to be display in the doughnut 
     console.log("Events in month:", date , eventsInMonth);
-    // get the payments 
-    const res = await axios.get("http://localhost:8000/Payment/")
-    const payments = res.data
     
     let idUsers = {}; //Dictionary. Pair key,value where key an idEvent and Value an array with the users 
                       // enrolled to it (without duplicated values)

@@ -6,14 +6,13 @@ import TabletIcon from "@mui/icons-material/Tablet";
 import { useState, useEffect } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import ResponsiveDatePicker from "../date-picker/date-picker-responsive";
-import axios from "axios";
 import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
 import { EventsDropdown } from "../events/events-dropdown";
 import { eventData, getEventData } from "src/utils/eventAxios";
 import { getActivitiesFromEvent, activitiesFromEvent } from "src/utils/activitiesAxios";
 
 
-export const ActivitiesPerEvent = ({ events }) => {
+export const ActivitiesPerEvent = ({ events , payments}) => {
   const theme = useTheme();
   const [firstLoading, setFirstLoading] = useState(true);
   const [data, setData] = useState();
@@ -44,9 +43,6 @@ export const ActivitiesPerEvent = ({ events }) => {
     //Gets the activities from the event 
     await getActivitiesFromEvent(idEvent)
     console.log("actividades: ", activitiesFromEvent)
-    // gets the payments 
-    const res = await axios.get("http://localhost:8000/Payment/")
-    const payments = res.data
     // gets the amount of participants per activity
     activitiesFromEvent.map((activity)=>{
         activitiesTitle.push(activity.Title)

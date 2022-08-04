@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { Budget } from '../components/dashboard/budget';
 import { LatestOrders } from '../components/dashboard/latest-orders';
 import { LatestProducts } from '../components/dashboard/latest-products';
@@ -12,24 +12,32 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import { getEvents } from 'src/utils/eventAxios';
 import { useEffect, useState } from 'react';
 import { ActivitiesPerEvent } from 'src/components/reports/participants-activities-by-event';
+import { IncomesPerYear } from 'src/components/reports/incomes-by-month-per-year';
 import LinearLoader from 'src/components/loaders/LinealLoader';
+import axios from 'axios';
+
 
 const Dashboard = () => { 
   const [loading, setLoading] = useState(true)
   const [events, setEvents] = useState()
+  const [payments, setPayments] = useState()
 
   useEffect(() => {
     if(loading) {
         /**
-     * Obtiene los eventos de la BD.
+     * Obtiene los eventos y pagos de la BD.
      */
       const getData = async () => {
         await getEvents().then((res)=>{
-          setEvents(res);
-          setLoading(false);
-        })      
+          setEvents(res);  
+        })
+        const res = await axios.get("http://localhost:8000/Payment/")
+        const paymentsData = res.data
+        setPayments(paymentsData)
+        setLoading(false);      
       }
       getData(); 
+
     }
     
   }, [])
@@ -44,13 +52,15 @@ const Dashboard = () => {
     {loading? 
       <LinearLoader upperMessage="Cargando reportes..."></LinearLoader>
     :
-      <Box
+         
+        <Box
       component="main"
       sx={{
         flexGrow: 1,
         py: 8
       }}
     >
+      
       <Container maxWidth={false}>
         <Grid
           container
@@ -58,39 +68,14 @@ const Dashboard = () => {
         >
           <Grid
             item
-            lg={3}
-            sm={6}
-            xl={3}
+            lg={12}
+            md={12}
+            xl={9}
             xs={12}
           >
-            <Budget />
-          </Grid>
-          <Grid
-            item
-            xl={3}
-            lg={3}
-            sm={6}
-            xs={12}
-          >
-            <TotalCustomers />
-          </Grid>
-          <Grid
-            item
-            xl={3}
-            lg={3}
-            sm={6}
-            xs={12}
-          >
-            <TasksProgress />
-          </Grid>
-          <Grid
-            item
-            xl={3}
-            lg={3}
-            sm={6}
-            xs={12}
-          >
-            <TotalProfit sx={{ height: '100%' }} />
+            <Typography sx={{ m: 1 }} variant="h4">
+          Reportes
+        </Typography>
           </Grid>
           <Grid
             item
@@ -108,7 +93,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <EventsInMonth events={events} />
+            <EventsInMonth events={events} payments={payments} />
           </Grid>
           <Grid
             item
@@ -117,16 +102,16 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <ActivitiesPerEvent events ={events}/>
+            <ActivitiesPerEvent events ={events} payments={payments}/>
           </Grid>
           <Grid
             item
-            lg={8}
+            lg={12}
             md={12}
             xl={9}
             xs={12}
           >
-            <LatestOrders />
+            <IncomesPerYear payments= {payments} />
           </Grid>
         </Grid>
       </Container>
