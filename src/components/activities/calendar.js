@@ -50,6 +50,7 @@ export const Calendar = () => {
   var activitiesArray;
   var activitiesEvent = {};
   useEffect(() => {
+
     /**
      * With this function we get all activities we have register on DB 
      * @returns {array} we pass this array to Calendar component

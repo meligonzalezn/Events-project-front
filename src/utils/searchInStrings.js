@@ -24,4 +24,5 @@ function findAllWithWord(word, candidates, key) {
   return foundObjects;
 }
 
-export { findAllWithWord }
+
+export { findAllWithWord}
