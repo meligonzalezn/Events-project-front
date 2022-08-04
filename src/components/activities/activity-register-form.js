@@ -29,6 +29,7 @@ export const ActivityRegisterForm = (props) => {
       final_hour:'', 
       //default capacity 100 people
       capacity: '',
+      cost: '',
       space: '',
       //When user creates an activity default state is active
       state: 'Activo',
@@ -41,7 +42,9 @@ export const ActivityRegisterForm = (props) => {
       details: Yup
         .string().required('Requerido'),
       capacity: Yup
-        .number().integer().required('Capacidad mayor a 0'),  
+        .number().integer().required('Capacidad mayor a 0'), 
+      cost: Yup
+        .number().required('Costo mayor a 0'), 
       space: Yup
         .string().required('Espacio requerido'),
       init_hour: Yup
@@ -60,8 +63,8 @@ export const ActivityRegisterForm = (props) => {
       try {
         if(!(formik.values.title == "" || formik.values.date == "" || 
           formik.values.init_hour == "" || formik.values.final_hour == "" ||
-          formik.values.capacity == 0  || formik.values.details == "" || 
-          formik.values.space== "")){
+          formik.values.capacity == ""  || formik.values.cost == "" ||
+          formik.values.details == "" || formik.values.space== "")){
             if(formik.isValid){
               await createActivity(formik)
               setModal(true)
@@ -130,7 +133,7 @@ export const ActivityRegisterForm = (props) => {
               />
             </Grid>
 
-            <Grid item md={6} xs={12}>
+            <Grid item md={4} xs={12}>
                 <TextField
                     fullWidth
                     label="Fecha"
@@ -146,7 +149,7 @@ export const ActivityRegisterForm = (props) => {
                 />
             </Grid>     
             
-            <Grid item md={6} xs={12} >
+            <Grid item md={4} xs={12} >
                 <TextField sx={{width:'100%'}}
                     fullWidth
                     label="Espacio/lugar"
@@ -157,6 +160,30 @@ export const ActivityRegisterForm = (props) => {
                     helperText={formik.touched.space && formik.errors.space}
                     value={formik.values.space}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+            </Grid>
+            <Grid item md={4} xs={12} >
+                <TextField sx={{width:'100%'}}
+                    fullWidth
+                    label="Precio"
+                    placeholder='3000'
+                    name="cost"
+                    inputProps={{min:0}}
+                    required
+                    variant="outlined"
+                    error={Boolean(formik.touched.cost && formik.errors.cost)}
+                    helperText={formik.touched.cost && formik.errors.cost}
+                    value={formik.values.cost}
+                    onChange={(event) => {
+                      let input = event.target.value
+                      if(parseInt(input) >= 0){
+                        formik.setFieldValue("cost", event.target.value)
+                      }
+                      else {
+                        formik.setFieldValue("cost", "")
+                      }
+                    }}
                     onBlur={formik.handleBlur}
                 />
             </Grid>

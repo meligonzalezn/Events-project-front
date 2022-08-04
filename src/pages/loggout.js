@@ -9,6 +9,11 @@ function Loggout(){
   useEffect(() =>{
     console.log("DESLOGUEANDO")
     loggout()
+    localStorage.setItem('userRole','')
+    localStorage.setItem('userName','')
+    localStorage.setItem('idUser','')
+    localStorage.setItem('userState','')
+    localStorage.setItem('urlUserImage','')
   }, [])
 
   return(

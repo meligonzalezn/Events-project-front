@@ -90,4 +90,20 @@ async function enable(pk) {
 
 }
 
-export { createUser, update, enable, getUsers }
+/**
+ * Revisa si el correo de un usuario ya está registrado en la BD.
+ * @param {string} email 
+ * @returns 
+ */
+async function checkEmail(email) {
+  try {
+    const request = await axios.post("http://localhost:8000/User/" + 0 + "/check_email/", { Email: email })
+    return [request.data, null];
+  }
+  catch (err) {
+    return [null, err]
+  }
+}
+
+
+export { createUser, update, enable, getUsers, checkEmail }

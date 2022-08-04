@@ -1,10 +1,20 @@
 import PropTypes from "prop-types";
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { Clock as ClockIcon } from "../../icons/clock";
 import { useRouter } from "next/router";
 import CreateActivity from "src/pages/CrearActividad";
+import AddIcon from "@mui/icons-material/Add";
 
-export const EventCard = ({ event, ...rest }) => {
+export const EventCard = ({ onClick, id, event, ...rest }) => {
   const router = useRouter();
 
   const image_url = () => {
@@ -15,8 +25,8 @@ export const EventCard = ({ event, ...rest }) => {
   };
   return (
     <>
-      {(router.pathname === '/Eventos') ? 
-      
+      {(router.pathname === '/Eventos') ?
+
         <Card
           sx={{
             display: "flex",
@@ -56,13 +66,13 @@ export const EventCard = ({ event, ...rest }) => {
             >
               {event.Details}
             </Typography>
-            
+
           </CardContent>
           <Box sx={{ flexGrow: 1 }} />
           <Divider />
           <Box sx={{ p: 2 }}>
-          <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
-              <Grid item sx={{ alignItems: "center", display: "flex" }}>
+            <Grid container spacing={0.7} sx={{ justifyContent: "space-between" }}>
+              <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
                 <ClockIcon color="action" />
 
                 <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
@@ -70,7 +80,8 @@ export const EventCard = ({ event, ...rest }) => {
                   {event.Start_date}
                 </Typography>
               </Grid>
-              <Grid item sx={{ alignItems: "center", display: "flex" }}>
+
+              <Grid item xs={12} sx={{ alignItems: "center", display: "flex" }}>
                 <ClockIcon color="action" />
 
                 <Typography color="textSecondary" display="inline" sx={{ pl: 1 }} variant="body2">
@@ -78,20 +89,19 @@ export const EventCard = ({ event, ...rest }) => {
                   {event.Finish_date}
                 </Typography>
               </Grid>
-            
-            <Grid item sx={{ alignItems: 'center', display: 'flex' }}> 
-              <Button variant="outlined" >
-                Participantes
-              </Button>
-            </Grid>
-              <Grid item sx={{ alignItems: 'center', display: 'flex' }}> 
-                <Button onClick={() => {localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad')}} color="primary" variant="contained">
-                  Actividades
-                </Button>
+              <Grid item sx={{ alignItems: "center", display: "flex" }}>
+                <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
+                  <Button variant="outlined" onClick={onClick} id={id}>
+                    Ver más
+                  </Button>
+                  <Button onClick={() => { localStorage.setItem('idEvent', JSON.stringify(event.id)), router.push('/CrearActividad') }} color="primary" variant="contained">
+                    Actividades
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </Box>
-        </Card>: null
+        </Card> : null
       }
     </>
   );

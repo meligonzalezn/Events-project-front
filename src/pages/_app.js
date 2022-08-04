@@ -27,8 +27,13 @@ const App = (props) => {
 
   const router = useRouter()
 
+  useEffect(() => {
+    localStorage.setItem("actividad", '');
+  }, [])
+
   useEffect(async () => {
     //User is logged?
+
     is_logged().then(([_, error]) => {
 
       setLogged(error == null)
