@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import NotFund from "./../../404.js"
 import BackButton from 'src/components/BackButton';
 import UserUploadImageCard from 'src/components/user/UploadImageCard';
+import { defaultUserIcon } from 'src/utils/defaultImages';
 
 /**
  * 
