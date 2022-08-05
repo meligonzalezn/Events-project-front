@@ -93,17 +93,12 @@ function has_perms(path) {
   return [true, null]
   // console.log("hasPerm", permissions)
   const role = sessionStorage.getItem("userRole");
-  console.log(path)
   const rolePermissions = permissions[role] ? permissions[role] : [];
   const otherPermissions = permissions.any_user
   const exactPermissions = permissions.exact_url;
 
   console.log(rolePermissions)
-  const hasPerm = rolePermissions.some(perm => perm.startsWith(path.slice(1))) || otherPermissions.some(perm => perm.startsWith(path.slice(1))) || exactPermissions.some(perm => perm == path)
+  const hasPerm = rolePermissions.some(perm => path.slice(1).startsWith(perm)) || otherPermissions.some(perm => path.slice(1).startsWith(perm)) || exactPermissions.some(perm => perm == path)
   return [hasPerm, null]
-  try {
-  } catch (err) {
-    return [null, "Internal Error"]
-  }
 
 }
