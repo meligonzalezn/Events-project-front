@@ -17,7 +17,7 @@ export const NewsDropdown = ({ newsNameState, setNewsNameState }) => {
 
     const newsData = async () => {
       try {
-        const newsRequest = await axios.get("https://abc-app-univalle.herokuapp.com/News/")
+        const newsRequest = await axios.get("http://localhost:8000/News/")
         setNewsData(newsRequest.data)
       }
       catch (error) {

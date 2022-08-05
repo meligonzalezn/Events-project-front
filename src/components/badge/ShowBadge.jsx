@@ -21,7 +21,7 @@ export default function ShowBadge(props) {
     const getBadge = async () => {
       const user = localStorage.getItem('idUser');
       console.log(user)
-      const request = await axios.get(`https://abc-app-univalle.herokuapp.com/User/${user}/get_badge/`);
+      const request = await axios.get(`http://localhost:8000/User/${user}/get_badge/`);
       const data = request.data.url;
       setBadgeURL(data)
       setLoading(false);

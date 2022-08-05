@@ -25,7 +25,7 @@ const Reports = () => {
         await getEvents().then((res) => {
           setEvents(res);
         })
-        const res = await axios.get("https://abc-app-univalle.herokuapp.com/Payment/")
+        const res = await axios.get("http://localhost:8000/Payment/")
         const paymentsData = res.data
         setPayments(paymentsData)
         setLoading(false);

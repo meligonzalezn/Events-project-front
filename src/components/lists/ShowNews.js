@@ -30,7 +30,7 @@ export default function ShowNews(props) {
      * Obtiene las noticias de la BD.
      */
     const getNews = async () => {
-      const request = await axios.get("https://abc-app-univalle.herokuapp.com/News/");
+      const request = await axios.get("http://localhost:8000/News/");
       const dataN = request.data;
       const dataNfilter = dataN.filter((value) => {
         var date = new Date;

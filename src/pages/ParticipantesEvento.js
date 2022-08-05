@@ -34,7 +34,7 @@ export default function ParticipantesEvento(props) {
      */
 
     async function eventParticipants(idEvent) {
-      await axios.get("https://abc-app-univalle.herokuapp.com/Payment/").then((res) => {
+      await axios.get("http://localhost:8000/Payment/").then((res) => {
         paymentsData = res.data
         paymentsData.map((element) => {
           if (element.ID_Event == idEvent) {
@@ -51,7 +51,7 @@ export default function ParticipantesEvento(props) {
         }
       });
       if (!isEmpty) {
-        await axios.get("https://abc-app-univalle.herokuapp.com/User/").then((res) => {
+        await axios.get("http://localhost:8000/User/").then((res) => {
           for (let item of idUsers) {
             participantsData.push(res.data.filter((element) => item == element.id));
             setAlreadyFetch(true);

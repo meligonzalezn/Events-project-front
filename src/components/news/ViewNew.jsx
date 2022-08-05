@@ -33,7 +33,7 @@ export default function ViewNew(props) {
       let dataUser;
 
       if (localStorage.getItem("autor") == undefined || JSON.parse(localStorage.getItem("autor")).id != noticia.ID_user) {
-        const userRequest = await axios.get(`https://abc-app-univalle.herokuapp.com/User/${noticia.ID_user}/`);
+        const userRequest = await axios.get(`http://localhost:8000/User/${noticia.ID_user}/`);
         dataUser = userRequest.data;
         localStorage.setItem("autor", JSON.stringify(dataUser));
       } else dataUser = JSON.parse(localStorage.getItem("autor"));

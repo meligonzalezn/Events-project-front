@@ -21,7 +21,7 @@ const formatDate = (date) => {
  */
 async function getEvents() {
   try {
-    const request = await axios.get('https://abc-app-univalle.herokuapp.com/Events/', {
+    const request = await axios.get('http://localhost:8000/Events/', {
       headers: {
         'Content-Type': 'application/json',
       }
@@ -44,7 +44,7 @@ async function getEvents() {
 let eventsTitle = []
 async function getEventsTitle() {
   try {
-    await axios.get("https://abc-app-univalle.herokuapp.com/Events/").then((res) => {
+    await axios.get("http://localhost:8000/Events/").then((res) => {
       res.data.map((value) => {
         eventsTitle.push(value.Title)
       })
@@ -94,7 +94,7 @@ async function createEvent(metadata) {
   }
   try {
     console.log(form_data)
-    const request = await axios.post("https://abc-app-univalle.herokuapp.com/Events/", form_data, config
+    const request = await axios.post("http://localhost:8000/Events/", form_data, config
     )
     return [request, null];
   }
@@ -112,7 +112,7 @@ let eventData = {};
 
 async function getEventData(eventTitle) {
   try {
-    await axios.get("https://abc-app-univalle.herokuapp.com/Events/").then((res) => {
+    await axios.get("http://localhost:8000/Events/").then((res) => {
       eventData = res.data.find((element) => element.Title === eventTitle)
       return eventData;
     })
@@ -127,7 +127,7 @@ async function getEventData(eventTitle) {
 async function enable(pk) {
 
   try {
-    const request = await axios.put("https://abc-app-univalle.herokuapp.com/User/" + pk + "/enable/", user)
+    const request = await axios.put("http://localhost:8000/User/" + pk + "/enable/", user)
     return [request, null];
 
   }
@@ -146,7 +146,7 @@ async function updateEvent(metadata) {
   const data = metadata.values;
   let eventUpdateSelected = {}
   let idEventSelectedUpdate;
-  const eventsDataAllUpdate = await axios.get("https://abc-app-univalle.herokuapp.com/Events/").then((res) => {
+  const eventsDataAllUpdate = await axios.get("http://localhost:8000/Events/").then((res) => {
     eventUpdateSelected = res.data.find((element) => element.Title === data.title)
     idEventSelectedUpdate = eventUpdateSelected.id
     return idEventSelectedUpdate;
@@ -179,7 +179,7 @@ async function updateEvent(metadata) {
   console.log(form_data)
 
   try {
-    const request = await axios.put("https://abc-app-univalle.herokuapp.com/Events/" + idEventSelectedUpdate + "/", form_data, config).then((res) => {
+    const request = await axios.put("http://localhost:8000/Events/" + idEventSelectedUpdate + "/", form_data, config).then((res) => {
       return res;
     });
     return { request, eventsDataAllUpdate }
@@ -192,7 +192,7 @@ async function updateEvent(metadata) {
 
 async function get_event_participants() {
   try {
-    const response = await axios.get("https://abc-app-univalle.herokuapp.com/Events/get_members")
+    const response = await axios.get("http://localhost:8000/Events/get_members")
     return [response, null];
 
   } catch (err) {
@@ -203,7 +203,7 @@ async function get_event_participants() {
 async function getIdEventByIdNew(id_New) {
   const petition = { id_new: id_New }
   try {
-    const id_event = await axios.post("https://abc-app-univalle.herokuapp.com/News/get_event_id_by_new/", petition)
+    const id_event = await axios.post("http://localhost:8000/News/get_event_id_by_new/", petition)
     return [id_event, null];
   }
   catch (err) {
@@ -213,7 +213,7 @@ async function getIdEventByIdNew(id_New) {
 
 async function enroll_user2event(event_id) {
   try {
-    const response = await axios.post(`https://abc-app-univalle.herokuapp.com/Enroll/enroll_user2event/`,
+    const response = await axios.post(`http://localhost:8000/Enroll/enroll_user2event/`,
       {
         event_id: event_id
       })
@@ -226,7 +226,7 @@ async function enroll_user2event(event_id) {
 
 async function is_enrolled2Event(event_id) {
   try {
-    const response = await axios.get(`https://abc-app-univalle.herokuapp.com/Enroll/${event_id}/is_user_enrolled2event/`,
+    const response = await axios.get(`http://localhost:8000/Enroll/${event_id}/is_user_enrolled2event/`,
       {
         event_id: event_id
       })
@@ -239,7 +239,7 @@ async function is_enrolled2Event(event_id) {
 
 async function uneroll_user2event(event_id) {
   try {
-    const response = await axios.delete(`https://abc-app-univalle.herokuapp.com/Enroll/${event_id}/unenrollment/`)
+    const response = await axios.delete(`http://localhost:8000/Enroll/${event_id}/unenrollment/`)
 
     return [response.enrolled, null];
   } catch (err) {

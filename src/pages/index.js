@@ -33,7 +33,7 @@ const Events = () => {
      * Obtiene los eventos de la BD.
      */
     const getEvents = async () => {
-      const request = await axios.get("https://abc-app-univalle.herokuapp.com/Events/");
+      const request = await axios.get("http://localhost:8000/Events/");
       const dataN = request.data;
       const dataNfilter = dataN.filter((value) => {
         return (value.State == 'Activo')

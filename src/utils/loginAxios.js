@@ -37,7 +37,7 @@ async function login(Email, Password) {
   try {
 
     let userLogged;
-    await axios.get("https://abc-app-univalle.herokuapp.com/User/").then((res) => {
+    await axios.get("http://localhost:8000/User/").then((res) => {
       userLogged = res.data.find((element) => element.Email === Email && element.Password === Password)
       saveUserIntoSession(userLogged)
       saveUserIntoLocalStorage(userLogged)
