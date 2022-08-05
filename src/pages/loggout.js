@@ -4,22 +4,22 @@ import { loggout } from "src/utils/loginAxios";
 const { Typography } = require("@mui/material");
 const { Box } = require("@mui/system");
 
-function Loggout(){
+function Loggout() {
 
-  useEffect(() =>{
+  useEffect(() => {
     console.log("DESLOGUEANDO")
     loggout()
-    localStorage.setItem('userRole','')
-    localStorage.setItem('userName','')
-    localStorage.setItem('idUser','')
-    localStorage.setItem('userState','')
-    localStorage.setItem('urlUserImage','')
+    localStorage.setItem('userRole', '')
+    localStorage.setItem('userName', '')
+    localStorage.setItem('idUser', '')
+    localStorage.setItem('userState', '')
+    localStorage.setItem('urlUserImage', '')
   }, [])
 
-  return(
+  return (
     <Box>
       <Typography>
-        You're logging out.
+        You are logging out.
       </Typography>
     </Box>
   )

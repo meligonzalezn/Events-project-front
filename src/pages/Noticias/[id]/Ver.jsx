@@ -1,6 +1,5 @@
 import { Box } from "@mui/system";
 import Head from "next/head";
-import { useEffect, useState } from "react";
 import { DashboardLayout } from "src/components/dashboard-layout";
 import ViewNew from "src/components/news/ViewNew";
 

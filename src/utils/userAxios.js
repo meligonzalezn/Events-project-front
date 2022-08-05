@@ -8,7 +8,7 @@ import { defaultUserIcon } from './defaultImages';
  */
 async function getUsers() {
   try {
-    const request = await axios.get('http://localhost:8000/User/', {
+    const request = await axios.get('https://abc-app-univalle.herokuapp.com/User/', {
       headers: {
         'Content-Type': 'application/json',
       }
@@ -46,7 +46,7 @@ async function createUser(metadata) {
   const config = { 'content-type': 'multipart/form-data' }
 
   try {
-    const request = await axios.post("http://localhost:8000/User/", form_data, config);
+    const request = await axios.post("https://abc-app-univalle.herokuapp.com/User/", form_data, config);
     return [request, null];
   }
   catch (err) {
@@ -65,13 +65,13 @@ async function update(metadata) {
   form_data.append('Role', data.Role);
   form_data.append('State', true);
   form_data.append('Password', data.Password);
-  
+
   if (data.Image != defaultUserIcon)
     form_data.append('Media_file', data.Image, data.Image.name);
 
 
   try {
-    const request = await axios.put("http://localhost:8000/User/" + data.id + "/", user)
+    const request = await axios.put("https://abc-app-univalle.herokuapp.com/User/" + data.id + "/", user)
     return [request, null];
 
   } catch (err) {
@@ -84,7 +84,7 @@ async function update(metadata) {
 async function enable(pk) {
 
   try {
-    const request = await axios.put("http://localhost:8000/User/" + pk + "/enable/", user)
+    const request = await axios.put("https://abc-app-univalle.herokuapp.com/User/" + pk + "/enable/", user)
     return [request, null];
 
   }
@@ -101,7 +101,7 @@ async function enable(pk) {
  */
 async function checkEmail(email) {
   try {
-    const request = await axios.post("http://localhost:8000/User/" + 0 + "/check_email/", { Email: email })
+    const request = await axios.post("https://abc-app-univalle.herokuapp.com/User/" + 0 + "/check_email/", { Email: email })
     return [request.data, null];
   }
   catch (err) {

@@ -2,9 +2,11 @@ import Head from 'next/head';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import UserForm from 'src/components/forms/CreateUserForm';
+import { update } from 'src/utils/userAxios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import NotFund from "./../../404.js"
+import BackButton from 'src/components/BackButton';
 
 /**
  * 
@@ -59,9 +61,18 @@ const EditarUsuario = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Typography sx={{ mb: 3 }} variant="h4" >
-            Editar Usuario
-          </Typography>
+          <Box
+            sx={{
+              alignItems: 'center', display: 'flex', justifyContent: 'space-between',
+              flexWrap: 'wrap', m: -1,
+            }}
+          >
+            <Typography sx={{ m: 1 }} variant="h4" >
+              Editar Usuario
+            </Typography>
+
+            <BackButton route='/Usuarios' />
+          </Box>
 
           <Grid container spacing={3} >
             <Grid item lg={4} md={6} xs={12} >

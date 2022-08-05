@@ -19,7 +19,7 @@ async function registerPayment(pay_method) {
   }
 
   try {
-    const request = await axios.post("http://localhost:8000/Payment/", payment);
+    const request = await axios.post("https://abc-app-univalle.herokuapp.com/Payment/", payment);
     return [request, null];
   }
   catch (err) {

@@ -1,11 +1,12 @@
-import { Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LinearLoader from '../loaders/LinealLoader';
 import AuthorCard from './AuthorCard';
 import axios from 'axios';
 import EventRegisterCard from '../events/RegisterCard';
-import { getIdEventByIdNew } from 'src/utils/eventAxios';
+import BackButton from '../BackButton';
 
 /**
  * Proporciona la vista completa de una noticia, con datos del autor
@@ -32,7 +33,7 @@ export default function ViewNew(props) {
       let dataUser;
 
       if (localStorage.getItem("autor") == undefined || JSON.parse(localStorage.getItem("autor")).id != noticia.ID_user) {
-        const userRequest = await axios.get(`http://localhost:8000/User/${noticia.ID_user}/`);
+        const userRequest = await axios.get(`https://abc-app-univalle.herokuapp.com/User/${noticia.ID_user}/`);
         dataUser = userRequest.data;
         localStorage.setItem("autor", JSON.stringify(dataUser));
       } else dataUser = JSON.parse(localStorage.getItem("autor"));
@@ -55,12 +56,14 @@ export default function ViewNew(props) {
   return (
     <>
       <Card className='allHeight'>
-        <Box sx={{ mt: 3 }}>
+        <Box>
           <CardContent>
             <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', }}>
               <Typography sx={{ m: 1 }} variant="h4">
                 {theNew.Title}
               </Typography>
+
+              <BackButton route='/Noticias' />
             </Box>
           </CardContent>
         </Box>
@@ -72,7 +75,7 @@ export default function ViewNew(props) {
 
           <div>
             <AuthorCard autor={autor} editionTime={theNew.Edition_date} />
-            <EventRegisterCard is_ready={IdEvent !== null}/>
+            <EventRegisterCard is_ready={IdEvent !== null} />
           </div>
 
           <div className='wrapperCenter'>

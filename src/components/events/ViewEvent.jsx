@@ -4,14 +4,10 @@ import { useEffect, useState } from "react";
 import LinearLoader from "../loaders/LinealLoader";
 import MapComponentView from "./ViewEventMap";
 import { Clock as ClockIcon } from "../../icons/clock";
-import axios from "axios";
+import { useRouter } from 'next/router';
 import AttachMoney from "@mui/icons-material/AttachMoney";
-import Link from "next/link";
 import { enroll_user2event, is_enrolled2Event, uneroll_user2event } from "src/utils/eventAxios";
-import { XCircle } from "src/icons/x-circle";
-import { Download } from "src/icons/download";
-import { SeverityPill } from "../severity-pill";
-import { TasksProgress } from "../dashboard/tasks-progress";
+import BackButton from "../BackButton";
 
 /**
  * Proporciona la vista completa de un evento, con su descripción
@@ -22,7 +18,7 @@ import { TasksProgress } from "../dashboard/tasks-progress";
 export default function ViewEvent(props) {
   const [loading, setLoading] = useState(true);
   const [theEvent, setTheEvent] = useState({});
-  const [autor, setAutor] = useState({});
+  const router = useRouter();
   const [EnrollmentEnable, setEnrollmentEnable] = useState(true);
   const [ShowMessageError, setShowMessageError] = useState("");
   const [ShowSuccessEnrollment, setShowSuccessEnrollment] = useState("")
@@ -56,7 +52,7 @@ export default function ViewEvent(props) {
     }
 
     getEvent();
-    getIfUserIsEnrolled(); 
+    getIfUserIsEnrolled();
   }, []);
 
 
@@ -114,7 +110,7 @@ export default function ViewEvent(props) {
       <Card>
         {" "}
         <CardContent>
-          <Box sx={{ mt: 0.2, py: 1.5 }}>
+          <Box sx={{ mt: 0.2, pb: 4 }}>
             {/* <CardContent> */}
             <Box
               sx={{
@@ -127,6 +123,20 @@ export default function ViewEvent(props) {
               <Typography sx={{ m: 0.2 }} variant="h4">
                 {theEvent.Title}
               </Typography>
+              <Box sx={{
+                display: "flex",
+              }} > 
+              {(localStorage.getItem('userRole') == 'Cliente') ? null :
+               <Box sx={{ m: 1, gap: '12px', display: 'flex' }}>
+                <Button color="primary" 
+                variant="contained"
+                onClick={(e) => router.push('/ParticipantesEvento') && localStorage.setItem('idEvent', theEvent.id)}>
+                  Participantes
+                </Button>
+                </Box>
+              }
+              <BackButton route="/" />
+              </Box>
             </Box>
             {/* </CardContent> */}
           </Box>
@@ -231,59 +241,8 @@ export default function ViewEvent(props) {
               </Grid>
             </Container>
           </Box>
-          <Box sx={{ m: 1, gap: "8px", display: "flex" }}>
-            <Button variant="outlined">Participantes</Button>
-            <Button color="primary" variant="contained">
-              Actividades
-            </Button>
-            <Button onClick={IsEnrolled ? onUnerollUser2event : onEnrollUser2Event}>{
-              IsEnrolled ? "No participar" : "Participar"
-            }</Button>
-          </Box>
-
-          {/* <div className="wrapper">
-          <div />
-
-          <div><MapComponentView place={theEvent.Space}/></div>
-
-          <div className="wrapperCenter">
-            <Divider className="toCenter" orientation="vertical" sx={{ height: "90%" }} />
-          </div>
-
-          <div className="ownOverflow">
-            <Typography
-              align="left"
-              color="textPrimary"
-              variant="body1"
-              sx={{ marginBottom: "8.4px", pt: 3, px: 1 }}
-            >
-              {theEvent.Details}
-            </Typography>
-
-            <Box sx={{ display: "flex", justifyContent: "center", px: 5, pt: 3 }}>
-              <img 
-                style={{ height: "350px", width: "100%", objectFit: "cover" }}
-                alt="Event-image"
-                src={image_url(theEvent.Media_file)}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "https://res.cloudinary.com/dxx9kwg6t/image/upload/v1655159261/media/images_videos_news/il-news-and-press-default-card-img_kcsr9g.jpg";
-                }}
-                variant="square"
-              />
-            </Box>
-
-             <Typography align="left" color="textPrimary" variant="body1" sx={{ marginBottom: '8.4px', pt: 4, px: 1 }}>
-              {theNew.Description}
-            </Typography> 
-          </div>
-
-          <div />
-        </div> */}
-          {/* </Card> */}
-        </CardContent>
-      </Card>
+        </CardContent >
+      </Card >
     </>
   );
 }

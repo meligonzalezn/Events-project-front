@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import { Box, Container, Grid, Typography } from '@mui/material';
-import { AccountProfile } from 'src/components/account/account-profile';
 import CreateUserForm from 'src/components/forms/CreateUserForm';
 import { useState } from 'react';
 import { createUser } from '../../utils/userAxios';
 import UserUploadImageCard from 'src/components/user/UploadImageCard';
 import { defaultUserIcon } from 'src/utils/defaultImages';
+import BackButton from 'src/components/BackButton';
 export default function CrearUsuario(props) {
   const [userImage, setUserImage] = useState(defaultUserIcon);
 
@@ -25,9 +25,18 @@ export default function CrearUsuario(props) {
         }}
       >
         <Container maxWidth="lg">
-          <Typography sx={{ mb: 3 }} variant="h4" >
-            Crear Usuario
-          </Typography>
+          <Box
+            sx={{
+              alignItems: 'center', display: 'flex', justifyContent: 'space-between',
+              flexWrap: 'wrap', m: -1,
+            }}
+          >
+            <Typography sx={{ m: 1 }} variant="h4" >
+              Crear Usuario
+            </Typography>
+
+            <BackButton route='/Usuarios' />
+          </Box>
 
           <Grid container spacing={3} >
             <Grid item lg={4} md={6} xs={12} >
