@@ -33,7 +33,7 @@ function saveUserIntoLocalStorage(userLogged) {
  * @param {str} Password 
  * @returns [Response, error if exist]
  */
- async function login(Email, Password) {
+async function login(Email, Password) {
   try {
 
     let userLogged;
@@ -90,8 +90,8 @@ async function loggout() {
  * @returns [Response, Error if user don't have access]
  */
 function has_perms(path) {
-  
-
+  return [true, null]
+  // console.log("hasPerm", permissions)
   const role = sessionStorage.getItem("userRole");
   const rolePermissions = permissions[role] ? permissions[role] : [];
   const otherPermissions = permissions.any_user
