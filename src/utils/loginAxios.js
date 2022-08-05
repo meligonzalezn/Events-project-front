@@ -1,4 +1,5 @@
 import axios from "axios"
+import permissions from "./json/permissions.json"
 
 export { login, loggout, is_logged, has_perms }
 
@@ -7,6 +8,23 @@ const config = {
     "Content-Type": "application/json"
   },
   withCredentials: false
+}
+
+function saveUserIntoSession(userLogged) {
+  sessionStorage.setItem('idUser', userLogged.id)
+  sessionStorage.setItem('userName', userLogged.Name)
+  sessionStorage.setItem('userRole', userLogged.Role)
+  sessionStorage.setItem('userState', userLogged.State)
+  sessionStorage.setItem('urlUserImage', userLogged.Media_file)
+}
+
+function saveUserIntoLocalStorage(userLogged) {
+
+  localStorage.setItem('idUser', userLogged.id)
+  localStorage.setItem('userName', userLogged.Name)
+  localStorage.setItem('userRole', userLogged.Role)
+  localStorage.setItem('userState', userLogged.State)
+  localStorage.setItem('urlUserImage', userLogged.Media_file)
 }
 
 /**
@@ -22,19 +40,11 @@ async function login(Email, Password) {
       Email: Email,
       Password: Password
     }, config)
-    /**
-     * This function search in database information about user that just logged in
-     * @param {email, password} 
-    */
-    let userLogged;
-    await axios.get("https://abc-app-univalle.herokuapp.com/User/").then((res) => {
-      userLogged = res.data.find((element) => element.Email === Email && element.Password === Password)
-      localStorage.setItem('idUser', userLogged.id)
-      localStorage.setItem('userName', userLogged.Name)
-      localStorage.setItem('userRole', userLogged.Role)
-      localStorage.setItem('userState', userLogged.State)
-      localStorage.setItem('urlUserImage', userLogged.Media_file)
-    })
+
+    userInformation = response.data;
+    saveUserIntoSession(userInformation);
+    saveUserIntoLocalStorage(userInformation);
+
     return [response, null]
   }
 
@@ -48,12 +58,17 @@ async function login(Email, Password) {
  * @returns [Response, Error if user is not logged]
  */
 async function is_logged() {
+  const messageError = "User doesn't exist";
   try {
-    const response = await axios.get('https://abc-app-univalle.herokuapp.com/login/', config)
-    return [response, null]
+    const userInformation = sessionStorage.getItem("idUser");
+
+    if (userInformation == undefined)
+      return [null, messageError]
+
+    return [userInformation, null]
 
   } catch (err) {
-    return [null, err]
+    return [null, messageError]
   }
 }
 
@@ -62,13 +77,14 @@ async function is_logged() {
  * @returns [Response, Error if some issue appear]
  */
 async function loggout() {
-
+  const messageError = "Failed trying to logging out";
   try {
-    const response = await axios.delete('https://abc-app-univalle.herokuapp.com/login/')
-    return [response, null]
+    sessionStorage.clear();
+    localStorage.clear();
+    return ["You are loggout", null]
   }
   catch (err) {
-    return [null, err]
+    return [null, messageError]
   }
 }
 
@@ -77,12 +93,15 @@ async function loggout() {
  * @returns [Response, Error if user don't have access]
  */
 async function has_perms(path) {
+
   try {
-    const response = await axios.post('https://abc-app-univalle.herokuapp.com/login/perms', {
-      path: path
-    })
-    return [response, null]
+    const role = sessionStorage.get("userRole");
+    const rolePermissions = permissions[role];
+    const hasPerm = rolePermissions.some(perm => perm.startsWith(path))
+
+    return [hasPerm, null]
   } catch (err) {
-    return [null, err]
+    return [null, "Internal Error"]
   }
+
 }

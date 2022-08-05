@@ -25,13 +25,9 @@ const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  // const [Logged, setLogged] = useState(false)  
-  // const [HasAccess, setHasAccess] = useState(false)
-  // const [Loading, setLoading] = useState(true)
-
-  const [Logged, setLogged] = useState(true)
-  const [HasAccess, setHasAccess] = useState(true)
-  const [Loading, setLoading] = useState(false)
+  const [Logged, setLogged] = useState(false)  
+  const [HasAccess, setHasAccess] = useState(false)
+  const [Loading, setLoading] = useState(true)
 
   const router = useRouter()
 
@@ -39,26 +35,25 @@ const App = (props) => {
     localStorage.setItem("actividad", '');
   }, [])
 
-  // useEffect(async () => {
-  //   //User is logged?
-  //   console.log("router.asPath", router.asPath)
+  useEffect(async () => {
+    //User is logged?
+    console.log("router.asPath", router.asPath)
 
-  //   is_logged().then(([_, error]) => {
+    is_logged().then(([_, error]) => {
 
-  //     setLogged(error == null)
+      setLogged(error == null)
 
-  //     if (error == null) {
-  //       //User has permissions ?
-  //       has_perms(router.asPath).then(([_, error]) => {
-  //         // console.log("actualizado ? ", _, error)
-  //         setHasAccess(error == null)
-  //         setLoading(false)
-  //       })
-  //     } else {
-  //       setLoading(false)
-  //     }
-  //   })
-  // }, [router.asPath])
+      if (error == null) {
+        //User has permissions ?
+        has_perms(router.asPath).then(([response, _]) => {
+          setHasAccess(response !== null ? response : false)
+          setLoading(false)
+        })
+      } else {
+        setLoading(false)
+      }
+    })
+  }, [router.asPath])
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
