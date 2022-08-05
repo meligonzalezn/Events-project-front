@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import NotFund from "./../../404.js"
 import BackButton from 'src/components/BackButton';
+import UserUploadImageCard from 'src/components/user/UploadImageCard';
 
 /**
  * 
@@ -79,7 +80,7 @@ const EditarUsuario = () => {
               <UserUploadImageCard image={userImage} setImage={setUserImage} />
             </Grid>
             <Grid item lg={8} md={6} xs={12} >
-              <UserForm finalFunction={update} type={"Actualizar"} {...usuario} userImage={userImage}  />
+              <UserForm finalFunction={update} type={"Actualizar"} {...usuario} userImage={userImage} />
             </Grid>
           </Grid>
         </Container>
