@@ -17,108 +17,108 @@ import LinearLoader from 'src/components/loaders/LinealLoader';
 import axios from 'axios';
 
 
-const Dashboard = () => { 
+const Dashboard = () => {
   const [loading, setLoading] = useState(true)
   const [events, setEvents] = useState()
   const [payments, setPayments] = useState()
 
   useEffect(() => {
-    if(loading) {
-        /**
-     * Obtiene los eventos y pagos de la BD.
-     */
+    if (loading) {
+      /**
+   * Obtiene los eventos y pagos de la BD.
+   */
       const getData = async () => {
-        await getEvents().then((res)=>{
-          setEvents(res);  
+        await getEvents().then((res) => {
+          setEvents(res);
         })
-        const res = await axios.get("http://localhost:8000/Payment/")
+        const res = await axios.get("https://abc-app-univalle.herokuapp.com/Payment/")
         const paymentsData = res.data
         setPayments(paymentsData)
-        setLoading(false);      
+        setLoading(false);
       }
-      getData(); 
+      getData();
 
     }
-    
+
   }, [])
 
-  return(
-  <>
-    <Head>
-      <title>
-        Reportes 
-      </title>
-    </Head>
-    {loading? 
-      <LinearLoader upperMessage="Cargando reportes..."></LinearLoader>
-    :
-         
-        <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8
-      }}
-    >
-      
-      <Container maxWidth={false}>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            lg={12}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <Typography sx={{ m: 1 }} variant="h4">
+  return (
+    <>
+      <Head>
+        <title>
           Reportes
-        </Typography>
-          </Grid>
-          <Grid
-            item
-            lg={12}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <EventsPerYear events= {events} />
-          </Grid>
-          <Grid
-            item
-            lg={6}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <EventsInMonth events={events} payments={payments} />
-          </Grid>
-          <Grid
-            item
-            lg={6}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <ActivitiesPerEvent events ={events} payments={payments}/>
-          </Grid>
-          <Grid
-            item
-            lg={12}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <IncomesPerYear payments= {payments} />
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
-    }
-  </>
-);
+        </title>
+      </Head>
+      {loading ?
+        <LinearLoader upperMessage="Cargando reportes..."></LinearLoader>
+        :
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            py: 8
+          }}
+        >
+
+          <Container maxWidth={false}>
+            <Grid
+              container
+              spacing={3}
+            >
+              <Grid
+                item
+                lg={12}
+                md={12}
+                xl={9}
+                xs={12}
+              >
+                <Typography sx={{ m: 1 }} variant="h4">
+                  Reportes
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                lg={12}
+                md={12}
+                xl={9}
+                xs={12}
+              >
+                <EventsPerYear events={events} />
+              </Grid>
+              <Grid
+                item
+                lg={6}
+                md={6}
+                xl={3}
+                xs={12}
+              >
+                <EventsInMonth events={events} payments={payments} />
+              </Grid>
+              <Grid
+                item
+                lg={6}
+                md={6}
+                xl={3}
+                xs={12}
+              >
+                <ActivitiesPerEvent events={events} payments={payments} />
+              </Grid>
+              <Grid
+                item
+                lg={12}
+                md={12}
+                xl={9}
+                xs={12}
+              >
+                <IncomesPerYear payments={payments} />
+              </Grid>
+            </Grid>
+          </Container>
+        </Box>
+      }
+    </>
+  );
 };
 
 Dashboard.getLayout = (page) => (

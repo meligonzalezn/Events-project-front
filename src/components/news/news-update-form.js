@@ -85,7 +85,7 @@ export const NewsUpdateForm = (props) => {
     */
     const eventsData = async () => {
       try {
-        const eventsRequest = await axios.get("http://localhost:8000/Events/")
+        const eventsRequest = await axios.get("https://abc-app-univalle.herokuapp.com/Events/")
         setEventsDataState(eventsRequest.data)
       }
       catch (error) {

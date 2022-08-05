@@ -33,7 +33,7 @@ const Events = () => {
      * Obtiene los eventos de la BD.
      */
     const getEvents = async () => {
-      const request = await axios.get("http://localhost:8000/Events/");
+      const request = await axios.get("https://abc-app-univalle.herokuapp.com/Events/");
       const data = request.data;
       setDataEvents(data);
       setSearchedEvents(data);
@@ -48,7 +48,7 @@ const Events = () => {
    * Debería acceder a la ventana donde muestra se muestra el evento
    * @param {event} e 
    */
-   const testClick = (e) => {
+  const testClick = (e) => {
     const eventSelected = e.target.id;
     console.log("event:", eventSelected);
     localStorage.setItem('evento', JSON.stringify(searchedEvents[eventSelected]));
@@ -73,7 +73,7 @@ const Events = () => {
     for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, searchedEvents.length); i++) {
       elements.push(
         <Grid key={i} item lg={4} md={6} xs={12} name={i}>
-          <EventCard  id={i} event={searchedEvents[i]}  onClick={testClick} />
+          <EventCard id={i} event={searchedEvents[i]} onClick={testClick} />
         </Grid>
       );
     }
@@ -137,7 +137,7 @@ const Events = () => {
           >
             {/* <Pagination color="primary" page={currentPage} onChange={handleChange} count={Math.ceil(events.length / eventsPerPage)} size="small" /> */}
             <Pagination page={page} color="primary" count={numPages} size="small"
-            onChange={handlePageChange} />
+              onChange={handlePageChange} />
           </Box>
         </Container>
       </Box>

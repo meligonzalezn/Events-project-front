@@ -24,9 +24,9 @@ async function createNews(metadata) {
   const data = metadata.values;
   let eventSelected = {}
   let id_event_selected;
-  const eventsDataAll = await axios.get("http://localhost:8000/Events/").then((res) => {
-    eventSelected = res.data.find((element) => element.Title === data.event_name)  
-    id_event_selected = eventSelected.id 
+  const eventsDataAll = await axios.get("https://abc-app-univalle.herokuapp.com/Events/").then((res) => {
+    eventSelected = res.data.find((element) => element.Title === data.event_name)
+    id_event_selected = eventSelected.id
     return id_event_selected;
   })
   let form_data = new FormData()
@@ -37,7 +37,7 @@ async function createNews(metadata) {
   form_data.append('Description', data.description)
   form_data.append('Summary', data.summary)
   form_data.append('State', data.state)
-  if(data.media_file)
+  if (data.media_file)
     form_data.append('Media_file', data.media_file, data.media_file.name)
   form_data.append('Edition_date', data.edition_date)
   form_data.append('Finish_date', formatDate(data.finish_date))
@@ -46,12 +46,12 @@ async function createNews(metadata) {
 
   }
   try {
-    const request = await axios.post("http://localhost:8000/News/", form_data, config).then((res) => { 
+    const request = await axios.post("https://abc-app-univalle.herokuapp.com/News/", form_data, config).then((res) => {
       return res;
     });
-    return {request, eventsDataAll}
+    return { request, eventsDataAll }
   }
-  catch(error){
+  catch (error) {
     console.log(error)
     return [null, error]
   }
@@ -65,19 +65,19 @@ let newsDataComplete = {};
 let newsEventData = {};
 let eventSelected;
 
-async function newsDataAll(newsTitle){
-  try{
-    await axios.get("http://localhost:8000/News/").then((res) => {
+async function newsDataAll(newsTitle) {
+  try {
+    await axios.get("https://abc-app-univalle.herokuapp.com/News/").then((res) => {
       newsDataComplete = res.data.find((element) => element.Title === newsTitle)
-      return newsDataComplete; 
+      return newsDataComplete;
     })
-    await axios.get("http://localhost:8000/Events/").then((res) => {
+    await axios.get("https://abc-app-univalle.herokuapp.com/Events/").then((res) => {
       newsEventData = res.data.find((element) => element.id === newsDataComplete.ID_event)
       eventSelected = newsEventData.Title
       return eventSelected;
     })
   }
-  catch(error){
+  catch (error) {
     console.log(error)
     return [null, error]
   }
@@ -86,13 +86,13 @@ async function newsDataAll(newsTitle){
  * This function performs the update of the data in the news model
  * @param {*} metadata 
  */
-async function updateNewsData(metadata){
+async function updateNewsData(metadata) {
   const data = metadata.values;
   let eventUpdateSelected = {}
   let idEventSelectedUpdate;
-  const eventsDataAllUpdate = await axios.get("http://localhost:8000/Events/").then((res) => {
-    eventUpdateSelected = res.data.find((element) => element.Title === data.event_name)  
-    idEventSelectedUpdate = eventUpdateSelected.id 
+  const eventsDataAllUpdate = await axios.get("https://abc-app-univalle.herokuapp.com/Events/").then((res) => {
+    eventUpdateSelected = res.data.find((element) => element.Title === data.event_name)
+    idEventSelectedUpdate = eventUpdateSelected.id
     return idEventSelectedUpdate;
   })
   let form_data = new FormData()
@@ -103,11 +103,11 @@ async function updateNewsData(metadata){
   form_data.append('Description', data.description)
   form_data.append('Summary', data.summary)
   form_data.append('State', data.state)
-  if(data.media_file)
-    if (data.media_file === newsDataComplete.Media_file){
+  if (data.media_file)
+    if (data.media_file === newsDataComplete.Media_file) {
       form_data.append('Media_file', data.media_file)
     }
-    else{
+    else {
       form_data.append('Media_file', data.media_file, data.media_file.name)
     }
   form_data.append('Edition_date', data.edition_date)
@@ -116,11 +116,11 @@ async function updateNewsData(metadata){
     'content-type': 'multipart/form-data'
 
   }
-  const request = await axios.put("http://localhost:8000/News/" + data.id + "/", form_data, config).then((res) => {
+  const request = await axios.put("https://abc-app-univalle.herokuapp.com/News/" + data.id + "/", form_data, config).then((res) => {
     return res;
   });
-  return {request, eventsDataAllUpdate}
+  return { request, eventsDataAllUpdate }
 }
 
 
-export { createNews, newsDataAll, newsDataComplete, eventSelected, updateNewsData}
+export { createNews, newsDataAll, newsDataComplete, eventSelected, updateNewsData }

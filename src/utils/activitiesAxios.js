@@ -36,7 +36,7 @@ async function createActivity(metadata) {
   }
   console.log("que necesito enviar ", activity)
   try {
-    const request = await axios.post("http://localhost:8000/Activity/", activity);
+    const request = await axios.post("https://abc-app-univalle.herokuapp.com/Activity/", activity);
     return [request, null];
   }
   catch (err) {
@@ -66,7 +66,7 @@ async function updateActivity(metadata) {
     ID_Event: localStorage.getItem('idEvent')
   }
   try {
-    const request = await axios.put("http://localhost:8000/Activity/" + data.id + "/", activity).then((res) => {
+    const request = await axios.put("https://abc-app-univalle.herokuapp.com/Activity/" + data.id + "/", activity).then((res) => {
       return [request, null];
     });
   }
@@ -93,7 +93,7 @@ async function checkEnrolledStatus(ID_Activity) {
   }
 
   try {
-    const request = await axios.post(`http://localhost:8000/Payment/${ID_User}/is_enrolled/`,
+    const request = await axios.post(`https://abc-app-univalle.herokuapp.com/Payment/${ID_User}/is_enrolled/`,
       JSON.stringify(body));
 
     return [request.data, null]
@@ -119,7 +119,7 @@ async function unenroll(ID_Activity) {
   }
 
   try {
-    const request = await axios.post(`http://localhost:8000/Payment/${ID_User}/unenroll/`,
+    const request = await axios.post(`https://abc-app-univalle.herokuapp.com/Payment/${ID_User}/unenroll/`,
       JSON.stringify(body));
 
     return [request.data, null]
@@ -130,24 +130,24 @@ async function unenroll(ID_Activity) {
 
 
 
-  /**
- * We get the activities from an event
- * @param {eventId} // id of event 
- */
- 
- let  activitiesFromEvent = []
- async function getActivitiesFromEvent(eventId){
-   try{
-     await axios.get("http://localhost:8000/Activity/").then((res) => {
-       activitiesFromEvent = res.data.filter((element) => element.ID_Event === eventId)
-       return activitiesFromEvent;
-     })
-   }
-   catch(error){
-     console.log(error)
-     return [null, error]
-   }
- }
+/**
+* We get the activities from an event
+* @param {eventId} // id of event 
+*/
+
+let activitiesFromEvent = []
+async function getActivitiesFromEvent(eventId) {
+  try {
+    await axios.get("https://abc-app-univalle.herokuapp.com/Activity/").then((res) => {
+      activitiesFromEvent = res.data.filter((element) => element.ID_Event === eventId)
+      return activitiesFromEvent;
+    })
+  }
+  catch (error) {
+    console.log(error)
+    return [null, error]
+  }
+}
 
 
-export { createActivity, updateActivity, checkEnrolledStatus, unenroll , getActivitiesFromEvent, activitiesFromEvent}
+export { createActivity, updateActivity, checkEnrolledStatus, unenroll, getActivitiesFromEvent, activitiesFromEvent }

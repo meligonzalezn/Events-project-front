@@ -31,14 +31,14 @@ export default function ParticipantesActividad(props) {
     */
 
     async function activityParticipants(idActivity, idEvent) {
-      await axios.get("http://localhost:8000/Payment/").then((res) => {
+      await axios.get("https://abc-app-univalle.herokuapp.com/Payment/").then((res) => {
         paymentsData = res.data.filter((element) => (element.ID_Event == idEvent && element.ID_Activity == idActivity))
         if (paymentsData.length == 0) {
           setIsEmpty(true)
         }
       })
       if (!isEmpty) {
-        await axios.get("http://localhost:8000/User/").then((res) => {
+        await axios.get("https://abc-app-univalle.herokuapp.com/User/").then((res) => {
           for (let item of paymentsData) {
             participantsData.push(res.data.filter((element) => item.ID_User == element.id))
             setAlreadyFetch(true)
