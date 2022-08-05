@@ -10,13 +10,13 @@ const config = {
   withCredentials: false
 }
 
-// function saveUserIntoSession(userLogged) {
-//   sessionStorage.setItem('idUser', userLogged.id)
-//   sessionStorage.setItem('userName', userLogged.Name)
-//   sessionStorage.setItem('userRole', userLogged.Role)
-//   sessionStorage.setItem('userState', userLogged.State)
-//   sessionStorage.setItem('urlUserImage', userLogged.Media_file)
-// }
+function saveUserIntoSession(userLogged) {
+  sessionStorage.setItem('idUser', userLogged.id)
+  sessionStorage.setItem('userName', userLogged.Name)
+  sessionStorage.setItem('userRole', userLogged.Role)
+  sessionStorage.setItem('userState', userLogged.State)
+  sessionStorage.setItem('urlUserImage', userLogged.Media_file)
+}
 
 function saveUserIntoLocalStorage(userLogged) {
 
@@ -39,7 +39,7 @@ function saveUserIntoLocalStorage(userLogged) {
     let userLogged;
     await axios.get("https://abc-app-univalle.herokuapp.com/User/").then((res) => {
       userLogged = res.data.find((element) => element.Email === Email && element.Password === Password)
-      // saveUserIntoSession(userLogged)
+      saveUserIntoSession(userLogged)
       saveUserIntoLocalStorage(userLogged)
     })
     return [response, null]
@@ -57,7 +57,7 @@ function saveUserIntoLocalStorage(userLogged) {
 function is_logged() {
   const messageError = "User doesn't exist";
   try {
-    const userInformation = localStorage.getItem("idUser");
+    const userInformation = sessionStorage.getItem("idUser");
 
     if (userInformation == undefined)
       return [null, messageError]
@@ -76,6 +76,7 @@ function is_logged() {
 async function loggout() {
   const messageError = "Failed trying to logging out";
   try {
+    sessionStorage.clear();
     localStorage.clear();
     return ["You are loggout", null]
   }
@@ -91,7 +92,7 @@ async function loggout() {
 function has_perms(path) {
 
   // console.log("hasPerm", permissions)
-  const role = localStorage.getItem("userRole");
+  const role = sessionStorage.getItem("userRole");
   console.log(path)
   const rolePermissions = permissions[role] ? permissions[role] : [];
   const otherPermissions = permissions.any_user
