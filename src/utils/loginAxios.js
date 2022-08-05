@@ -33,18 +33,15 @@ function saveUserIntoLocalStorage(userLogged) {
  * @param {str} Password 
  * @returns [Response, error if exist]
  */
-async function login(Email, Password) {
+ async function login(Email, Password) {
   try {
 
-    const response = await axios.post('https://abc-app-univalle.herokuapp.com/login/', {
-      Email: Email,
-      Password: Password
-    }, config)
-
-    userInformation = response.data;
-    saveUserIntoSession(userInformation);
-    saveUserIntoLocalStorage(userInformation);
-
+    let userLogged;
+    await axios.get("https://abc-app-univalle.herokuapp.com/User/").then((res) => {
+      userLogged = res.data.find((element) => element.Email === Email && element.Password === Password)
+      saveUserIntoSession(userLogged)
+      saveUserIntoLocalStorage(userLogged)
+    })
     return [response, null]
   }
 
@@ -57,7 +54,7 @@ async function login(Email, Password) {
  * Check if an user is logged in the system.
  * @returns [Response, Error if user is not logged]
  */
-async function is_logged() {
+function is_logged() {
   const messageError = "User doesn't exist";
   try {
     const userInformation = sessionStorage.getItem("idUser");
@@ -92,14 +89,19 @@ async function loggout() {
  * Check if an user has permissions to get access to functionalities.
  * @returns [Response, Error if user don't have access]
  */
-async function has_perms(path) {
+function has_perms(path) {
 
+  // console.log("hasPerm", permissions)
+  const role = sessionStorage.getItem("userRole");
+  console.log(path)
+  const rolePermissions = permissions[role] ? permissions[role] : [];
+  const otherPermissions = permissions.any_user
+  const exactPermissions = permissions.exact_url;
+
+  console.log(rolePermissions)
+  const hasPerm = rolePermissions.some(perm => perm.startsWith(path.slice(1))) || otherPermissions.some(perm => perm.startsWith(path.slice(1))) || exactPermissions.some(perm => perm == path)
+  return [hasPerm, null]
   try {
-    const role = sessionStorage.get("userRole");
-    const rolePermissions = permissions[role];
-    const hasPerm = rolePermissions.some(perm => perm.startsWith(path))
-
-    return [hasPerm, null]
   } catch (err) {
     return [null, "Internal Error"]
   }

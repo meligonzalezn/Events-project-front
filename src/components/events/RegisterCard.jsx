@@ -22,7 +22,9 @@ export default function EventRegisterCard(props) {
       {props.is_ready ?
         <Typography align="center" color='#5048E5' gutterBottom variant="h6">
           <Link href="Inscripcion">
-            Registrarse {`>>>`}
+            <>
+              {"Registrarse >>>"}
+            </>
           </Link>
         </Typography>
         : <></>

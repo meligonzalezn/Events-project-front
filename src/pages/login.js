@@ -49,7 +49,7 @@ const Login = () => {
     console.log("here")
     const [_, error] = await login(formik.values.email, formik.values.password)
     if (error) {
-      setUploadFailed(error.data ? error.data : "Internal Error")
+      setUploadFailed("Internal Error")
       return;
     }
     if (CaptchaSuccess == null) {

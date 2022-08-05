@@ -25,9 +25,10 @@ const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-  const [Logged, setLogged] = useState(false)  
+  const [Logged, setLogged] = useState(false)
   const [HasAccess, setHasAccess] = useState(false)
   const [Loading, setLoading] = useState(true)
+  const [darkMode, setDarkMode] = useState(false)
 
   const router = useRouter()
 
@@ -37,28 +38,26 @@ const App = (props) => {
 
   useEffect(async () => {
     //User is logged?
-    console.log("router.asPath", router.asPath)
 
-    is_logged().then(([_, error]) => {
+    const [_a, errorCheckLoggin] = is_logged()
+    setLogged(errorCheckLoggin == null)
 
-      setLogged(error == null)
+    if (errorCheckLoggin != null) {
+      setLoading(false)
+      return;
+    }
+    //User has permissions ?
+    console.log("Permissions")
+    const [response, _] = has_perms(router.asPath);
+    setHasAccess(response !== null ? response : false)
+    setLoading(false)
 
-      if (error == null) {
-        //User has permissions ?
-        has_perms(router.asPath).then(([response, _]) => {
-          setHasAccess(response !== null ? response : false)
-          setLoading(false)
-        })
-      } else {
-        setLoading(false)
-      }
-    })
   }, [router.asPath])
 
-  const getLayout = Component.getLayout ?? ((page) => page);
+const getLayout = Component.getLayout ?? ((page) => page);
 
 
-
+if (typeof window !== "undefined") {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -101,6 +100,7 @@ const App = (props) => {
       </LocalizationProvider>
     </CacheProvider>
   );
+} else return (<></>)
 };
 
 export default App;
