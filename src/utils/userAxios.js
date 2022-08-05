@@ -29,8 +29,9 @@ async function getUsers() {
  */
 async function createUser(metadata) {
   const data = metadata.values;
+  console.log(data);
 
-  let cipheredPassword = createHash("sha256").update(data.password).digest("hex")
+  let cipheredPassword = createHash("sha256").update(data.Password).digest("hex")
   let form_data = new FormData();
   form_data.append('Name', data.Name);
   form_data.append('Last_name', data.LastName);
