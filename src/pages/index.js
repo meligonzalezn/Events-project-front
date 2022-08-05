@@ -1,130 +1,155 @@
-import Head from 'next/head';
-import { Box, Container, Grid, Typography } from '@mui/material';
-import { Budget } from '../components/dashboard/budget';
-import { LatestOrders } from '../components/dashboard/latest-orders';
-import { LatestProducts } from '../components/dashboard/latest-products';
-import { EventsPerYear } from '../components/reports/events-per-year';
-import { TasksProgress } from '../components/dashboard/tasks-progress';
-import { TotalCustomers } from '../components/dashboard/total-customers';
-import { TotalProfit } from '../components/dashboard/total-profit';
-import { EventsInMonth } from 'src/components/reports/participants-events-in-month';
-import { DashboardLayout } from '../components/dashboard-layout';
-import { getEvents } from 'src/utils/eventAxios';
+import Head from "next/head";
 import { useEffect, useState } from 'react';
-import { ActivitiesPerEvent } from 'src/components/reports/participants-activities-by-event';
-import { IncomesPerYear } from 'src/components/reports/incomes-by-month-per-year';
-import LinearLoader from 'src/components/loaders/LinealLoader';
+import { Box, Card, CardContent, Container, Grid, InputAdornment, Pagination, SvgIcon, TextField } from '@mui/material';
+//import { Search as SearchIcon } from '../../icons/search';
+import { useRouter } from 'next/router';
+import LinearLoader from '../components/loaders/LinealLoader';
+import { EventListToolbar } from "../components/events/event-list-toolbar";
+import { EventCard } from "../components/events/event-card";
+import { DashboardLayout } from "../components/dashboard-layout";
 import axios from 'axios';
+import { findAllWithWord } from 'src/utils/searchInStrings';
 
+const NEWS_PER_PAGE = 6;
 
-const Dashboard = () => {
-  const [loading, setLoading] = useState(true)
-  const [events, setEvents] = useState()
-  const [payments, setPayments] = useState()
+/**
+ * Muestra todas los eventos registrados en la base de datos mediante
+ * paginación.
+ * @param {} 
+ * @returns 
+ */
+const Events = () => {
+  const [page, setPage] = useState(1); // We display 6 news per page.
+  const [loading, setLoading] = useState(true);
+  const [numPages, setNumPages] = useState(0);
+  const [dataEvents, setDataEvents] = useState();
+  const [searchedEvents, setSearchedEvents] = useState();
+  const [succesfulRegister, setSuccessfulRegister] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
-    if (loading) {
-      /**
-   * Obtiene los eventos y pagos de la BD.
-   */
-      const getData = async () => {
-        await getEvents().then((res) => {
-          setEvents(res);
-        })
-        const res = await axios.get("https://abc-app-univalle.herokuapp.com/Payment/")
-        const paymentsData = res.data
-        setPayments(paymentsData)
-        setLoading(false);
+    /**
+     * Obtiene los eventos de la BD.
+     */
+    const getEvents = async () => {
+      const request = await axios.get("https://abc-app-univalle.herokuapp.com/Events/");
+      const dataN = request.data;
+      const dataNfilter = dataN.filter((value) => {
+        return (value.State == 'Activo')
       }
-      getData();
-
+      )
+      setDataEvents(dataNfilter);
+      setSearchedEvents(dataNfilter);
+      setNumPages(Math.ceil(dataNfilter.length / NEWS_PER_PAGE));
+      setLoading(false);
     }
 
+    getEvents();
   }, [])
 
-  return (
+  /**
+   * Debería acceder a la ventana donde muestra se muestra el evento
+   * @param {event} e 
+   */
+  const testClick = (e) => {
+    const eventSelected = e.target.id;
+    console.log("event:", eventSelected);
+    localStorage.setItem('evento', JSON.stringify(searchedEvents[eventSelected]));
+    //console.log("monda1", JSON.stringify(searchedEvents[eventSelected]))
+    router.push("Eventos/[id]/Ver", `Eventos/${searchedEvents[eventSelected].Title}/Ver`);
+  }
+
+
+
+  /**
+   * Obtiene los elementos para desplegar , según la pagina seleccionada
+   * @returns Array de Cards con los eventos de la pagina seleccionada
+   */
+  const displayPageElements = () => {
+    let elements = [];
+
+    // Ordena los eventos según las fechas mas recientes.
+    searchedEvents.sort(function (a, b) {
+      return new Date(b["Start_date"]) - new Date(a["Start_date"]);
+    })
+
+    for (var i = (page - 1) * NEWS_PER_PAGE; i < Math.min(page * NEWS_PER_PAGE, searchedEvents.length); i++) {
+      elements.push(
+        <Grid key={i} item lg={4} md={6} xs={12} name={i}>
+          <EventCard id={i} event={searchedEvents[i]} onClick={testClick} />
+        </Grid>
+      );
+    }
+
+    return elements;
+  }
+
+  /**
+   * Cambia el valor de 'page' a la página seleccionada.
+   * @param {useless} _ 
+   * @param {int} value 
+   */
+  const handlePageChange = (_, value) => {
+    setPage(value);
+  }
+
+  const handleSearchEvents = (e) => {
+    const searchedValue = e.target.value;
+    const data = findAllWithWord(searchedValue, dataEvents, "Title");
+    setSearchedEvents(data);
+    setNumPages(Math.ceil(data.length / NEWS_PER_PAGE));
+  }
+
+  if (loading) {
+    return (
+      <LinearLoader
+        upperMessage='Estamos cargando tus eventos'
+        lowerMessage='Por favor espera'
+      ></LinearLoader>
+    )
+  } else return (
     <>
       <Head>
-        <title>
-          Reportes
-        </title>
+        <title>Eventos</title>
       </Head>
-      {loading ?
-        <LinearLoader upperMessage="Cargando reportes..."></LinearLoader>
-        :
-
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            py: 8
-          }}
-        >
-
-          <Container maxWidth={false}>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                item
-                lg={12}
-                md={12}
-                xl={9}
-                xs={12}
-              >
-                <Typography sx={{ m: 1 }} variant="h4">
-                  Reportes
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                lg={12}
-                md={12}
-                xl={9}
-                xs={12}
-              >
-                <EventsPerYear events={events} />
-              </Grid>
-              <Grid
-                item
-                lg={6}
-                md={6}
-                xl={3}
-                xs={12}
-              >
-                <EventsInMonth events={events} payments={payments} />
-              </Grid>
-              <Grid
-                item
-                lg={6}
-                md={6}
-                xl={3}
-                xs={12}
-              >
-                <ActivitiesPerEvent events={events} payments={payments} />
-              </Grid>
-              <Grid
-                item
-                lg={12}
-                md={12}
-                xl={9}
-                xs={12}
-              >
-                <IncomesPerYear payments={payments} />
-              </Grid>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8,
+        }}
+      >
+        <Container maxWidth={false}>
+          <EventListToolbar searchHandleChange={handleSearchEvents} />
+          <Box sx={{ pt: 3 }}>
+            <Grid container spacing={3}>
+              {/* {currentEvents.map((event, key) => (
+                <Grid item key={key} lg={4} md={6} xs={12}>
+                  <EventCard event={event} />
+                </Grid>
+              ))} */}
+              {displayPageElements()}
             </Grid>
-          </Container>
-        </Box>
-      }
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              pt: 3,
+            }}
+          >
+            {/* <Pagination color="primary" page={currentPage} onChange={handleChange} count={Math.ceil(events.length / eventsPerPage)} size="small" /> */}
+            <Pagination page={page} color="primary" count={numPages} size="small"
+              onChange={handlePageChange} />
+          </Box>
+        </Container>
+      </Box>
     </>
   );
 };
 
-Dashboard.getLayout = (page) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
-);
 
-export default Dashboard;
+Events.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+
+export default Events;

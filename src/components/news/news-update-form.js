@@ -140,7 +140,6 @@ export const NewsUpdateForm = (props) => {
     setData(true);
   }
 
-
   return (
     <form
       autoComplete="off"
@@ -272,7 +271,8 @@ export const NewsUpdateForm = (props) => {
                       lineHeight: '24px',
                       border: '0.8px solid #e76063',
                       overflow: 'auto',
-                      resize: 'vertical'
+                      resize: 'vertical',
+                      background:'transparent'
                     } :
                       {
                         height: '9.3rem',
@@ -288,7 +288,8 @@ export const NewsUpdateForm = (props) => {
                         fontSize: '16px',
                         lineHeight: '24px',
                         resize: 'vertical',
-                        overflow: 'auto'
+                        overflow: 'auto',
+                        background:'transparent'
                       }}
                     aria-label="Descripcion"
                     name="description"

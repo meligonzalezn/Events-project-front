@@ -1,10 +1,10 @@
 const states = [
     {
-      value: "active",
+      value: "Activo",
       label: "Activo",
     },
     {
-      value: "inactive",
+      value: "Inactivo",
       label: "Inactivo",
     },
   ];

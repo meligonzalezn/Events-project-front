@@ -5,7 +5,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
-import { theme } from '../theme';
+import { lightTheme, darkTheme, MaterialUISwitch } from '../theme';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { has_perms, is_logged } from 'src/utils/loginAxios';
@@ -16,7 +16,10 @@ import SignUp from './SignUp';
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import LinearLoader from 'src/components/loaders/LinealLoader';
+
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -29,7 +32,6 @@ const App = (props) => {
   const [Logged, setLogged] = useState(true)
   const [HasAccess, setHasAccess] = useState(true)
   const [Loading, setLoading] = useState(false)
-
 
   const router = useRouter()
 
@@ -60,6 +62,8 @@ const App = (props) => {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
+
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -73,14 +77,23 @@ const App = (props) => {
       </Head>
 
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
           <CssBaseline />
           {Loading ?
             <LinearLoader></LinearLoader>
             :
             Logged ?
               HasAccess ?
-                getLayout(<Component {...pageProps} />)
+                <>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<MaterialUISwitch sx={{ m: 1, zIndex: '2000', fontSize: '0.5rem' }} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+                      label="mui toggle"
+                    />
+                  </FormGroup>
+                  {getLayout(
+                    <Component {...pageProps} />)}
+                </>
                 :
                 <NotFound />
               : router.asPath === "/SignUp" ?
@@ -89,6 +102,7 @@ const App = (props) => {
                 <Login />
           }
         </ThemeProvider>
+
       </LocalizationProvider>
     </CacheProvider>
   );

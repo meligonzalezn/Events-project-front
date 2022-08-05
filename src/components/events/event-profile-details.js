@@ -81,7 +81,6 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
         if (formik.isValid) {
           await submitFunc(formik).then((res) => console.log("res: ", res));
           setLoading(!loading);
-          //router.push("/Eventos");
         }
         setModal(!modal)
         setUpload(false);
@@ -124,7 +123,7 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
           }}>
           <CardHeader title="Evento" />
           <Box sx={{ pr: 2 }}>
-            <BackButton route='/Eventos' />
+            <BackButton route='/' />
           </Box>
         </Box>
 
@@ -308,7 +307,7 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
         title={"Registro de evento"}
         message={"Los cambios se guardaron exitosamente!"} modalState={modal}
         setModalState={setModal}
-        redirectTo={"/Eventos"} /> : null
+        redirectTo={"/"} /> : null
       }
       {(modalError == true) ?
         <ModalAlert
