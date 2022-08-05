@@ -47,12 +47,16 @@ export default function BasicTable(props) {
               >
                 <TableCell component="th" scope="row" style={{ cursor: 'pointer' }}>
                   <Link href={`/Usuarios/${row.id}/Editar`}>
-                    {capitalizeWord(row.Name)}
+                    <>
+                      {capitalizeWord(row.Name)}
+                    </>
                   </Link>
                 </TableCell>
                 <TableCell align='right' component="th" scope="row" style={{ cursor: 'pointer' }}>
                   <Link href={`/Usuarios/${row.id}/Editar`}>
-                    {capitalizeWord(row.Role)}
+                    <>
+                      {capitalizeWord(row.Role)}
+                    </>
                   </Link>
                 </TableCell>
                 <TableCell align='right'>

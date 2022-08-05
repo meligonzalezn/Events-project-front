@@ -272,7 +272,7 @@ export const NewsUpdateForm = (props) => {
                       border: '0.8px solid #e76063',
                       overflow: 'auto',
                       resize: 'vertical',
-                      background:'transparent'
+                      background: 'transparent'
                     } :
                       {
                         height: '9.3rem',
@@ -289,7 +289,7 @@ export const NewsUpdateForm = (props) => {
                         lineHeight: '24px',
                         resize: 'vertical',
                         overflow: 'auto',
-                        background:'transparent'
+                        background: 'transparent'
                       }}
                     aria-label="Descripcion"
                     name="description"
@@ -306,7 +306,9 @@ export const NewsUpdateForm = (props) => {
                 </Grid>
               </Grid>
               <Grid item md={12} xs={12}>
-                <Link target="_blank" href={"https://res.cloudinary.com/dxx9kwg6t/" + newsDataComplete.Media_file}>Imagen o video cargado</Link>
+                <Link target="_blank" href={"https://res.cloudinary.com/dxx9kwg6t/" + newsDataComplete.Media_file}>
+                  <>{"Imagen o video cargado"}
+                  </></Link>
               </Grid>
             </CardContent>
             <Divider></Divider>

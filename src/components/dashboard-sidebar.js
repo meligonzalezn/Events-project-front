@@ -117,13 +117,15 @@ export const DashboardSidebar = (props) => {
               passHref
             >
               <Link href='/' style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
-                <Logo
-                  sx={{
-                    height: 42,
-                    width: 42
-                  }}
-                />
-                <Typography sx={{ color: '#7B61FF', fontWeight: 'bold' }}>ABC</Typography>
+                <>
+                  <Logo
+                    sx={{
+                      height: 42,
+                      width: 42
+                    }}
+                  />
+                  <Typography sx={{ color: '#7B61FF', fontWeight: 'bold' }}>ABC</Typography>
+                </>
               </Link>
             </NextLink>
           </Box>
