@@ -217,10 +217,10 @@ export const NewsRegisterForm = (props) => {
                   fontWeight: '400',
                   fontSize: '16px',
                   lineHeight: '24px',
-                  border: '0.8px solid #e76063', 
-                  overflow:'auto',
-                  resize:'vertical',
-                  background:'transparent'
+                  border: '0.8px solid #e76063',
+                  overflow: 'auto',
+                  resize: 'vertical',
+                  background: 'transparent',
                   border: '0.8px solid #e76063',
                   overflow: 'auto',
                   resize: 'vertical'
@@ -238,9 +238,9 @@ export const NewsRegisterForm = (props) => {
                     fontWeight: '400',
                     fontSize: '16px',
                     lineHeight: '24px',
-                    resize:'vertical', 
-                    overflow:'auto',
-                    background:'transparent',
+                    resize: 'vertical',
+                    overflow: 'auto',
+                    background: 'transparent',
                     resize: 'vertical',
                     overflow: 'auto'
                   }}
