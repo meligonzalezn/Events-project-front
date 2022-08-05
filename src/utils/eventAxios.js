@@ -212,10 +212,12 @@ async function getIdEventByIdNew(id_New) {
 }
 
 async function enroll_user2event(event_id) {
+  const userId = sessionStorage.getItem("idUser")
   try {
     const response = await axios.post(`https://abc-app-univalle.herokuapp.com/Enroll/enroll_user2event/`,
       {
-        event_id: event_id
+        event_id: event_id,
+        userId: userId
       })
     return [response, null];
   }
@@ -225,10 +227,12 @@ async function enroll_user2event(event_id) {
 }
 
 async function is_enrolled2Event(event_id) {
+  const userId = sessionStorage.getItem("idUser")
   try {
-    const response = await axios.get(`https://abc-app-univalle.herokuapp.com/Enroll/${event_id}/is_user_enrolled2event/`,
+    const response = await axios.post(`https://abc-app-univalle.herokuapp.com/Enroll/is_user_enrolled2event/`,
       {
-        event_id: event_id
+        event_id: event_id,
+        userId: userId
       })
     return [response, null];
   }
@@ -238,8 +242,12 @@ async function is_enrolled2Event(event_id) {
 }
 
 async function uneroll_user2event(event_id) {
+  const userId = sessionStorage.getItem("idUser")
   try {
-    const response = await axios.delete(`https://abc-app-univalle.herokuapp.com/Enroll/${event_id}/unenrollment/`)
+    const response = await axios.post(`https://abc-app-univalle.herokuapp.com/Enroll/unenrollment/`,{
+      userId: userId,
+      eventId: event_id
+    })
 
     return [response.enrolled, null];
   } catch (err) {
