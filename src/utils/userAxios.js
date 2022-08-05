@@ -65,9 +65,7 @@ async function update(metadata) {
   form_data.append('Role', data.Role);
   form_data.append('State', true);
   form_data.append('Password', data.Password);
-
-  if (data.Image != defaultUserIcon)
-    form_data.append('Media_file', data.Image, data.Image.name);
+  form_data.append('Media_file', data.Image, data.Image.name);
 
 
   try {
