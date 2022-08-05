@@ -18,7 +18,7 @@ export const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const ModalAlert = ({ title, message, modalState, setModalState, modalSuccess, routeURL, redirectTo}) => {
+export const ModalAlert = ({ title, message, modalState, setModalState, modalSuccess, routeURL, redirectTo }) => {
   const styles = useStyles();
   const router = useRouter();
 
@@ -29,11 +29,8 @@ export const ModalAlert = ({ title, message, modalState, setModalState, modalSuc
    */
   const onClose = () => {
     setModalState(!modalState);
-    if(modalSuccess) {
+    if (modalSuccess) {
       router.push(routeURL)
-    }
-    if(redirectTo!==''){
-      router.push(redirectTo);
     }
   }
 
