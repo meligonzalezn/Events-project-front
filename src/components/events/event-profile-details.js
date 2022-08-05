@@ -247,7 +247,7 @@ export const EventDetails = ({ updateEvent, eventValues, eventPlace, submitFunc 
                 }
                 }
               >
-                <a href={eventValues["Media_file"]} style={{ textDecoration: "none" }} target="_blank"> Visualizar imagen </a>
+                <a href={eventValues["Media_file"]} style={{ textDecoration: "none" }} target="_blank" rel="noreferrer" > Visualizar imagen </a>
               </label>
             </Box>
           )}
