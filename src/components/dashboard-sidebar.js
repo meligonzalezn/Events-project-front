@@ -3,59 +3,82 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
-import { Cog as CogIcon } from '../icons/cog';
-import { Lock as LockIcon } from '../icons/lock';
-import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import { User as UserIcon } from '../icons/user';
-import { UserAdd as UserAddIcon } from '../icons/user-add';
-import { Users as UsersIcon } from '../icons/users';
-import { XCircle as XCircleIcon } from '../icons/x-circle';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import CloseIcon from '@mui/icons-material/Close';
 import BadgeIcon from '@mui/icons-material/Badge';
+import Link from 'next/link';
 
-const items = [
-  {
-    href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
-  },
-  {
-    href: '/Usuarios',
-    icon: (<UserIcon fontSize="small" />),
-    title: 'Usuarios'
-  },
-  {
-    href: '/products',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Products'
-  },
-  {
-    href: '/Noticias',
-    icon: (<NewspaperIcon fontSize="small" />),
-    title: 'Noticias'
-  },
-  {
-    href: '/Eventos',
-    icon: (<CalendarMonthIcon fontSize="small" />),
-    title: 'Events'
-  },
-  {
-    href: '/Escarapela',
-    icon: (<BadgeIcon fontSize="small" />),
-    title: 'Escarapela'
-  },
-  {
-    href: '/loggout',
-    icon: (<CloseIcon fontSize="small" />),
-    title: 'Loggout'
+const items = () => {
+  if (localStorage.getItem('userRole') == 'Cliente') {
+    return [
+      {
+        href: '/Usuarios',
+        icon: (<UserIcon fontSize="small" />),
+        title: 'Usuarios'
+      },
+      {
+        href: '/Noticias',
+        icon: (<NewspaperIcon fontSize="small" />),
+        title: 'Noticias'
+      },
+      {
+        href: '/',
+        icon: (<CalendarMonthIcon fontSize="small" />),
+        title: 'Eventos'
+      },
+      {
+        href: '/Escarapela',
+        icon: (<BadgeIcon fontSize="small" />),
+        title: 'Escarapela'
+      },
+      {
+        href: '/loggout',
+        icon: (<CloseIcon fontSize="small" />),
+        title: 'Loggout'
+      }
+    ];
   }
-];
+  else {
+    return [
+      {
+        href: '/Reportes',
+        icon: (<ChartBarIcon fontSize="small" />),
+        title: 'Reportes'
+      },
+      {
+        href: '/Usuarios',
+        icon: (<UserIcon fontSize="small" />),
+        title: 'Usuarios'
+      },
+      {
+        href: '/Noticias',
+        icon: (<NewspaperIcon fontSize="small" />),
+        title: 'Noticias'
+      },
+      {
+        href: '/',
+        icon: (<CalendarMonthIcon fontSize="small" />),
+        title: 'Eventos'
+      },
+      {
+        href: '/Escarapela',
+        icon: (<BadgeIcon fontSize="small" />),
+        title: 'Escarapela'
+      },
+      {
+        href: '/loggout',
+        icon: (<CloseIcon fontSize="small" />),
+        title: 'Loggout'
+      }
+    ];
+  }
+}
+
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
@@ -93,15 +116,17 @@ export const DashboardSidebar = (props) => {
               href="/"
               passHref
             >
-              <a href='/' style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
-                <Logo
-                  sx={{
-                    height: 42,
-                    width: 42
-                  }}
-                />
-                <Typography sx={{ color: '#7B61FF', fontWeight: 'bold' }}>ABC</Typography>
-              </a>
+              <Link href='/' style={{ display: 'flex', textDecoration: 'none', alignItems: 'center', gap: '0.75rem' }}>
+                <>
+                  <Logo
+                    sx={{
+                      height: 42,
+                      width: 42
+                    }}
+                  />
+                  <Typography sx={{ color: '#7B61FF', fontWeight: 'bold' }}>ABC</Typography>
+                </>
+              </Link>
             </NextLink>
           </Box>
         </div>
@@ -112,7 +137,7 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {items.map((item) => (
+          {items().map((item) => (
             <NavItem
               key={item.title}
               icon={item.icon}

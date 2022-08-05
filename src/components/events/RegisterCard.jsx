@@ -19,11 +19,16 @@ export default function EventRegisterCard(props) {
 
       <Box sx={{ pt: 3 }} />
 
-      <Typography align="center" color='#5048E5' gutterBottom variant="h6">
-        <Link href="#">
-          Registrarse {`>>>`}
-        </Link>
-      </Typography>
+      {props.is_ready ?
+        <Typography align="center" color='#5048E5' gutterBottom variant="h6">
+          <Link href="Inscripcion">
+            <>
+              {"Registrarse >>>"}
+            </>
+          </Link>
+        </Typography>
+        : <></>
+      }
     </>
   )
 }

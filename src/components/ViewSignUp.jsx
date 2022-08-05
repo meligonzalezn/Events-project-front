@@ -201,7 +201,9 @@ export default function ViewSignUp(props) {
           {' '}
           <NextLink href="/login" passHref >
             <Link variant="subtitle2" underline="hover" >
-              Ingresa aquí
+              <>
+                {"Ingresa aquí"}
+              </>
             </Link>
           </NextLink>
         </Typography>

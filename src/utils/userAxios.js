@@ -57,14 +57,18 @@ async function createUser(metadata) {
 
 async function update(metadata) {
   const data = metadata.values;
-  const user = {
-    Name: data.Name + " " + data.LastName,
-    Email: data.Email,
-    Phone: data.Phone,
-    Role: data.Role,
-    State: data.State,
-    Password: data.Password === data.BeforePassword ? data.password : createHash("sha256").update(data.password).digest("hex")
-  }
+  let form_data = new FormData();
+  form_data.append('Name', data.Name);
+  form_data.append('Last_name', data.LastName);
+  form_data.append('Email', data.Email);
+  form_data.append('Phone', data.Phone);
+  form_data.append('Role', data.Role);
+  form_data.append('State', true);
+  form_data.append('Password', data.Password);
+
+  if (data.Image != defaultUserIcon)
+    form_data.append('Media_file', data.Image, data.Image.name);
+
 
   try {
     const request = await axios.put("http://localhost:8000/User/" + data.id + "/", user)

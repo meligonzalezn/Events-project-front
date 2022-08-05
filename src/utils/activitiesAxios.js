@@ -1,4 +1,7 @@
+
 import axios from 'axios'
+
+
 
 /**
  * This function parse the date to "YYYY-MM-DD"
@@ -62,8 +65,9 @@ async function updateActivity(metadata) {
     Title: data.title,
     ID_Event: localStorage.getItem('idEvent')
   }
+  console.log("detalles", activity)
   try {
-    const request = await axios.put("http://localhost:8000/Activity/" + data.id + "/", activity).then((res) => {
+    const request = await axios.put("http://localhost:8000/Activity/"+ data.id + "/", activity).then((res) => {
       return [request, null];
     });
   }
@@ -125,4 +129,26 @@ async function unenroll(ID_Activity) {
   }
 }
 
-export { createActivity, updateActivity, checkEnrolledStatus, unenroll }
+
+
+/**
+* We get the activities from an event
+* @param {eventId} // id of event 
+*/
+
+let activitiesFromEvent = []
+async function getActivitiesFromEvent(eventId) {
+  try {
+    await axios.get("http://localhost:8000/Activity/").then((res) => {
+      activitiesFromEvent = res.data.filter((element) => element.ID_Event === eventId)
+      return activitiesFromEvent;
+    })
+  }
+  catch (error) {
+    console.log(error)
+    return [null, error]
+  }
+}
+
+
+export { createActivity, updateActivity, checkEnrolledStatus, unenroll, getActivitiesFromEvent, activitiesFromEvent }

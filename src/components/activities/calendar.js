@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction'
-import { Modal } from '@mui/material';
+import { CardHeader, Modal, Typography } from '@mui/material';
 import { ActivityRegisterForm } from './activity-register-form';
 import { ActivityInfoAndUpdate } from './activity-info-and-update';
 import { useStyles } from '../modals/modalAlert';
 import styled from "@emotion/styled";
+import { Box } from '@mui/system';
+import BackButton from '../BackButton';
 
 export const StyleWrapper = styled.div`
   .fc .fc-button-primary {
@@ -50,6 +52,7 @@ export const Calendar = () => {
   var activitiesArray;
   var activitiesEvent = {};
   useEffect(() => {
+
     /**
      * With this function we get all activities we have register on DB 
      * @returns {array} we pass this array to Calendar component
@@ -115,39 +118,51 @@ export const Calendar = () => {
   }
 
   return (
-    <StyleWrapper>
-      <FullCalendar
-        events={dataCalendar}
-        plugins={[dayGridPlugin, interactionPlugin]}
-        dateClick={localStorage.getItem('userRole') == 'Cliente' ? null : handleDateClick}
-        selectable="true"
-        eventClick={handleEventClick}
-      />
-      {modalActivity ?
-        <Modal open={modalActivity} onClose={handleOnClose} >
-          <div className={styles.modal} style={{ padding: 0, alignItems: 'center' }}>
-            <ActivityRegisterForm dateselected={{ dateSelectedState }} />
-          </div>
-        </Modal> : null}
-      {activityClick && activityData && !loading ?
-        <Modal open={activityClick} onClose={handleOnCloseInfo}>
-          <div className={styles.modal} style={{ padding: 0, borderRadius: '0.6rem' }}>
-            <ActivityInfoAndUpdate
-              idactivity={activityData.event.id}
-              titleactivity={activityData.event.title}
-              dateactivity={activityData.event.start}
-              inithouractivity={activityData.event.extendedProps.initHour}
-              finalhouractivity={activityData.event.extendedProps.finalHour}
-              capacityactivity={activityData.event.extendedProps.capacity}
-              costactivity={activityData.event.extendedProps.cost}
-              spaceactivity={activityData.event.extendedProps.space}
-              stateactivity={activityData.event.extendedProps.state}
-              detailsactivity={activityData.event.extendedProps.details}
-              //0 is to indicate that is not a client 
-              isclient={localStorage.getItem('userRole') == 'Cliente' ? null : 0}
-            />
-          </div>
-        </Modal> : null}
-    </StyleWrapper>
+    <>
+      <Box
+        sx={{
+          alignItems: 'center', display: 'flex', justifyContent: 'space-between',
+          flexWrap: 'wrap', m: -1, pb: 2
+        }}>
+        <Typography sx={{ m: 1 }} variant="h4">
+          Calendario
+        </Typography>
+        <BackButton route='/' />
+      </Box>
+      <StyleWrapper>
+        <FullCalendar
+          events={dataCalendar}
+          plugins={[dayGridPlugin, interactionPlugin]}
+          dateClick={localStorage.getItem('userRole') == 'Cliente' ? null : handleDateClick}
+          selectable="true"
+          eventClick={handleEventClick}
+        />
+        {modalActivity ?
+          <Modal open={modalActivity} onClose={handleOnClose} >
+            <div className={styles.modal} style={{ padding: 0, alignItems: 'center' }}>
+              <ActivityRegisterForm dateselected={{ dateSelectedState }} />
+            </div>
+          </Modal> : null}
+        {activityClick && activityData && !loading ?
+          <Modal open={activityClick} onClose={handleOnCloseInfo}>
+            <div className={styles.modal} style={{ padding: 0, borderRadius: '0.6rem' }}>
+              <ActivityInfoAndUpdate
+                idactivity={activityData.event.id}
+                titleactivity={activityData.event.title}
+                dateactivity={activityData.event.start}
+                inithouractivity={activityData.event.extendedProps.initHour}
+                finalhouractivity={activityData.event.extendedProps.finalHour}
+                capacityactivity={activityData.event.extendedProps.capacity}
+                costactivity={activityData.event.extendedProps.cost}
+                spaceactivity={activityData.event.extendedProps.space}
+                stateactivity={activityData.event.extendedProps.state}
+                detailsactivity={activityData.event.extendedProps.details}
+                //0 is to indicate that is not a client 
+                isclient={localStorage.getItem('userRole') == 'Cliente' ? null : 0}
+              />
+            </div>
+          </Modal> : null}
+      </StyleWrapper>
+    </>
   )
 };

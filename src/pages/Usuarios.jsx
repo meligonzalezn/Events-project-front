@@ -10,6 +10,7 @@ import Tabla from 'src/components/tabla';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getUsers } from 'src/utils/userAxios';
+import { UserNavbar } from 'src/components/user/UserNavbar';
 
 const Item = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -27,7 +28,7 @@ const ConsultarUser = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [EnableUsers, setEnableUsers] = useState(true);
 
-  const handleShowUserList = () =>{
+  const handleShowUserList = () => {
     setEnableUsers(!EnableUsers)
   }
 
@@ -37,7 +38,7 @@ const ConsultarUser = () => {
     // Date.now()
     setUsuarios(error ? [] : usuarios);
   }
-  , [])
+    , [])
 
   return (
     <>
@@ -49,14 +50,16 @@ const ConsultarUser = () => {
 
       <Container maxWidth="full">
 
+        <UserNavbar isEmployee={localStorage.getItem('userRole') != 'Cliente'} />
+
 
         <Tabla rows={usuarios} StateExpected={EnableUsers}></Tabla>
 
-      <Button onClick={handleShowUserList}>
-        {EnableUsers ? 'Inhabilitados' : 'Usuarios habilitados'}
-      </Button>
+        <Button onClick={handleShowUserList}>
+          {EnableUsers ? 'Inhabilitados' : 'Usuarios habilitados'}
+        </Button>
       </Container>
-  
+
     </>
   )
 };

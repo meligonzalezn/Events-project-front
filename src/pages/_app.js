@@ -5,7 +5,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
-import { theme } from '../theme';
+import { lightTheme, darkTheme, MaterialUISwitch } from '../theme';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { has_perms, is_logged } from 'src/utils/loginAxios';
@@ -16,6 +16,10 @@ import SignUp from './SignUp';
 import "@fullcalendar/common/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import LinearLoader from 'src/components/loaders/LinealLoader';
+
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -24,6 +28,7 @@ const App = (props) => {
   const [Logged, setLogged] = useState(false)
   const [HasAccess, setHasAccess] = useState(false)
   const [Loading, setLoading] = useState(true)
+  const [darkMode, setDarkMode] = useState(false)
 
   const router = useRouter()
 
@@ -34,25 +39,25 @@ const App = (props) => {
   useEffect(async () => {
     //User is logged?
 
-    is_logged().then(([_, error]) => {
+    const [_a, errorCheckLoggin] = is_logged()
+    setLogged(errorCheckLoggin == null)
 
-      setLogged(error == null)
+    if (errorCheckLoggin != null) {
+      setLoading(false)
+      return;
+    }
+    //User has permissions ?
+    console.log("Permissions")
+    const [response, _] = has_perms(router.asPath);
+    setHasAccess(response !== null ? response : false)
+    setLoading(false)
 
-      if (error == null) {
-        //User has permissions ?
-        has_perms(router.asPath).then(([_, error]) => {
-          // console.log("actualizado ? ", _, error)
-          setHasAccess(error == null)
-          setLoading(false)
-        })
-      } else {
-        setLoading(false)
-      }
-    })
   }, [router.asPath])
 
-  const getLayout = Component.getLayout ?? ((page) => page);
+const getLayout = Component.getLayout ?? ((page) => page);
 
+
+if (typeof window !== "undefined") {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -66,22 +71,36 @@ const App = (props) => {
       </Head>
 
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
           <CssBaseline />
           {Loading ?
-            <h1>Cargando :)</h1>
+            <LinearLoader></LinearLoader>
             :
             Logged ?
               HasAccess ?
-                getLayout(<Component {...pageProps} />)
+                <>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<MaterialUISwitch sx={{ m: 1, zIndex: '2000', fontSize: '0.5rem' }} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+                      label="mui toggle"
+                    />
+                  </FormGroup>
+                  {getLayout(
+                    <Component {...pageProps} />)}
+                </>
                 :
                 <NotFound />
-              : <Login />
+              : router.asPath === "/SignUp" ?
+                <SignUp />
+                :
+                <Login />
           }
         </ThemeProvider>
+
       </LocalizationProvider>
     </CacheProvider>
   );
+} else return (<></>)
 };
 
 export default App;
