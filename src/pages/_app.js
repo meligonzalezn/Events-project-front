@@ -32,6 +32,7 @@ const App = (props) => {
   const [Logged, setLogged] = useState(true)
   const [HasAccess, setHasAccess] = useState(true)
   const [Loading, setLoading] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
 
   const router = useRouter()
 
@@ -63,49 +64,50 @@ const App = (props) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
 
+  if (typeof window !== "undefined") {
+    return (
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>
+            ABC App
+          </title>
+          <meta
+            name="viewport"
+            content="initial-scale=1, width=device-width"
+          />
+        </Head>
 
-  return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>
-          ABC App
-        </title>
-        <meta
-          name="viewport"
-          content="initial-scale=1, width=device-width"
-        />
-      </Head>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+            <CssBaseline />
+            {Loading ?
+              <LinearLoader></LinearLoader>
+              :
+              Logged ?
+                HasAccess ?
+                  <>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<MaterialUISwitch sx={{ m: 1, zIndex: '2000', fontSize: '0.5rem' }} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+                        label="mui toggle"
+                      />
+                    </FormGroup>
+                    {getLayout(
+                      <Component {...pageProps} />)}
+                  </>
+                  :
+                  <NotFound />
+                : router.asPath === "/SignUp" ?
+                  <SignUp />
+                  :
+                  <Login />
+            }
+          </ThemeProvider>
 
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-          <CssBaseline />
-          {Loading ?
-            <LinearLoader></LinearLoader>
-            :
-            Logged ?
-              HasAccess ?
-                <>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<MaterialUISwitch sx={{ m: 1, zIndex: '2000', fontSize: '0.5rem' }} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
-                      label="mui toggle"
-                    />
-                  </FormGroup>
-                  {getLayout(
-                    <Component {...pageProps} />)}
-                </>
-                :
-                <NotFound />
-              : router.asPath === "/SignUp" ?
-                <SignUp />
-                :
-                <Login />
-          }
-        </ThemeProvider>
-
-      </LocalizationProvider>
-    </CacheProvider>
-  );
+        </LocalizationProvider>
+      </CacheProvider>
+    );
+  } else return (<></>)
 };
 
 export default App;
